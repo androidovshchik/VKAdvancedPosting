@@ -1,23 +1,20 @@
 buildscript {
-    
-
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        
-
     }
 }
 
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
-
     version = '1.0'
     ext {
         appName = "VKAdvancedPosting"
@@ -27,21 +24,28 @@ allprojects {
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
     }
-
     repositories {
         mavenLocal()
         mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/releases/"
+        }
+        maven {
+            url "https://maven.google.com"
+        }
     }
 }
 
 project(":android") {
     apply plugin: "android"
-
-    configurations { natives }
-
+    configurations {
+        natives
+    }
     dependencies {
+        compile 'com.android.support:support-v4:26.0.2'
         compile project(":post-generator")
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
@@ -49,17 +53,13 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-arm64-v8a"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-x86_64"
-        
     }
 }
 
 project(":post-generator") {
     apply plugin: "java"
-
-
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        
     }
 }
 

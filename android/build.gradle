@@ -19,7 +19,7 @@ android {
     }
     defaultConfig {
         applicationId "rf.androidovshchik.vkadvancedposting"
-        minSdkVersion 9
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
