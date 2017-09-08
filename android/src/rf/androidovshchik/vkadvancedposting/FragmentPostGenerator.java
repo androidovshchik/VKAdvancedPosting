@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 
-public class PostGeneratorFragment extends AndroidFragmentApplication {
+public class FragmentPostGenerator extends AndroidFragmentApplication {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

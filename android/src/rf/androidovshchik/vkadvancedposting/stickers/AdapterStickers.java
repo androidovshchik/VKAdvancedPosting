@@ -11,18 +11,20 @@ import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
 public class AdapterStickers extends RecyclerView.Adapter<ViewHolderStickers> {
 
-    public static final int ITEM_SIZE = ViewUtil.dp2px(78);
+    public static final int MIN_ITEM_SIZE = ViewUtil.dp2px(78);
 
     private int itemsCount;
+    private int itemSize;
 
-    public AdapterStickers(int itemsCount) {
+    public AdapterStickers(int itemsCount, int itemSize) {
         this.itemsCount = itemsCount;
+        this.itemSize = itemSize;
     }
 
     @Override
     public ViewHolderStickers onCreateViewHolder(ViewGroup parent, int viewType) {
         ImageView itemView = new ImageView(parent.getContext());
-        itemView.setLayoutParams(new ViewGroup.LayoutParams(ITEM_SIZE, ITEM_SIZE));
+        itemView.setLayoutParams(new ViewGroup.LayoutParams(itemSize, itemSize));
         return new ViewHolderStickers(itemView);
     }
 

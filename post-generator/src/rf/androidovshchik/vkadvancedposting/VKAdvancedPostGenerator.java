@@ -13,7 +13,7 @@ public class VKAdvancedPostGenerator extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		img = new Texture("stickers/1.png");
 	}
 
 	@Override

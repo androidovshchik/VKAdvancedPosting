@@ -16,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rf.androidovshchik.vkadvancedposting.stickers.AdapterStickers;
+import rf.androidovshchik.vkadvancedposting.stickers.DecorationStickers;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import timber.log.Timber;
 
@@ -42,15 +43,32 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 			Timber.e(e.getMessage());
 			return;
 		}
-		AdapterStickers adapterStickers = new AdapterStickers(itemsCount);
+		final int deviceWidth = ViewUtil.getScreen(getApplicationContext()).x;
+		final int maxGridWidth = deviceWidth - DecorationStickers.MIN_ONE_SIDE_SPACE * 2 +
+				DecorationStickers.SPACE_BETWEEN_ITEMS;
+		int minItemWidth = AdapterStickers.MIN_ITEM_SIZE + DecorationStickers.SPACE_BETWEEN_ITEMS;
+		final int itemsPerLine = maxGridWidth / minItemWidth;
+		int freeSpace = maxGridWidth - itemsPerLine * minItemWidth;
+		while (freeSpace >= itemsPerLine) {
+			minItemWidth++;
+			freeSpace -= itemsPerLine;
+		}
+		int leftPadding = DecorationStickers.MIN_ONE_SIDE_SPACE + freeSpace / 2;
+		int rightPadding = DecorationStickers.MIN_ONE_SIDE_SPACE -
+				DecorationStickers.SPACE_BETWEEN_ITEMS + freeSpace / 2 + (freeSpace > 0 &&
+				freeSpace % 2 != 0 ? 1 : 0);
+		stickersRecyclerView.setPadding(leftPadding, 0, rightPadding, 0);
+		AdapterStickers adapterStickers = new AdapterStickers(itemsCount, minItemWidth -
+				DecorationStickers.SPACE_BETWEEN_ITEMS);
 		stickersRecyclerView.setAdapter(adapterStickers);
-		stickersRecyclerView.setItemViewCacheSize(itemsCount);
 		GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(),
-				Math.round(ViewUtil.getScreen(getApplicationContext()).x / AdapterStickers.ITEM_SIZE));
+				itemsPerLine);
 		stickersRecyclerView.setLayoutManager(gridLayoutManager);
-		stickersRecyclerView.setDrawingCacheEnabled(true);
-		stickersRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+		stickersRecyclerView.addItemDecoration(new DecorationStickers(itemsCount, itemsPerLine));
 		stickersRecyclerView.setHasFixedSize(true);
+		stickersRecyclerView.setItemViewCacheSize(itemsCount);
+		stickersRecyclerView.setDrawingCacheEnabled(true);
+		stickersRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
 	}
 
 	@OnClick(R.id.actionSticker)
