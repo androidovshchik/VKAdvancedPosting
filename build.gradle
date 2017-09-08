@@ -42,7 +42,7 @@ project(":android") {
     configurations { natives }
 
     dependencies {
-        compile project(":core")
+        compile project(":post-generator")
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -53,7 +53,7 @@ project(":android") {
     }
 }
 
-project(":core") {
+project(":post-generator") {
     apply plugin: "java"
 
 
