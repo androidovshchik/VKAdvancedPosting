@@ -14,7 +14,7 @@ import butterknife.OnClick;
 public class ActivityMain extends AppCompatActivity implements AndroidFragmentApplication.Callbacks {
 
 	@BindView(R.id.stickersContainer)
-	ViewGroup stickersContainer;
+	public ViewGroup stickersContainer;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -26,7 +26,14 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@OnClick(R.id.actionSticker)
 	public void onStickers() {
 		BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(stickersContainer);
-		bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+		switch (bottomSheetBehavior.getState()) {
+			case BottomSheetBehavior.STATE_EXPANDED:
+				bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+				break;
+			default:
+				bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+				break;
+		}
 	}
 
 	@Override

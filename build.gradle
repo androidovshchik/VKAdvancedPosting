@@ -23,6 +23,7 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.8.0'
+        supportVersion = '26.0.2'
     }
     repositories {
         mavenLocal()
@@ -45,9 +46,10 @@ project(":android") {
         natives
     }
     dependencies {
-        compile 'com.android.support:appcompat-v7:26.0.2'
-        compile 'com.android.support:support-v4:26.0.2'
-        compile 'com.android.support:design:26.0.2'
+        compile "com.android.support:appcompat-v7:$supportVersion"
+        compile "com.android.support:support-v4:$supportVersion"
+        compile "com.android.support:design:$supportVersion"
+        compile "com.android.support:recyclerview-v7:$supportVersion"
         compile 'com.jakewharton:butterknife:8.8.1'
         annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
         compile project(":post-generator")
