@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<rf.androidovshchik.vkadvancedposting.views.ToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbarHeight"
     android:background="@color/colorWhite">
@@ -12,11 +12,54 @@
         android:scaleType="centerInside"
         android:contentDescription="@string/app_name"/>
 
+    <TextView
+        android:id="@+id/post"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/centerHorizontalLine"
+        android:layout_toStartOf="@+id/centerHorizontalLine"
+        android:gravity="center"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:textColor="@color/colorCornflowerBlueTwo"
+        android:text="@string/main.post"/>
+
     <View
         android:id="@+id/centerHorizontalLine"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/history"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/centerHorizontalLine"
+        android:layout_toEndOf="@+id/centerHorizontalLine"
+        android:gravity="center"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:textSize="14sp"
+        android:textAllCaps="true"
+        android:textColor="@color/colorCornflowerBlueTwo"
+        android:text="@string/main.history" />
+
+    <View
+        android:id="@+id/slider"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/post"
+        android:layout_alignEnd="@+id/post"
+        android:layout_alignLeft="@+id/post"
+        android:layout_alignRight="@+id/post"
+        android:background="@color/colorCornflowerBlueTwo"/>
 
     <ImageView
         android:id="@+id/actionSticker"
@@ -28,4 +71,4 @@
         android:scaleType="centerInside"
         android:contentDescription="@string/app_name"/>
 
-</RelativeLayout>
+</rf.androidovshchik.vkadvancedposting.views.ToolbarLayout>

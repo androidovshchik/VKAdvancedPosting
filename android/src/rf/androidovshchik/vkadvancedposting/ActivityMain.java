@@ -71,6 +71,9 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 		stickersRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
 	}
 
+	@OnClick(R.id.actionFont)
+	public void onFont() {}
+
 	@OnClick(R.id.actionSticker)
 	public void onStickers() {
 		BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(stickersContainer);
