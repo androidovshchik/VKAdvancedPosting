@@ -18,9 +18,13 @@ import butterknife.OnClick;
 import rf.androidovshchik.vkadvancedposting.stickers.AdapterStickers;
 import rf.androidovshchik.vkadvancedposting.stickers.DecorationStickers;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.ToolbarLayout;
 import timber.log.Timber;
 
 public class ActivityMain extends AppCompatActivity implements AndroidFragmentApplication.Callbacks {
+
+	@BindView(R.id.toolbarContainer)
+	public ToolbarLayout toolbar;
 
 	@BindView(R.id.stickersContainer)
 	public ViewGroup stickersContainer;
@@ -73,6 +77,16 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 
 	@OnClick(R.id.actionFont)
 	public void onFont() {}
+
+	@OnClick(R.id.actionPost)
+	public void onPost() {
+        toolbar.onPostClicked();
+    }
+
+	@OnClick(R.id.actionHistory)
+	public void onHistory() {
+        toolbar.onHistoryClicked();
+	}
 
 	@OnClick(R.id.actionSticker)
 	public void onStickers() {
