@@ -1,10 +1,12 @@
 package rf.androidovshchik.vkadvancedposting.views;
 
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import butterknife.BindView;
@@ -22,6 +24,10 @@ public class ToolbarLayout extends RelativeLayout {
     protected View actionHistory;
 
     private Unbinder unbinder;
+
+    private boolean isActionPost = true;
+
+    private ObjectAnimator translationX;
 
     public ToolbarLayout(Context context) {
         super(context);
@@ -45,14 +51,32 @@ public class ToolbarLayout extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
+        translationX = ObjectAnimator.ofFloat(slider, "translationX", 0f);
+        translationX.setDuration(300);
+        translationX.setRepeatCount(Animation.ABSOLUTE);
     }
 
     public void onPostClicked() {
-
+        if (!isActionPost) {
+            isActionPost = true;
+            startSlideAnimation();
+        }
     }
 
     public void onHistoryClicked() {
+        if (isActionPost) {
+            isActionPost = false;
+            startSlideAnimation();
+        }
+    }
 
+    private void startSlideAnimation() {
+        if (isActionPost) {
+            translationX.setFloatValues(slider.getWidth(), 0f);
+        } else {
+            translationX.setFloatValues(0f, slider.getWidth());
+        }
+        translationX.start();
     }
 
     @Override
