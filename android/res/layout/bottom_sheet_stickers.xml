@@ -28,7 +28,9 @@
         android:layout_height="0.5dp"/>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/stickersRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="328dp"/>
+        android:layout_height="wrap_content"
+        android:maxHeight="328dp"/>
 
 </LinearLayout>
