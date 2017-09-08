@@ -48,6 +48,8 @@ project(":android") {
         compile 'com.android.support:appcompat-v7:26.0.2'
         compile 'com.android.support:support-v4:26.0.2'
         compile 'com.android.support:design:26.0.2'
+        compile 'com.jakewharton:butterknife:8.8.1'
+        annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
         compile project(":post-generator")
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"

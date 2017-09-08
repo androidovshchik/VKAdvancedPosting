@@ -1,36 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <View
-        android:id="@+id/centerHorizontalToolbar"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_centerHorizontal="true"/>
-
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_toolbar_font"
-        android:scaleType="centerInside"
-        android:contentDescription="@string/app_name"/>
-
-    <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_toolbar_sticker"
-        android:scaleType="centerInside"
-        android:contentDescription="@string/app_name"/>
 
     <fragment
         android:name="rf.androidovshchik.vkadvancedposting.PostGeneratorFragment"
         android:id="@+id/postGenerator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/centerHorizontalToolbar"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="match_parent"/>
 
-</RelativeLayout>
+    <include
+        layout="@layout/toolbar_main" />
+
+    <include
+        layout="@layout/bottom_sheet_stickers" />
+
+</android.support.design.widget.CoordinatorLayout>

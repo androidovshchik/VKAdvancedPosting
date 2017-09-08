@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbarHeight"
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/actionFont"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_toolbar_font"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/app_name"/>
+
+    <View
+        android:id="@+id/centerHorizontalLine"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:id="@+id/actionSticker"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_toolbar_sticker"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/app_name"/>
+
+</RelativeLayout>

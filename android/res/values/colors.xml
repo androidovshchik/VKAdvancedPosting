@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorBlack">#2c2d2e</color>
+    <color name="colorGrey">#909499</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorCoolBlue">#4680c2</color>
+    <color name="colorSunYellow">#ffcc33</color>
+    <color name="colorOrangish">#ff7733</color>
+    <color name="colorMidGreen">#47b347</color>
+    <color name="colorReddishPink">#ff3355</color>
+    <color name="colorBerry">#990f6b</color>
+    <color name="colorLightLavendar">#f8a6ff</color>
+    <color name="colorDarkPeriwinkle">#6c6cd9</color>
+    <color name="colorCornflowerBlue">#5692d7</color>
+    <color name="colorCornflowerBlueTwo">#528bcc</color>
+
+    <color name="colorVKButton">#639fcd</color>
+</resources>
