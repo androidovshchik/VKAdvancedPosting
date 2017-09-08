@@ -1,16 +1,12 @@
 package rf.androidovshchik.vkadvancedposting;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import rf.androidovshchik.vkadvancedposting.VKAdvancedPostGenerator;
+public class AndroidLauncher extends AppCompatActivity {
 
-public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new VKAdvancedPostGenerator(), config);
 	}
 }

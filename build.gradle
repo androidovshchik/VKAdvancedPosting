@@ -45,7 +45,9 @@ project(":android") {
         natives
     }
     dependencies {
+        compile 'com.android.support:appcompat-v7:26.0.2'
         compile 'com.android.support:support-v4:26.0.2'
+        compile 'com.android.support:design:26.0.2'
         compile project(":post-generator")
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
