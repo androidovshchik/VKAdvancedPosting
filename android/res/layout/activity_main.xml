@@ -3,10 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/centerHorizontalToolbar"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_toolbar_font"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/app_name"/>
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_toolbar_sticker"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/app_name"/>
+
     <fragment
         android:name="rf.androidovshchik.vkadvancedposting.PostGeneratorFragment"
         android:id="@+id/postGenerator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/centerHorizontalToolbar"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
