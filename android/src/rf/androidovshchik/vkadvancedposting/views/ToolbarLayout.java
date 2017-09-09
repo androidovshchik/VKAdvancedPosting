@@ -87,23 +87,23 @@ public class ToolbarLayout extends RelativeLayout {
         slider.setPivotX(0f);
     }
 
-    public void onPostClicked() {
+    public void onPostClicked(boolean immediately) {
         if (!isActivePost) {
             isActivePost = true;
-            startSlideAnimation(slider.getX());
+            startSlideAnimation(immediately);
         }
     }
 
-    public void onHistoryClicked() {
+    public void onHistoryClicked(boolean immediately) {
         if (isActivePost) {
             isActivePost = false;
-            startSlideAnimation(slider.getX());
+            startSlideAnimation(immediately);
         }
     }
 
-    public void startSlideAnimation(float x) {
+    public void startSlideAnimation(boolean immediately) {
         initVars();
-        float currentDistance = getDistance(x);
+        float currentDistance = getDistance(slider.getX());
         if (isActivePost) {
             sliderTranslationX.setFloatValues(currentDistance, 0f);
             sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance), 1f);
@@ -124,6 +124,9 @@ public class ToolbarLayout extends RelativeLayout {
                     MIN_TEXT_OPACITY, 1f);
             animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
                     currentDistance) / sliderMaxDistance));
+        }
+        if (immediately) {
+            animatorSet.setDuration(0);
         }
         animatorSet.start();
     }

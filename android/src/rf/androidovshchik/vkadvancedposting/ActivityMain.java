@@ -80,12 +80,12 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 
 	@OnClick(R.id.actionPost)
 	public void onPost() {
-        toolbar.onPostClicked();
+        toolbar.onPostClicked(false);
     }
 
 	@OnClick(R.id.actionHistory)
 	public void onHistory() {
-        toolbar.onHistoryClicked();
+        toolbar.onHistoryClicked(false);
 	}
 
 	@OnClick(R.id.actionSticker)
@@ -99,6 +99,12 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 				bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 				break;
 		}
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		toolbar.onHistoryClicked(true);
 	}
 
 	@Override
