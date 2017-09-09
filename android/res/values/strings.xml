@@ -4,4 +4,5 @@
     <string name="main.post">Запись</string>
     <string name="main.history">История</string>
     <string name="main.stickers">Стикеры</string>
+    <string name="main.send">Отправить</string>
 </resources>
