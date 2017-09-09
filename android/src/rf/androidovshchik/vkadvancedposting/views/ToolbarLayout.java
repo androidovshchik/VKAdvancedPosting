@@ -17,7 +17,7 @@ import rf.androidovshchik.vkadvancedposting.R;
 
 public class ToolbarLayout extends RelativeLayout {
 
-    private static final int ANIMATION_MAX_TIME = 3000;
+    private static final int ANIMATION_MAX_TIME = 300;
     private static final float MIN_LAYOUT_OPACITY = 0.92f;
     private static final float MIN_TEXT_OPACITY = 0.72f;
 
@@ -40,7 +40,7 @@ public class ToolbarLayout extends RelativeLayout {
     private Float sliderHistoryScale = null;
     private static final float LAYOUT_ALPHA_FACTOR = MIN_LAYOUT_OPACITY - 1;
     private static final float POST_ALPHA_FACTOR = MIN_TEXT_OPACITY - 1;
-    private static final float HISTORY_ALPHA_FACTOR = 1f - MIN_TEXT_OPACITY;
+    private static final float HISTORY_ALPHA_FACTOR = 1 - MIN_TEXT_OPACITY;
 
     private AnimatorSet animatorSet;
     private ObjectAnimator sliderTranslationX;
@@ -109,8 +109,8 @@ public class ToolbarLayout extends RelativeLayout {
             sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance), 1f);
             alphaBackground.setFloatValues(getRatio(LAYOUT_ALPHA_FACTOR, currentDistance), 1f);
             alphaPost.setFloatValues(getRatio(POST_ALPHA_FACTOR, currentDistance), 1f);
-            alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1,
-                    MIN_TEXT_OPACITY);
+            alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1 +
+                            MIN_TEXT_OPACITY, MIN_TEXT_OPACITY);
             animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME *
                     currentDistance / sliderMaxDistance));
         } else {
@@ -120,7 +120,8 @@ public class ToolbarLayout extends RelativeLayout {
             alphaBackground.setFloatValues(getRatio(LAYOUT_ALPHA_FACTOR, currentDistance),
                     MIN_LAYOUT_OPACITY);
             alphaPost.setFloatValues(getRatio(POST_ALPHA_FACTOR, currentDistance), MIN_TEXT_OPACITY);
-            alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1, 1f);
+            alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1 +
+                    MIN_TEXT_OPACITY, 1f);
             animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
                     currentDistance) / sliderMaxDistance));
         }
