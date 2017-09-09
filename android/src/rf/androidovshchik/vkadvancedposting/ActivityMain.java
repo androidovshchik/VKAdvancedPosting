@@ -75,17 +75,29 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 		stickersRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(ToolbarLayout.EXTRA_ACTIVE_POST, toolbar.isActivePost);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		toolbar.isActivePost = savedInstanceState.getBoolean(ToolbarLayout.EXTRA_ACTIVE_POST);
+	}
+
 	@OnClick(R.id.actionFont)
 	public void onFont() {}
 
 	@OnClick(R.id.actionPost)
 	public void onPost() {
-        toolbar.onPostClicked(false);
+        toolbar.onPostClicked();
     }
 
 	@OnClick(R.id.actionHistory)
 	public void onHistory() {
-        toolbar.onHistoryClicked(false);
+        toolbar.onHistoryClicked();
 	}
 
 	@OnClick(R.id.actionSticker)
@@ -104,7 +116,7 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		toolbar.onHistoryClicked(true);
+		toolbar.startSlideAnimation(true);
 	}
 
 	@Override

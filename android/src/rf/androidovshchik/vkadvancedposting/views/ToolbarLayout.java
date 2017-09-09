@@ -17,6 +17,8 @@ import rf.androidovshchik.vkadvancedposting.R;
 
 public class ToolbarLayout extends RelativeLayout {
 
+    public static final String EXTRA_ACTIVE_POST = "activePost";
+
     private static final int ANIMATION_MAX_TIME = 300;
     private static final float MIN_LAYOUT_OPACITY = 0.92f;
     private static final float MIN_TEXT_OPACITY = 0.72f;
@@ -32,7 +34,7 @@ public class ToolbarLayout extends RelativeLayout {
 
     private Unbinder unbinder;
 
-    private boolean isActivePost = true;
+    public boolean isActivePost = true;
 
     private Float sliderStartX = null;
     private Float sliderMaxDistance = null;
@@ -87,17 +89,17 @@ public class ToolbarLayout extends RelativeLayout {
         slider.setPivotX(0f);
     }
 
-    public void onPostClicked(boolean immediately) {
+    public void onPostClicked() {
         if (!isActivePost) {
             isActivePost = true;
-            startSlideAnimation(immediately);
+            startSlideAnimation(false);
         }
     }
 
-    public void onHistoryClicked(boolean immediately) {
+    public void onHistoryClicked() {
         if (isActivePost) {
             isActivePost = false;
-            startSlideAnimation(immediately);
+            startSlideAnimation(false);
         }
     }
 
