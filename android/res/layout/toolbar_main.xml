@@ -2,8 +2,13 @@
 <rf.androidovshchik.vkadvancedposting.views.ToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbarContainer"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbarHeight"
-    android:background="@color/colorWhite">
+    android:layout_height="@dimen/toolbarHeight">
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"/>
 
     <ImageView
         android:id="@+id/actionFont"

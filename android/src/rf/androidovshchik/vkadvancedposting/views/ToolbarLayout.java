@@ -21,10 +21,12 @@ public class ToolbarLayout extends RelativeLayout {
     private static final float MIN_LAYOUT_OPACITY = 0.92f;
     private static final float MIN_TEXT_OPACITY = 0.72f;
 
-    @BindView(R.id.slider)
-    protected View slider;
+    @BindView(R.id.background)
+    protected View background;
     @BindView(R.id.actionPost)
     protected View actionPost;
+    @BindView(R.id.slider)
+    protected View slider;
     @BindView(R.id.actionHistory)
     protected View actionHistory;
 
@@ -36,14 +38,14 @@ public class ToolbarLayout extends RelativeLayout {
     private Float sliderMaxDistance = null;
     private Float sliderScaleFactor = null;
     private Float sliderHistoryScale = null;
-    private Float layoutAlphaFactor = null;
-    private Float postAlphaFactor = null;
-    private Float historyAlphaFactor = null;
+    private static final float LAYOUT_ALPHA_FACTOR = MIN_LAYOUT_OPACITY - 1;
+    private static final float POST_ALPHA_FACTOR = MIN_TEXT_OPACITY - 1;
+    private static final float HISTORY_ALPHA_FACTOR = 1f - MIN_TEXT_OPACITY;
 
     private AnimatorSet animatorSet;
     private ObjectAnimator sliderTranslationX;
     private ObjectAnimator sliderScaleX;
-    private ObjectAnimator alphaLayout;
+    private ObjectAnimator alphaBackground;
     private ObjectAnimator alphaPost;
     private ObjectAnimator alphaHistory;
 
@@ -73,14 +75,15 @@ public class ToolbarLayout extends RelativeLayout {
         sliderTranslationX.setRepeatCount(Animation.ABSOLUTE);
         sliderScaleX = ObjectAnimator.ofFloat(slider, "scaleX", 0f);
         sliderScaleX.setRepeatCount(Animation.ABSOLUTE);
-        alphaLayout = ObjectAnimator.ofFloat(this, "alpha", 0f);
-        alphaLayout.setRepeatCount(Animation.ABSOLUTE);
+        alphaBackground = ObjectAnimator.ofFloat(background, "alpha", 0f);
+        alphaBackground.setRepeatCount(Animation.ABSOLUTE);
         alphaPost = ObjectAnimator.ofFloat(actionPost, "alpha", 0f);
         alphaPost.setRepeatCount(Animation.ABSOLUTE);
         alphaHistory = ObjectAnimator.ofFloat(actionHistory, "alpha", 0f);
         alphaHistory.setRepeatCount(Animation.ABSOLUTE);
         animatorSet = new AnimatorSet();
-        animatorSet.playTogether(sliderTranslationX, sliderScaleX, alphaLayout, alphaPost, alphaHistory);
+        animatorSet.playTogether(sliderTranslationX, sliderScaleX, alphaBackground, alphaPost,
+                alphaHistory);
         slider.setPivotX(0f);
     }
 
@@ -104,17 +107,20 @@ public class ToolbarLayout extends RelativeLayout {
         if (isActivePost) {
             sliderTranslationX.setFloatValues(currentDistance, 0f);
             sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance), 1f);
-            alphaLayout.setFloatValues(getRatio(layoutAlphaFactor, currentDistance), 1f);
-            alphaPost.setFloatValues(getRatio(postAlphaFactor, currentDistance), 1f);
-            alphaHistory.setFloatValues(getRatio(historyAlphaFactor, currentDistance), MIN_TEXT_OPACITY);
+            alphaBackground.setFloatValues(getRatio(LAYOUT_ALPHA_FACTOR, currentDistance), 1f);
+            alphaPost.setFloatValues(getRatio(POST_ALPHA_FACTOR, currentDistance), 1f);
+            alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1,
+                    MIN_TEXT_OPACITY);
             animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME *
                     currentDistance / sliderMaxDistance));
         } else {
             sliderTranslationX.setFloatValues(currentDistance, sliderMaxDistance);
-            sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance), sliderHistoryScale);
-            alphaLayout.setFloatValues(getRatio(layoutAlphaFactor, currentDistance), MIN_LAYOUT_OPACITY);
-            alphaPost.setFloatValues(getRatio(postAlphaFactor, currentDistance), MIN_TEXT_OPACITY);
-            alphaHistory.setFloatValues(getRatio(historyAlphaFactor, currentDistance), 1f);
+            sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance),
+                    sliderHistoryScale);
+            alphaBackground.setFloatValues(getRatio(LAYOUT_ALPHA_FACTOR, currentDistance),
+                    MIN_LAYOUT_OPACITY);
+            alphaPost.setFloatValues(getRatio(POST_ALPHA_FACTOR, currentDistance), MIN_TEXT_OPACITY);
+            alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1, 1f);
             animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
                     currentDistance) / sliderMaxDistance));
         }
@@ -132,15 +138,6 @@ public class ToolbarLayout extends RelativeLayout {
         if (sliderScaleFactor == null) {
             sliderScaleFactor = (float) actionHistory.getWidth() / actionPost.getWidth() - 1f;
         }
-        if (layoutAlphaFactor == null) {
-            layoutAlphaFactor = MIN_LAYOUT_OPACITY - 1f;
-        }
-        if (postAlphaFactor == null) {
-            postAlphaFactor = 1f - MIN_TEXT_OPACITY;
-        }
-        if (historyAlphaFactor == null) {
-            historyAlphaFactor = MIN_TEXT_OPACITY - 1f;
-        }
         if (sliderMaxDistance == null) {
             sliderMaxDistance = (float) actionPost.getWidth();
         }
@@ -150,7 +147,7 @@ public class ToolbarLayout extends RelativeLayout {
     }
 
     private float getRatio(float factor, float x) {
-        return 1f + factor * x / sliderMaxDistance;
+        return 1 + factor * x / sliderMaxDistance;
     }
 
     @Override
