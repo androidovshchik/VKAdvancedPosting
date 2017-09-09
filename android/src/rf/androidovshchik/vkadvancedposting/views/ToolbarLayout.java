@@ -1,5 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.views;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -16,6 +17,8 @@ import rf.androidovshchik.vkadvancedposting.R;
 
 public class ToolbarLayout extends RelativeLayout {
 
+    private static final int ANIMATION_MAX_TIME = 300;
+
     @BindView(R.id.slider)
     protected View slider;
     @BindView(R.id.actionPost)
@@ -25,9 +28,16 @@ public class ToolbarLayout extends RelativeLayout {
 
     private Unbinder unbinder;
 
-    private boolean isActionPost = true;
+    private boolean isActivePost = true;
 
+    private Float sliderStartX = null;
+    private Float sliderMaxDistance = null;
+    private Float sliderRatioFactor = null;
+    private Float sliderHistoryRatio = null;
+
+    private AnimatorSet sliderSet;
     private ObjectAnimator translationX;
+    private ObjectAnimator scaleX;
 
     public ToolbarLayout(Context context) {
         super(context);
@@ -52,31 +62,65 @@ public class ToolbarLayout extends RelativeLayout {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
         translationX = ObjectAnimator.ofFloat(slider, "translationX", 0f);
-        translationX.setDuration(300);
         translationX.setRepeatCount(Animation.ABSOLUTE);
+        scaleX = ObjectAnimator.ofFloat(slider, "scaleX", 0f);
+        scaleX.setRepeatCount(Animation.ABSOLUTE);
+        sliderSet = new AnimatorSet();
+        sliderSet.playTogether(translationX, scaleX);
+        slider.setPivotX(0f);
     }
 
     public void onPostClicked() {
-        if (!isActionPost) {
-            isActionPost = true;
+        if (!isActivePost) {
+            isActivePost = true;
             startSlideAnimation();
         }
     }
 
     public void onHistoryClicked() {
-        if (isActionPost) {
-            isActionPost = false;
+        if (isActivePost) {
+            isActivePost = false;
             startSlideAnimation();
         }
     }
 
     private void startSlideAnimation() {
-        if (isActionPost) {
-            translationX.setFloatValues(slider.getWidth(), 0f);
+        initVars();
+        float currentDistance = getDistance(slider.getX());
+        if (isActivePost) {
+            translationX.setFloatValues(currentDistance, 0f);
+            scaleX.setFloatValues(getSliderRatio(currentDistance), 1f);
+            sliderSet.setDuration(Math.round(ANIMATION_MAX_TIME * currentDistance / sliderMaxDistance));
         } else {
-            translationX.setFloatValues(0f, slider.getWidth());
+            translationX.setFloatValues(currentDistance, sliderMaxDistance);
+            scaleX.setFloatValues(getSliderRatio(currentDistance), sliderHistoryRatio);
+            sliderSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
+                    currentDistance) / sliderMaxDistance));
         }
-        translationX.start();
+        sliderSet.start();
+    }
+
+    private void initVars() {
+        if (sliderStartX == null) {
+            sliderStartX = slider.getX();
+        }
+        if (sliderRatioFactor == null) {
+            sliderRatioFactor = (float) actionHistory.getWidth() / actionPost.getWidth() - 1f;
+        }
+        if (sliderMaxDistance == null) {
+            sliderMaxDistance = getDistance(sliderStartX + actionPost.getWidth());
+        }
+        if (sliderHistoryRatio == null) {
+            sliderHistoryRatio = getSliderRatio(sliderMaxDistance);
+        }
+    }
+
+    private float getSliderRatio(float x) {
+        return 1f + sliderRatioFactor * x / sliderMaxDistance;
+    }
+
+    private float getDistance(float x) {
+        return x - sliderStartX;
     }
 
     @Override
