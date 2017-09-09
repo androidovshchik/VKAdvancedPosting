@@ -17,7 +17,9 @@ import rf.androidovshchik.vkadvancedposting.R;
 
 public class ToolbarLayout extends RelativeLayout {
 
-    private static final int ANIMATION_MAX_TIME = 300;
+    private static final int ANIMATION_MAX_TIME = 3000;
+    private static final float MIN_LAYOUT_OPACITY = 0.92f;
+    private static final float MIN_TEXT_OPACITY = 0.72f;
 
     @BindView(R.id.slider)
     protected View slider;
@@ -32,12 +34,18 @@ public class ToolbarLayout extends RelativeLayout {
 
     private Float sliderStartX = null;
     private Float sliderMaxDistance = null;
-    private Float sliderRatioFactor = null;
-    private Float sliderHistoryRatio = null;
+    private Float sliderScaleFactor = null;
+    private Float sliderHistoryScale = null;
+    private Float layoutAlphaFactor = null;
+    private Float postAlphaFactor = null;
+    private Float historyAlphaFactor = null;
 
-    private AnimatorSet sliderSet;
-    private ObjectAnimator translationX;
-    private ObjectAnimator scaleX;
+    private AnimatorSet animatorSet;
+    private ObjectAnimator sliderTranslationX;
+    private ObjectAnimator sliderScaleX;
+    private ObjectAnimator alphaLayout;
+    private ObjectAnimator alphaPost;
+    private ObjectAnimator alphaHistory;
 
     public ToolbarLayout(Context context) {
         super(context);
@@ -61,66 +69,88 @@ public class ToolbarLayout extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
-        translationX = ObjectAnimator.ofFloat(slider, "translationX", 0f);
-        translationX.setRepeatCount(Animation.ABSOLUTE);
-        scaleX = ObjectAnimator.ofFloat(slider, "scaleX", 0f);
-        scaleX.setRepeatCount(Animation.ABSOLUTE);
-        sliderSet = new AnimatorSet();
-        sliderSet.playTogether(translationX, scaleX);
+        sliderTranslationX = ObjectAnimator.ofFloat(slider, "translationX", 0f);
+        sliderTranslationX.setRepeatCount(Animation.ABSOLUTE);
+        sliderScaleX = ObjectAnimator.ofFloat(slider, "scaleX", 0f);
+        sliderScaleX.setRepeatCount(Animation.ABSOLUTE);
+        alphaLayout = ObjectAnimator.ofFloat(this, "alpha", 0f);
+        alphaLayout.setRepeatCount(Animation.ABSOLUTE);
+        alphaPost = ObjectAnimator.ofFloat(actionPost, "alpha", 0f);
+        alphaPost.setRepeatCount(Animation.ABSOLUTE);
+        alphaHistory = ObjectAnimator.ofFloat(actionHistory, "alpha", 0f);
+        alphaHistory.setRepeatCount(Animation.ABSOLUTE);
+        animatorSet = new AnimatorSet();
+        animatorSet.playTogether(sliderTranslationX, sliderScaleX, alphaLayout, alphaPost, alphaHistory);
         slider.setPivotX(0f);
     }
 
     public void onPostClicked() {
         if (!isActivePost) {
             isActivePost = true;
-            startSlideAnimation();
+            startSlideAnimation(slider.getX());
         }
     }
 
     public void onHistoryClicked() {
         if (isActivePost) {
             isActivePost = false;
-            startSlideAnimation();
+            startSlideAnimation(slider.getX());
         }
     }
 
-    private void startSlideAnimation() {
+    public void startSlideAnimation(float x) {
         initVars();
-        float currentDistance = getDistance(slider.getX());
+        float currentDistance = getDistance(x);
         if (isActivePost) {
-            translationX.setFloatValues(currentDistance, 0f);
-            scaleX.setFloatValues(getSliderRatio(currentDistance), 1f);
-            sliderSet.setDuration(Math.round(ANIMATION_MAX_TIME * currentDistance / sliderMaxDistance));
+            sliderTranslationX.setFloatValues(currentDistance, 0f);
+            sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance), 1f);
+            alphaLayout.setFloatValues(getRatio(layoutAlphaFactor, currentDistance), 1f);
+            alphaPost.setFloatValues(getRatio(postAlphaFactor, currentDistance), 1f);
+            alphaHistory.setFloatValues(getRatio(historyAlphaFactor, currentDistance), MIN_TEXT_OPACITY);
+            animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME *
+                    currentDistance / sliderMaxDistance));
         } else {
-            translationX.setFloatValues(currentDistance, sliderMaxDistance);
-            scaleX.setFloatValues(getSliderRatio(currentDistance), sliderHistoryRatio);
-            sliderSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
+            sliderTranslationX.setFloatValues(currentDistance, sliderMaxDistance);
+            sliderScaleX.setFloatValues(getRatio(sliderScaleFactor, currentDistance), sliderHistoryScale);
+            alphaLayout.setFloatValues(getRatio(layoutAlphaFactor, currentDistance), MIN_LAYOUT_OPACITY);
+            alphaPost.setFloatValues(getRatio(postAlphaFactor, currentDistance), MIN_TEXT_OPACITY);
+            alphaHistory.setFloatValues(getRatio(historyAlphaFactor, currentDistance), 1f);
+            animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
                     currentDistance) / sliderMaxDistance));
         }
-        sliderSet.start();
+        animatorSet.start();
+    }
+
+    private float getDistance(float x) {
+        return x - sliderStartX;
     }
 
     private void initVars() {
         if (sliderStartX == null) {
             sliderStartX = slider.getX();
         }
-        if (sliderRatioFactor == null) {
-            sliderRatioFactor = (float) actionHistory.getWidth() / actionPost.getWidth() - 1f;
+        if (sliderScaleFactor == null) {
+            sliderScaleFactor = (float) actionHistory.getWidth() / actionPost.getWidth() - 1f;
+        }
+        if (layoutAlphaFactor == null) {
+            layoutAlphaFactor = MIN_LAYOUT_OPACITY - 1f;
+        }
+        if (postAlphaFactor == null) {
+            postAlphaFactor = 1f - MIN_TEXT_OPACITY;
+        }
+        if (historyAlphaFactor == null) {
+            historyAlphaFactor = MIN_TEXT_OPACITY - 1f;
         }
         if (sliderMaxDistance == null) {
-            sliderMaxDistance = getDistance(sliderStartX + actionPost.getWidth());
+            sliderMaxDistance = (float) actionPost.getWidth();
         }
-        if (sliderHistoryRatio == null) {
-            sliderHistoryRatio = getSliderRatio(sliderMaxDistance);
+        if (sliderHistoryScale == null) {
+            sliderHistoryScale = getRatio(sliderScaleFactor, sliderMaxDistance);
         }
     }
 
-    private float getSliderRatio(float x) {
-        return 1f + sliderRatioFactor * x / sliderMaxDistance;
-    }
-
-    private float getDistance(float x) {
-        return x - sliderStartX;
+    private float getRatio(float factor, float x) {
+        return 1f + factor * x / sliderMaxDistance;
     }
 
     @Override
