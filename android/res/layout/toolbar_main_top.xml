@@ -8,7 +8,7 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"/>
+        android:background="@color/white"/>
 
     <ImageView
         android:id="@+id/actionFont"
@@ -31,7 +31,7 @@
         android:paddingEnd="12dp"
         android:textSize="14sp"
         android:textAllCaps="true"
-        android:textColor="@color/colorCornflowerBlueTwo"
+        android:textColor="@color/cornflower_blue_two"
         android:text="@string/main.post"/>
 
     <View
@@ -53,7 +53,7 @@
         android:paddingEnd="12dp"
         android:textSize="14sp"
         android:textAllCaps="true"
-        android:textColor="@color/colorCornflowerBlueTwo"
+        android:textColor="@color/cornflower_blue_two"
         android:text="@string/main.history" />
 
     <View
@@ -65,7 +65,7 @@
         android:layout_alignEnd="@+id/actionPost"
         android:layout_alignLeft="@+id/actionPost"
         android:layout_alignRight="@+id/actionPost"
-        android:background="@color/colorCornflowerBlueTwo"/>
+        android:background="@color/cornflower_blue_two"/>
 
     <ImageView
         android:id="@+id/actionSticker"
