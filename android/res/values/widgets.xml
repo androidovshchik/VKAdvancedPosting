@@ -1,6 +1,6 @@
 <resources>
     <style name="Widget.VKButton" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/vk_button</item>
+        <item name="colorButtonNormal">@color/custom_button_login</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textAllCaps">true</item>
     </style>

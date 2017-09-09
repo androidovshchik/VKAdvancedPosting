@@ -25,7 +25,7 @@ public class ActivityWallPost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        final Bitmap photo = null;//ew Bitmap();//getPhoto();
+        /*final Bitmap photo = null;//ew Bitmap();//getPhoto();
         VKRequest request = VKApi.uploadWallPhotoRequest(new VKUploadImage(photo, VKImageParameters.jpgImage(0.9f)),
                 0, 0);
         request.executeWithListener(new VKRequest.VKRequestListener() {
@@ -40,7 +40,7 @@ public class ActivityWallPost extends AppCompatActivity {
             public void onError(VKError error) {
                 //showError(error);
             }
-        });
+        });*/
     }
 /*
     private void makePost(VKAttachments attachments, String message) {

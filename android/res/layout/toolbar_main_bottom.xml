@@ -12,6 +12,7 @@
         android:layout_weight="1"/>
 
     <Button
+        android:id="@+id/actionSend"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingTop="12dp"

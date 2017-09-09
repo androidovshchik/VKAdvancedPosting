@@ -1,5 +1,6 @@
 package rf.androidovshchik.vkadvancedposting;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
@@ -112,6 +113,11 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 				break;
 		}
 	}
+
+    @OnClick(R.id.actionSend)
+    public void onSend() {
+        startActivity(new Intent(getApplicationContext(), ActivityWallPost.class));
+    }
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
