@@ -18,13 +18,13 @@ import butterknife.OnClick;
 import rf.androidovshchik.vkadvancedposting.stickers.AdapterStickers;
 import rf.androidovshchik.vkadvancedposting.stickers.DecorationStickers;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
-import rf.androidovshchik.vkadvancedposting.views.ToolbarLayout;
+import rf.androidovshchik.vkadvancedposting.views.TopToolbarLayout;
 import timber.log.Timber;
 
 public class ActivityMain extends AppCompatActivity implements AndroidFragmentApplication.Callbacks {
 
-	@BindView(R.id.toolbarContainer)
-	public ToolbarLayout toolbar;
+	@BindView(R.id.topToolbarContainer)
+	public TopToolbarLayout topToolbar;
 
 	@BindView(R.id.stickersContainer)
 	public ViewGroup stickersContainer;
@@ -78,13 +78,13 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putBoolean(ToolbarLayout.EXTRA_ACTIVE_POST, toolbar.isActivePost);
+		outState.putBoolean(TopToolbarLayout.EXTRA_ACTIVE_POST, topToolbar.isActivePost);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		toolbar.isActivePost = savedInstanceState.getBoolean(ToolbarLayout.EXTRA_ACTIVE_POST);
+		topToolbar.isActivePost = savedInstanceState.getBoolean(TopToolbarLayout.EXTRA_ACTIVE_POST);
 	}
 
 	@OnClick(R.id.actionFont)
@@ -92,12 +92,12 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 
 	@OnClick(R.id.actionPost)
 	public void onPost() {
-        toolbar.onPostClicked();
+        topToolbar.onPostClicked();
     }
 
 	@OnClick(R.id.actionHistory)
 	public void onHistory() {
-        toolbar.onHistoryClicked();
+        topToolbar.onHistoryClicked();
 	}
 
 	@OnClick(R.id.actionSticker)
@@ -116,7 +116,7 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		toolbar.startSlideAnimation(true);
+		topToolbar.startSlideAnimation(true);
 	}
 
 	@Override

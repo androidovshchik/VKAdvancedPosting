@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
 
-public class ToolbarLayout extends RelativeLayout {
+public class TopToolbarLayout extends RelativeLayout {
 
     public static final String EXTRA_ACTIVE_POST = "activePost";
 
@@ -51,21 +51,21 @@ public class ToolbarLayout extends RelativeLayout {
     private ObjectAnimator alphaPost;
     private ObjectAnimator alphaHistory;
 
-    public ToolbarLayout(Context context) {
+    public TopToolbarLayout(Context context) {
         super(context);
     }
 
-    public ToolbarLayout(Context context, AttributeSet attrs) {
+    public TopToolbarLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TopToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("unused")
-    public ToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TopToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
@@ -113,7 +113,7 @@ public class ToolbarLayout extends RelativeLayout {
             alphaPost.setFloatValues(getRatio(POST_ALPHA_FACTOR, currentDistance), 1f);
             alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1 +
                             MIN_TEXT_OPACITY, MIN_TEXT_OPACITY);
-            animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME *
+            animatorSet.setDuration(immediately ? 0 : Math.round(ANIMATION_MAX_TIME *
                     currentDistance / sliderMaxDistance));
         } else {
             sliderTranslationX.setFloatValues(currentDistance, sliderMaxDistance);
@@ -124,11 +124,8 @@ public class ToolbarLayout extends RelativeLayout {
             alphaPost.setFloatValues(getRatio(POST_ALPHA_FACTOR, currentDistance), MIN_TEXT_OPACITY);
             alphaHistory.setFloatValues(getRatio(HISTORY_ALPHA_FACTOR, currentDistance) - 1 +
                     MIN_TEXT_OPACITY, 1f);
-            animatorSet.setDuration(Math.round(ANIMATION_MAX_TIME * (sliderMaxDistance -
-                    currentDistance) / sliderMaxDistance));
-        }
-        if (immediately) {
-            animatorSet.setDuration(0);
+            animatorSet.setDuration(immediately ? 0 : Math.round(ANIMATION_MAX_TIME *
+                    (sliderMaxDistance - currentDistance) / sliderMaxDistance));
         }
         animatorSet.start();
     }

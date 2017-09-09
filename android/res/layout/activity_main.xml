@@ -10,7 +10,13 @@
         android:layout_height="match_parent"/>
 
     <include
-        layout="@layout/toolbar_main" />
+        layout="@layout/toolbar_main_top" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottomToolbarHeight"
+        android:layout_gravity="bottom"
+        layout="@layout/toolbar_main_bottom" />
 
     <include
         layout="@layout/bottom_sheet_stickers" />
