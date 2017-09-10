@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="topToolbarHeight">48dp</dimen>
-    <dimen name="bottomToolbarHeight">56dp</dimen>
+    <dimen name="toolbar_bottom_height">56dp</dimen>
 </resources>

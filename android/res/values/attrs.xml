@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TrashFab">
+        <attr name="visibleMarginBottom" format="dimension" />
+        <attr name="radiusAppear" format="dimension" />
+        <attr name="radiusOpen" format="dimension" />
+    </declare-styleable>
+</resources>
