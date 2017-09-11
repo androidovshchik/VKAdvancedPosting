@@ -1,7 +1,6 @@
 package rf.androidovshchik.vkadvancedposting;
 
 import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector;
 
 public abstract class PostGeneratorAdapter extends GestureDetector.GestureAdapter
@@ -11,11 +10,11 @@ public abstract class PostGeneratorAdapter extends GestureDetector.GestureAdapte
 
     @Override
     public void pause() {
-        Gdx.app.log(TAG, "pause");
+        GdxLog.f(TAG, "pause");
     }
 
     @Override
     public void resume() {
-        Gdx.app.log(TAG, "resume");
+        GdxLog.f(TAG, "resume");
     }
 }
