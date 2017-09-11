@@ -5,7 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class Sticker extends Image {
 
-    public float startScale;
+    public boolean isScaling = false;
+    public boolean isRotating = false;
+
+    public float startScale = 1f;
 
     public Sticker(Texture texture) {
         super(texture);

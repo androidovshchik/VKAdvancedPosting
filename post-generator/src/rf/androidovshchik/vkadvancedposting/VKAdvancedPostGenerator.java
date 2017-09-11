@@ -6,8 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class VKAdvancedPostGenerator extends PostGeneratorAdapter {
 
@@ -54,6 +54,55 @@ public class VKAdvancedPostGenerator extends PostGeneratorAdapter {
 	}
 
 	@Override
+	public boolean touchDown(float x, float y, int pointer, int button) {
+		if (pointer == 1) {
+			Gdx.app.log(TAG, "touchDown pointer1 x: " + x + " y: " + y);
+			Sticker sticker = (Sticker) stage.getActors().get(stickersDragListener.stickerIndex);
+			sticker.startScale = sticker.getScaleX();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean zoom(float initialDistance, float distance) {
+		if (stickersDragListener.stickerIndex != StickersDragListener.NONE) {
+			Gdx.app.log(TAG, "zoom initialDistance: " + initialDistance + " distance: " + distance);
+			Sticker sticker = (Sticker) stage.getActors().get(stickersDragListener.stickerIndex);
+			float pointerScale = distance / initialDistance;
+			float targetScale = sticker.startScale * pointerScale;
+			sticker.setScale(targetScale);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1,
+						  Vector2 pointer2) {
+		//Sticker sticker = (Sticker) stage.getActors().get(stickersDragListener.stickerIndex);
+		/*Vector2 startVector = initialPointer1.sub(pointer1);
+		Vector2 currentVector = initialPointer2.sub(pointer2);
+		//double startAngle = Math.atan2(startVector.y, startVector.x);
+		//double endAngle = Math.atan2(currentVector.y, currentVector.x);
+		//double deltaAngle = endAngle - startAngle;
+		//Gdx.app.log(TAG, "pinch deltaAngle: " + deltaAngle);
+		float scale = currentVector.len() / startVector.len();
+		Gdx.app.log(TAG, "pinch scale: " + scale + " stickerScale: " + sticker.getScaleX());
+		if (!Float.isNaN(scale)) {
+			sticker.setScale(scale);
+		}
+		pointer1.dst(pointer2)*/
+		return false;
+	}
+
+	@Override
+	public void pinchStop() {
+		if (stickersDragListener.stickerIndex != StickersDragListener.NONE) {
+			Gdx.app.log(TAG, "pinchStop");
+			Sticker sticker = (Sticker) stage.getActors().get(stickersDragListener.stickerIndex);
+		}
+	}
+
+	@Override
 	public void resize(int width, int height) {}
 
 	@Override
@@ -64,10 +113,18 @@ public class VKAdvancedPostGenerator extends PostGeneratorAdapter {
 
 	public void addSticker(int index, float x, float y, float rotation) {
 		Texture texture = new Texture(Gdx.files.internal("stickers/" + index + ".png"));
-		Image image = new Image(texture);
-		image.setPosition(x, y);
-		image.setRotation(rotation);
-		image.addListener(stickersDragListener);
-		stage.addActor(image);
+		Sticker sticker = new Sticker(texture);
+		sticker.setPosition(x, y);
+		sticker.setRotation(rotation);
+		sticker.addListener(stickersDragListener);
+		sticker.setUserObject(stage.getActors().size);
+		stage.addActor(sticker);
+	}
+
+	public void removeSticker() {
+		// TODO remove
+		for (int i = 0; i < stage.getActors().size; i++) {
+			stage.getActors().get(i).setUserObject(i);
+		}
 	}
 }

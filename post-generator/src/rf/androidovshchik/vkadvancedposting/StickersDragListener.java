@@ -17,7 +17,7 @@ public class StickersDragListener extends InputListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         if (pointer == 0) {
-            Gdx.app.log(TAG, "touchDown x: " + x + " y: " + y);
+            Gdx.app.log(TAG, "touchDown pointer0 x: " + x + " y: " + y);
             stickerIndex = (Integer) event.getListenerActor().getUserObject();
             startX = x;
             startY = y;
@@ -28,7 +28,7 @@ public class StickersDragListener extends InputListener {
     @Override
     public void touchDragged(InputEvent event, float x, float y, int pointer) {
         if (pointer == 0) {
-            Gdx.app.log(TAG, "touchDragged x: " + x + " y: " + y);
+            Gdx.app.log(TAG, "touchDragged pointer0 x: " + x + " y: " + y);
             event.getListenerActor().moveBy(x - startX, y - startY);
         }
     }
@@ -36,7 +36,7 @@ public class StickersDragListener extends InputListener {
     @Override
     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
         if (pointer == 0) {
-            Gdx.app.log(TAG, "touchUp x: " + x + " y: " + y);
+            Gdx.app.log(TAG, "touchUp pointer0 x: " + x + " y: " + y);
             stickerIndex = NONE;
         }
     }
