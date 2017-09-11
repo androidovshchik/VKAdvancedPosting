@@ -77,7 +77,7 @@ public class VKAdvancedPostGenerator extends PostGeneratorAdapter {
 			Sticker sticker = getCurrentSticker();
 			if (sticker != null) {
 				sticker.isPinching = true;
-				sticker.setPinchStarts();
+				sticker.setPinchStarts(coordinates.x, coordinates.y);
 			}
 		}
 		return false;
@@ -86,50 +86,26 @@ public class VKAdvancedPostGenerator extends PostGeneratorAdapter {
 	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1,
 						  Vector2 pointer2) {
-		pointer2 = stickers.screenToStageCoordinates(pointer2);
-		GdxLog.print(TAG, "pinch" + pointer2.toString());
+		// initialPointer doesn't change
+		// all vectors contains device coordinates
 		Sticker sticker = getCurrentSticker();
 		if (sticker == null) {
 			return false;
 		}
-		/*var startCenter = initialPointer1.sub(pointer1).scl(0.5f) + point#1.start
-		var currentCenter = (point#0.current - point#1.current)/2 + point#1.current
-		var rawTrans = currentCenter - startCenter
-		var startCenter = (point#0.start - point#1.start)/2 + point#1.start
-		var currentCenter = (point#0.current - point#1.current)/2 + point#1.current
-		var rawTrans = currentCenter - startCenter*/
-		//Sticker sticker = (Sticker) stickers.getActors().get(stickersDragListener.sticker);
-		/*Vector2 startVector = initialPointer1.sub(pointer1);
-		Vector2 currentVector = initialPointer2.sub(pointer2);
-		//double startAngle = Math.atan2(startVector.y, startVector.x);
-		//double endAngle = Math.atan2(currentVector.y, currentVector.x);
-		//double deltaAngle = endAngle - startAngle;
-		//Gdx.app.log(TAG, "pinch deltaAngle: " + deltaAngle);
-		float scale = currentVector.len() / startVector.len();
-		Gdx.app.log(TAG, "pinch scale: " + scale + " stickerScale: " + sticker.getScaleX());
-		if (!Float.isNaN(scale)) {
-			sticker.setScale(scale);
-		}
-		pointer1.dst(pointer2)*/
-		//Sticker sticker = (Sticker) stage.getActors().get(stickersDragListener.stickerIndex);
-		/*Vector2 startVector = initialPointer1.sub(pointer1);
-		Vector2 currentVector = initialPointer2.sub(pointer2);
-		//double startAngle = Math.atan2(startVector.y, startVector.x);
-		//double endAngle = Math.atan2(currentVector.y, currentVector.x);
-		//double deltaAngle = endAngle - startAngle;
-		//Gdx.app.log(TAG, "pinch deltaAngle: " + deltaAngle);
-		float scale = currentVector.len() / startVector.len();
-		Gdx.app.log(TAG, "pinch scale: " + scale + " stickerScale: " + sticker.getScaleX());
-		if (!Float.isNaN(scale)) {
-			sticker.setScale(scale);
-		}
-		pointer1.dst(pointer2)*/
-		/*
-		* Gdx.app.log(TAG, "zoom initialDistance: " + initialDistance + " distance: " + distance);
-			Sticker sticker = (Sticker) stage.getActors().get(stickersDragListener.stickerIndex);
-			float pointerScale = distance / initialDistance;
-			float targetScale = sticker.startScale * pointerScale;
-			sticker.setScale(targetScale);*/
+
+		Vector2 startVector = new Vector2(initialPointer1).sub(initialPointer2);
+		Vector2 currentVector = new Vector2(pointer1).sub(pointer2);
+		sticker.setScale(sticker.startScale * currentVector.len() / startVector.len());
+
+		float startAngle = (float) Math.toDegrees(Math.atan2(startVector.y, startVector.x));
+		float endAngle = (float) Math.toDegrees(Math.atan2(currentVector.y, currentVector.x));
+		sticker.setRotation(sticker.startRotation + endAngle - startAngle);
+
+		Vector2 startCenter = new Vector2(startVector).scl(0.5f).add(initialPointer2);
+		Vector2 currentCenter = new Vector2(currentVector).scl(0.5f).add(pointer2);
+		Vector2 rawTrans = new Vector2(currentCenter).sub(startCenter);
+		sticker.setPosition(rawTrans.x, rawTrans.y);
+
 		return false;
 	}
 

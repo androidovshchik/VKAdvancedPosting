@@ -32,20 +32,12 @@ public class Sticker extends Image {
         GdxLog.f(TAG, "setDragStarts startDragX: %f startDragY: %f", startDragX, startDragY);
     }
 
-    public void setPinchStarts() {
-        startPinchX = getX();
-        startPinchY = getY();
+    public void setPinchStarts(float x, float y) {
+        startPinchX = x;
+        startPinchY = y;
         startScale = getScaleX();
         startRotation = getRotation();
         GdxLog.f(TAG, "setPinchStarts startPinchX: %f startPinchY: %f startScale: %f startRotation: %f",
                 startPinchX, startPinchY, startScale, startRotation);
-    }
-
-    public void move(float x, float y) {
-        float diffX = x - startDragX;
-        float diffY = y - startDragY;
-        GdxLog.f(TAG, "move getX: %f getY: %f x: %f y: %f diffX: %f diffY: %f", getX(), getY(),
-                x, y, diffX, diffY);
-        moveBy(diffX, diffY);
     }
 }

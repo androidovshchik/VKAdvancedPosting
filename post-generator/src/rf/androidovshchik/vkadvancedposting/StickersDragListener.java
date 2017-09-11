@@ -27,7 +27,8 @@ public class StickersDragListener extends InputListener {
         if (pointer == FIRST_FINGER) {
             Sticker sticker = (Sticker) event.getListenerActor();
             if (!sticker.isPinching) {
-                sticker.move(x, y);
+                GdxLog.f(TAG, "move x: %f y: %f", x, y);
+                sticker.moveBy(x - sticker.startDragX, y - sticker.startDragY);
             }
         }
     }
