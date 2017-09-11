@@ -1,6 +1,5 @@
 package rf.androidovshchik.vkadvancedposting;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
@@ -15,7 +14,7 @@ public class StickersDragListener extends InputListener {
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         if (pointer == FIRST_FINGER) {
-            Gdx.app.log(TAG, "touchDown pointer0");
+            GdxLog.print(TAG, "touchDown pointer0");
             Sticker sticker = (Sticker) event.getListenerActor();
             index = sticker.index;
             sticker.setDragStarts(x, y);
@@ -36,7 +35,7 @@ public class StickersDragListener extends InputListener {
     @Override
     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
         if (pointer == FIRST_FINGER) {
-            Gdx.app.log(TAG, "touchUp pointer0 x: " + x + " y: " + y);
+            GdxLog.f(TAG, "touchDown pointer0 x: %f y: %f", x, y);
             index = Sticker.NONE;
         }
     }

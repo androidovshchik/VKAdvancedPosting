@@ -10,11 +10,11 @@ public abstract class PostGeneratorAdapter extends GestureDetector.GestureAdapte
 
     @Override
     public void pause() {
-        GdxLog.f(TAG, "pause");
+        GdxLog.print(TAG, "pause");
     }
 
     @Override
     public void resume() {
-        GdxLog.f(TAG, "resume");
+        GdxLog.print(TAG, "resume");
     }
 }
