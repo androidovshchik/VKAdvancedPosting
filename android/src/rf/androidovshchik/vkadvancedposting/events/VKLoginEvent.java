@@ -2,9 +2,9 @@ package rf.androidovshchik.vkadvancedposting.events;
 
 public class VKLoginEvent {
 
-    public boolean needLogin = false;
+    public boolean isLogged;
 
-    public VKLoginEvent(boolean needLogin) {
-        this.needLogin = needLogin;
+    public VKLoginEvent(boolean isLogged) {
+        this.isLogged = isLogged;
     }
 }
