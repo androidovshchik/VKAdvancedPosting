@@ -55,6 +55,8 @@ project(":android") {
         compile 'com.jakewharton.timber:timber:4.5.1'
         compile 'com.github.bumptech.glide:glide:4.1.1'
         annotationProcessor 'com.github.bumptech.glide:compiler:4.1.1'
+        compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+        compile 'io.reactivex.rxjava2:rxjava:2.1.2'
         compile 'org.greenrobot:eventbus:3.0.0'
         compile 'com.vk:androidsdk:1.6.9'
         compile project(":post-generator")

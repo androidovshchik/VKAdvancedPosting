@@ -30,6 +30,12 @@ android {
             storePassword 'android'
             keyPassword 'android'
         }
+        release {
+            storeFile file('keystore/release.jks')
+            keyAlias 'androidovshchik'
+            storePassword 'release'
+            keyPassword 'release'
+        }
     }
     buildTypes {
         release {
