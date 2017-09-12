@@ -12,7 +12,18 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+
 public class DialogWallPost extends DialogFragment {
+
+    public static final String EXTRA_POST_PUBLISHED = "postPublished";
+
+    private Unbinder unbinder;
+
+    private boolean isFirstStart = false;
+    private boolean isPostPublished = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,9 +32,20 @@ public class DialogWallPost extends DialogFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        isFirstStart = savedInstanceState == null;
+        if (savedInstanceState != null) {
+            isPostPublished = savedInstanceState.getBoolean(EXTRA_POST_PUBLISHED, false);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_wall_post, container, false);
+        View view = inflater.inflate(R.layout.dialog_wall_post, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -42,12 +64,34 @@ public class DialogWallPost extends DialogFragment {
     public void onStart() {
         super.onStart();
         Window window = getDialog().getWindow();
-        if (window != null) {
+        if (isFirstStart && window != null) {
             ObjectAnimator appearing = ObjectAnimator.ofFloat(window.getDecorView(),
                     "alpha", 0f, 1f);
             appearing.setInterpolator(new AccelerateInterpolator());
             appearing.setDuration(300);
             appearing.start();
         }
+    }
+
+    @OnClick(R.id.actionCancel)
+    protected void onCancel() {
+        dismissAllowingStateLoss();
+    }
+
+    @OnClick(R.id.actionRepeat)
+    protected void onRepeat() {
+        dismissAllowingStateLoss();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(EXTRA_POST_PUBLISHED, isPostPublished);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
