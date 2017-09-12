@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="VKButton.Login" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">#639fcd</item>
         <item name="android:textColor">@color/white</item>
+        <item name="colorButtonNormal">#639fcd</item>
     </style>
     <style name="VKButton.Send" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/white</item>
         <item name="colorButtonNormal">#388cc7</item>
-        <item name="android:textColor">@color/white</item>
     </style>
-    <style name="VKButton.SendSucceed" parent="VKButton.Send"/>
-    <style name="VKButton.SendFailed" parent="Widget.AppCompat.Button.Colored">
+    <style name="VKButton.Cancel" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">@color/white</item>
         <item name="colorButtonNormal">#d2e3f1</item>
-        <item name="android:textColor">@color/white</item>
     </style>
+    <style name="VKButton.Repeat" parent="VKButton.Send"/>
 </resources>
