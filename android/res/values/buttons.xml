@@ -9,7 +9,7 @@
         <item name="colorButtonNormal">#388cc7</item>
     </style>
     <style name="VKButton.Cancel" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/cornflower_blue_two</item>
         <item name="colorButtonNormal">#d2e3f1</item>
     </style>
     <style name="VKButton.Repeat" parent="VKButton.Send"/>

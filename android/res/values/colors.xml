@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#2c2d2e</color>
-    <color name="grey">#909499</color>
     <color name="sun_yellow">#ffcc33</color>
     <color name="orangish">#ff7733</color>
     <color name="mid_green">#47b347</color>
-    <color name="reddish_pink">#ff3355</color>
-    <color name="berry">#990f6b</color>
     <color name="light_lavender">#f8a6ff</color>
     <color name="dark_periwinkle">#6c6cd9</color>
-    <color name="cornflower_blue_two">#528bcc</color>
     <color name="sickly_yellow">#cbe645</color>
-    <color name="cool_blue">#4680c2</color>
     <color name="white">#ffffff</color>
+    <color name="reddish_pink">#ff3355</color>
+    <color name="berry">#990f6b</color>
+    <color name="cornflower_blue_two">#528bcc</color>
+    <color name="cool_blue">#4680c2</color>
     <color name="cornflower_blue">#5692d7</color>
+    <color name="dark_sky_blue">#2e7ae6</color>
+    <color name="white_36">#5cffffff</color>
 </resources>

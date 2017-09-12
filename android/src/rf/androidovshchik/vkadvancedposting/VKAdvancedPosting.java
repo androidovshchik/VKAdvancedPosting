@@ -29,7 +29,6 @@ public class VKAdvancedPosting extends Application {
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
                     .detectAll()
                     .penaltyLog()
-                    .penaltyDeath()
                     .build());
         } else {
             Timber.plant(new CrashReportingTree());

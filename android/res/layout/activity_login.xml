@@ -14,9 +14,9 @@
         android:id="@+id/actionLogin"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
         android:text="@string/login.button"
-        android:theme="@style/VKButton.Login"
-        android:layout_margin="12dp"/>
+        android:theme="@style/VKButton.Login"/>
 
 </RelativeLayout>
