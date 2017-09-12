@@ -2,10 +2,16 @@
     <style name="Theme.Base" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:textSize">16sp</item>
+    </style>
+    <style name="Theme.Main" parent="Theme.Base">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+    <style name="Theme.Login" parent="Theme.Base">
+        <item name="android:windowBackground">@drawable/gradient_login</item>
     </style>
 </resources>

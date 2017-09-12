@@ -14,8 +14,4 @@
     <color name="cool_blue">#4680c2</color>
     <color name="white">#ffffff</color>
     <color name="cornflower_blue">#5692d7</color>
-    <color name="custom_button_login">#639fcd</color>
-    <color name="custom_button_send">#388cc7</color>
-    <color name="custom_button_sent_succeed">@color/custom_button_send</color>
-    <color name="custom_button_sent_failed">#d2e3f1</color>
 </resources>
