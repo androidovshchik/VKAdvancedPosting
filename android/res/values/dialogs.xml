@@ -1,0 +1,7 @@
+<resources>
+    <style name="Dialog.WallPost" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:padding">0dp</item>
+    </style>
+</resources>
