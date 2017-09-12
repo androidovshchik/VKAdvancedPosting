@@ -6,10 +6,16 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+import rf.androidovshchik.vkadvancedposting.R;
 
 public class WallPostLayout extends RelativeLayout {
+
+    @BindView(R.id.progressBar)
+    protected MaterialProgressBar progressBar;
 
     private Unbinder unbinder;
 

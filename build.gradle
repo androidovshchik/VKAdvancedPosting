@@ -59,6 +59,7 @@ project(":android") {
         compile 'io.reactivex.rxjava2:rxjava:2.1.2'
         compile 'org.greenrobot:eventbus:3.0.0'
         compile 'com.vk:androidsdk:1.6.9'
+        compile 'me.zhanghai.android.materialprogressbar:library:1.4.2'
         compile project(":post-generator")
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
