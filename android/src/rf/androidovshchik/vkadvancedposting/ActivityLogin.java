@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +39,7 @@ public class ActivityLogin extends AppCompatActivity {
     @OnClick(R.id.actionLogin)
     public void onLogin() {
         actionLogin.setEnabled(false);
-        VKSdk.login(this);
+        VKSdk.login(this, VKScope.WALL);
     }
 
     @SuppressWarnings("unused")

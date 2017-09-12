@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
+import com.vk.sdk.VKSdk;
 
 import java.io.IOException;
 
@@ -32,12 +33,32 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@BindView(R.id.stickersRecyclerView)
 	public RecyclerView stickersRecyclerView;
 
+	public FragmentPostGenerator postGenerator;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
+		if (!VKSdk.isLoggedIn()) {
+			startActivityForResult(new Intent(getApplicationContext(), ActivityLogin.class), 1);
+		}
+		postGenerator = (FragmentPostGenerator) getSupportFragmentManager().
+				findFragmentByTag(FragmentPostGenerator.class.getSimpleName());
+		if (postGenerator == null) {
+			postGenerator = new FragmentPostGenerator();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(R.id.postGenerator, postGenerator,
+							FragmentPostGenerator.class.getSimpleName())
+					.commitAllowingStateLoss();
+		}
 		setupStickers();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 	}
 
 	private void setupStickers() {
@@ -116,13 +137,18 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 
     @OnClick(R.id.actionSend)
     public void onSend() {
-        startActivity(new Intent(getApplicationContext(), ActivityWallPost.class));
+
     }
 
 	@Override
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
 		topToolbar.startSlideAnimation(true);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
 	}
 
 	@Override
