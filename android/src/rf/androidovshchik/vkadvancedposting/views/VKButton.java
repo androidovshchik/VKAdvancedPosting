@@ -18,7 +18,7 @@ public class VKButton extends AppCompatButton {
 
     private static final int ANIMATION_TIME_APPEAR = 300;
     private static final int ANIMATION_DELAY_APPEAR = 500;
-    private static final int ANIMATION_TIME_FADE = 500;
+    private static final int ANIMATION_TIME_FADE = 200;
 
     public VKButton(Context context, @NonNull AttributeSet attrs) {
         this(context, attrs, android.support.v7.appcompat.R.attr.buttonStyle);

@@ -13,10 +13,23 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.photo.VKImageParameters;
+import com.vk.sdk.api.photo.VKUploadImage;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import rf.androidovshchik.vkadvancedposting.components.VKRequestCallback;
+import rf.androidovshchik.vkadvancedposting.events.VKResponseEvent;
+import rf.androidovshchik.vkadvancedposting.utils.DiskUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
 
 public class DialogWallPost extends DialogFragment {
@@ -34,6 +47,7 @@ public class DialogWallPost extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Dialog_WallPost);
+        uploadImage();
     }
 
     @Override
@@ -65,6 +79,7 @@ public class DialogWallPost extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Window window = getDialog().getWindow();
         if (wallPostLayout.isFirstStart && window != null) {
             ObjectAnimator appearing = ObjectAnimator.ofFloat(window.getDecorView(),
@@ -74,6 +89,20 @@ public class DialogWallPost extends DialogFragment {
             appearing.setDuration(300);
             appearing.start();
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
+    public void onVKResponseEvent(VKResponseEvent event) {
+
+    }
+
+    private void uploadImage() {
+        long userId = Long.parseLong(VKAccessToken.currentToken().userId);
+        VKRequest request =
+                VKApi.uploadWallPhotoRequest(new VKUploadImage(DiskUtil.getPhoto(getContext()),
+                        VKImageParameters.pngImage()), userId, 0);
+        request.executeWithListener(new VKRequestCallback());
     }
 
     @OnClick(R.id.actionCancel)
@@ -93,6 +122,12 @@ public class DialogWallPost extends DialogFragment {
         outState.putBoolean(EXTRA_IS_FIRST_START, false);
         outState.putBoolean(EXTRA_IS_PUBLISHING, wallPostLayout.isPublishing);
         outState.putBoolean(EXTRA_HAS_POST_PUBLISHED, wallPostLayout.hasPostPublished);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

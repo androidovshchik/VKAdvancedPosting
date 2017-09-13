@@ -1,43 +1,43 @@
 package rf.androidovshchik.vkadvancedposting.themes;
 
-import android.net.Uri;
+import android.support.annotation.ArrayRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
+import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
 public class AdapterThemes extends RecyclerView.Adapter<ViewHolderThemes> {
 
-    public static final int MIN_ITEM_SIZE = ViewUtil.dp2px(78);
+    public static final int ITEM_SIZE = ViewUtil.dp2px(78);
 
-    private int itemsCount;
-    private int itemSize;
+    @ArrayRes
+    private final static int[] GRADIENT_THEME_IDS = new int[] {
+            R.drawable.gradient_theme1,
+            R.drawable.gradient_theme2,
+            R.drawable.gradient_theme3,
+            R.drawable.gradient_theme4,
+            R.drawable.gradient_theme5
+    };
 
-    public AdapterThemes(int itemsCount, int itemSize) {
-        this.itemsCount = itemsCount;
-        this.itemSize = itemSize;
-    }
+    public AdapterThemes() {}
 
     @Override
     public ViewHolderThemes onCreateViewHolder(ViewGroup parent, int viewType) {
         ImageView itemView = new ImageView(parent.getContext());
-        itemView.setLayoutParams(new ViewGroup.LayoutParams(itemSize, itemSize));
+        itemView.setLayoutParams(new ViewGroup.LayoutParams(ITEM_SIZE, ITEM_SIZE));
         return new ViewHolderThemes(itemView);
     }
 
     @Override
     public int getItemCount() {
-        return itemsCount;
+        return 1 + GRADIENT_THEME_IDS.length + 1;
     }
 
     @Override
     public void onBindViewHolder(ViewHolderThemes holder, int position) {
-        Glide.with(holder.itemView.getContext())
-                .load(Uri.parse("file:///android_asset/stickers/" + (position + 1) + ".png"))
-                .into((ImageView) holder.itemView);
+
     }
 
     @Override

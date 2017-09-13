@@ -43,7 +43,7 @@ public class ActivityLogin extends AppCompatActivity {
     }
 
     @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.POSTING)
+    @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
     public void onVKLoginEvent(VKLoginEvent event) {
         if (event.isLogged) {
             setResult(RESULT_OK, new Intent());

@@ -12,15 +12,20 @@ import android.view.ViewGroup;
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 import com.vk.sdk.VKSdk;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
 import rf.androidovshchik.vkadvancedposting.stickers.AdapterStickers;
 import rf.androidovshchik.vkadvancedposting.stickers.DecorationStickers;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
-import rf.androidovshchik.vkadvancedposting.views.TopToolbarLayout;
+import rf.androidovshchik.vkadvancedposting.views.layout.TopToolbarLayout;
 import timber.log.Timber;
 
 public class ActivityMain extends AppCompatActivity implements AndroidFragmentApplication.Callbacks {
@@ -33,7 +38,9 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@BindView(R.id.stickersRecyclerView)
 	public RecyclerView stickersRecyclerView;
 
-	public FragmentPostGenerator postGenerator;
+	private FragmentPostGenerator postGenerator;
+
+	private DialogWallPost dialogWallPost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,24 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 		if (!VKSdk.isLoggedIn()) {
 			startActivityForResult(new Intent(getApplicationContext(), ActivityLogin.class), 1);
 		}
+		setupPostGenerator();
+		setupStickers();
+		dialogWallPost = new DialogWallPost();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		EventBus.getDefault().register(this);
+	}
+
+	@SuppressWarnings("unused")
+	@Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
+	public void onVKInvalidTokenEvent(VKInvalidTokenEvent event) {
+
+	}
+
+	private void setupPostGenerator() {
 		postGenerator = (FragmentPostGenerator) getSupportFragmentManager().
 				findFragmentByTag(FragmentPostGenerator.class.getSimpleName());
 		if (postGenerator == null) {
@@ -53,12 +78,6 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 							FragmentPostGenerator.class.getSimpleName())
 					.commitAllowingStateLoss();
 		}
-		setupStickers();
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
 	}
 
 	private void setupStickers() {
@@ -110,7 +129,9 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	}
 
 	@OnClick(R.id.actionFont)
-	public void onFont() {}
+	public void onFont() {
+		dialogWallPost.show(getSupportFragmentManager(), DialogWallPost.class.getSimpleName());
+	}
 
 	@OnClick(R.id.actionPost)
 	public void onPost() {
@@ -149,6 +170,7 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	@Override
 	public void onStop() {
 		super.onStop();
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override

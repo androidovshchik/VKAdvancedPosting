@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.views;
+package rf.androidovshchik.vkadvancedposting.views.layout;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -23,7 +23,7 @@ public class TopToolbarLayout extends RelativeLayout {
     private static final float MIN_LAYOUT_OPACITY = 0.92f;
     private static final float MIN_TEXT_OPACITY = 0.72f;
 
-    @BindView(R.id.background)
+    @BindView(R.id.topBackground)
     protected View background;
     @BindView(R.id.actionPost)
     protected View actionPost;

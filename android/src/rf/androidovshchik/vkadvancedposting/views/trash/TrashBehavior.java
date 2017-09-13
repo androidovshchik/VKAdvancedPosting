@@ -58,7 +58,7 @@ public class TrashBehavior extends CoordinatorLayout.Behavior<TrashFab>
         gestureDetector.onTouchEvent(event);
         if (hasLongPressed) {
             if (event.getAction() != MotionEvent.ACTION_MOVE) {
-                Timber.d("Event action != ACTION_MOVE");
+                Timber.d("Stopping trash calls");
                 hasLongPressed = false;
                 return false;
             }

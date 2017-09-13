@@ -12,12 +12,12 @@ public class VKLoginCallback implements VKCallback<VKAccessToken> {
 
     @Override
     public void onResult(VKAccessToken vkAccessToken) {
-        EventUtil.post(new VKLoginEvent(true));
+        EventUtil.postSticky(new VKLoginEvent(true));
     }
 
     @Override
     public void onError(VKError error) {
         Timber.e(error.errorMessage);
-        EventUtil.post(new VKLoginEvent(false));
+        EventUtil.postSticky(new VKLoginEvent(false));
     }
 }

@@ -33,7 +33,7 @@ public class VKAdvancedPosting extends Application {
         } else {
             Timber.plant(new CrashReportingTree());
         }
-        VKSdk.initialize(getApplicationContext());
         new VKTokenTracker().startTracking();
+        VKSdk.initialize(getApplicationContext());
     }
 }
