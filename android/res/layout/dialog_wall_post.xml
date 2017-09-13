@@ -13,10 +13,23 @@
         app:mpb_useIntrinsicPadding="false"
         app:mpb_indeterminateTint="@color/cornflower_blue_two"/>
 
-    <TextView
+    <ImageView
+        android:id="@+id/loaderImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/progressBar"/>
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_loader_success"
+        android:contentDescription="@string/app_name"/>
+
+    <TextView
+        android:id="@+id/loaderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:text="@string/main.publication_progress"
+        style="@style/TextStyle6"/>
 
     <rf.androidovshchik.vkadvancedposting.views.VKButton
         android:id="@+id/actionCancel"
@@ -25,7 +38,8 @@
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
         android:text="@string/main.button.cancel"
-        android:theme="@style/VKButton.Cancel"/>
+        android:theme="@style/VKButton.Cancel"
+        android:visibility="invisible"/>
 
     <rf.androidovshchik.vkadvancedposting.views.VKButton
         android:id="@+id/actionRepeat"
@@ -34,6 +48,7 @@
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
         android:text="@string/main.button.repeat"
-        android:theme="@style/VKButton.Repeat"/>
+        android:theme="@style/VKButton.Repeat"
+        android:visibility="gone"/>
 
 </rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout>
