@@ -3,6 +3,8 @@ package rf.androidovshchik.vkadvancedposting;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.input.GestureDetector;
 
+import rf.androidovshchik.vkadvancedposting.components.GdxLog;
+
 public abstract class PostGeneratorAdapter extends GestureDetector.GestureAdapter
         implements ApplicationListener {
 

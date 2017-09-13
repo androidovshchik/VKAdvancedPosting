@@ -1,7 +1,9 @@
-package rf.androidovshchik.vkadvancedposting;
+package rf.androidovshchik.vkadvancedposting.models;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
+import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 
 public class Sticker extends Image {
 

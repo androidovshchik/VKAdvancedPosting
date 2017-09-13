@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting;
+package rf.androidovshchik.vkadvancedposting.components;
 
 import com.badlogic.gdx.Gdx;
 
