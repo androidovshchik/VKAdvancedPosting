@@ -7,7 +7,6 @@
         <item name="android:textColor">@color/cornflower_blue_two</item>
     </style>
     <style name="TextStyle4">
-        <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0.04</item>
