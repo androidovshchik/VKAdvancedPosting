@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -67,6 +68,7 @@ public class DialogWallPost extends DialogFragment {
         if (isFirstStart && window != null) {
             ObjectAnimator appearing = ObjectAnimator.ofFloat(window.getDecorView(),
                     "alpha", 0f, 1f);
+            appearing.setRepeatCount(Animation.ABSOLUTE);
             appearing.setInterpolator(new AccelerateInterpolator());
             appearing.setDuration(300);
             appearing.start();

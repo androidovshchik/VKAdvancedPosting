@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:src="@drawable/ic_loader_success"
+        android:visibility="invisible"
         android:contentDescription="@string/app_name"/>
 
     <TextView
@@ -38,8 +39,7 @@
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
         android:text="@string/main.button.cancel"
-        android:theme="@style/VKButton.Cancel"
-        android:visibility="invisible"/>
+        android:theme="@style/VKButton.Cancel"/>
 
     <rf.androidovshchik.vkadvancedposting.views.VKButton
         android:id="@+id/actionRepeat"
