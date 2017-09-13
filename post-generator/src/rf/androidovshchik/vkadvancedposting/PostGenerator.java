@@ -14,6 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import rf.androidovshchik.vkadvancedposting.components.GdxLog;
+import rf.androidovshchik.vkadvancedposting.components.StickersDragListener;
+import rf.androidovshchik.vkadvancedposting.models.Sticker;
+
 public class PostGenerator extends PostGeneratorAdapter {
 
 	public static final String TAG = PostGenerator.class.getSimpleName();
@@ -26,6 +30,8 @@ public class PostGenerator extends PostGeneratorAdapter {
 
 	private Stage background;
 	private Stage stickers;
+	private Stage text;
+
 	private BitmapFont font;
 
 	private StickersDragListener stickersDragListener;
@@ -49,6 +55,8 @@ public class PostGenerator extends PostGeneratorAdapter {
 		stickers = new Stage(new FitViewport(worldWidth, worldHeight, camera));
 		stickersDragListener = new StickersDragListener();
 		addSticker(5, 200, 200, 1, 0);
+
+		text = new Stage(new FitViewport(worldWidth, worldHeight, camera));
 
 		font = new BitmapFont();
 
@@ -100,17 +108,16 @@ public class PostGenerator extends PostGeneratorAdapter {
 
 		Vector2 startVector = new Vector2(initialPointer1).sub(initialPointer2);
 		Vector2 currentVector = new Vector2(pointer1).sub(pointer2);
-		sticker.setScale(sticker.startScale * currentVector.len() / startVector.len());
 
 		float startAngle = (float) Math.toDegrees(Math.atan2(startVector.y, startVector.x));
 		float endAngle = (float) Math.toDegrees(Math.atan2(currentVector.y, currentVector.x));
-		sticker.setRotation(sticker.startRotation + endAngle - startAngle);
 
 		Vector2 startCenter = new Vector2(startVector).scl(0.5f).add(initialPointer2);
 		Vector2 currentCenter = new Vector2(currentVector).scl(0.5f).add(pointer2);
 		Vector2 rawTrans = new Vector2(currentCenter).sub(startCenter);
-		sticker.setPosition(rawTrans.x, rawTrans.y);
 
+		sticker.onPinch(rawTrans.x, rawTrans.y, sticker.startScale * currentVector.len() /
+				startVector.len(), sticker.startRotation + endAngle - startAngle);
 		return false;
 	}
 
@@ -126,8 +133,8 @@ public class PostGenerator extends PostGeneratorAdapter {
 	@Override
 	public void resize(int width, int height) {
 		GdxLog.print(TAG, "resize");
-		//background.getViewport().update(width, height, true);
-		//stickers.getViewport().update(width, height, true);
+		background.getViewport().update(width, height, true);
+		stickers.getViewport().update(width, height, true);
 	}
 
 	@Override
