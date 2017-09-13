@@ -1,14 +1,13 @@
 package rf.androidovshchik.vkadvancedposting.views.layout;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,9 +17,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import rf.androidovshchik.vkadvancedposting.R;
-import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.VKButton;
 
-public class WallPostLayout extends RelativeLayout {
+public class WallPostLayout extends RelativeLayout implements Animator.AnimatorListener {
 
     @BindView(R.id.progressBar)
     protected MaterialProgressBar progressBar;
@@ -29,15 +28,17 @@ public class WallPostLayout extends RelativeLayout {
     @BindView(R.id.loaderText)
     protected TextView loaderText;
     @BindView(R.id.actionCancel)
-    protected View actionCancel;
-    @BindView(R.id.actionRepeat)
-    protected View actionRepeat;
+    protected VKButton actionCancel;
+    @BindView(R.id.actionBackwards)
+    protected VKButton actionBackwards;
 
     public boolean isFirstStart = true;
     public boolean isPublishing = true;
     public boolean hasPostPublished = false;
 
     private AccelerateInterpolator accelerateInterpolator;
+    @Nullable
+    private ObjectAnimator cancelAppearing;
 
     private Unbinder unbinder;
 
@@ -70,29 +71,60 @@ public class WallPostLayout extends RelativeLayout {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         if (isFirstStart) {
-            int cancelMarginBottom =
-                    ((MarginLayoutParams) actionCancel.getLayoutParams()).bottomMargin;
-            ObjectAnimator appearing = ObjectAnimator.ofPropertyValuesHolder(actionCancel,
-                    PropertyValuesHolder.ofFloat(TRANSLATION_Y,
-                            cancelMarginBottom + ViewUtil.dp2px(4), 0),
-                    PropertyValuesHolder.ofFloat(View.ALPHA, 0, 1));
-            appearing.setRepeatCount(Animation.ABSOLUTE);
-            appearing.setInterpolator(accelerateInterpolator);
-            appearing.setDuration(300);
-            appearing.start();
+            cancelAppearing = actionCancel.createAnimationAppear(accelerateInterpolator);
+            cancelAppearing.addListener(this);
+            cancelAppearing.start();
         } else if (hasPostPublished) {
             onPublishSucceed();
         } else if (!isPublishing) {
             onPublishFailed();
+        } else {
+            actionCancel.setVisibility(VISIBLE);
+        }
+    }
+
+    @Override
+    public void onAnimationStart(Animator animator) {
+        if (isPublishing) {
+            actionCancel.setVisibility(VISIBLE);
+        }
+    }
+
+    @Override
+    public void onAnimationEnd(Animator animator) {
+        animator.removeListener(this);
+    }
+
+    @Override
+    public void onAnimationCancel(Animator animator) {
+        animator.removeListener(this);
+    }
+
+    @Override
+    public void onAnimationRepeat(Animator animator) {}
+
+    public void onPublishCancel() {
+        if (cancelAppearing != null && cancelAppearing.isRunning()) {
+            cancelAppearing.cancel();
         }
     }
 
     public void onPublishSucceed() {
+        if (cancelAppearing != null && cancelAppearing.isRunning()) {
+            cancelAppearing.end();
+        }
         loaderText.setText(R.string.main_publication_succeed);
     }
 
     public void onPublishFailed() {
+        if (cancelAppearing != null && cancelAppearing.isRunning()) {
+            cancelAppearing.end();
+        }
         loaderText.setText(R.string.main_publication_failed);
+    }
+
+    public void onPublishRetry() {
+
     }
 
     @Override

@@ -40,15 +40,16 @@
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
         android:text="@string/main.button.cancel"
+        android:visibility="invisible"
         android:theme="@style/VKButton.Cancel"/>
 
     <rf.androidovshchik.vkadvancedposting.views.VKButton
-        android:id="@+id/actionRepeat"
+        android:id="@+id/actionBackwards"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
-        android:text="@string/main.button.repeat"
+        android:text="@string/main.button.backwards"
         android:theme="@style/VKButton.Repeat"
         android:visibility="gone"/>
 

@@ -78,11 +78,12 @@ public class DialogWallPost extends DialogFragment {
 
     @OnClick(R.id.actionCancel)
     protected void onCancel() {
+        wallPostLayout.onPublishCancel();
         dismissAllowingStateLoss();
     }
 
-    @OnClick(R.id.actionRepeat)
-    protected void onRepeat() {
+    @OnClick(R.id.actionBackwards)
+    protected void onBackwards() {
         dismissAllowingStateLoss();
     }
 
