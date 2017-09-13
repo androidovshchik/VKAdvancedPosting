@@ -33,8 +33,9 @@ public class WallPostLayout extends RelativeLayout {
     @BindView(R.id.actionRepeat)
     protected View actionRepeat;
 
-    public boolean isFirstStart = false;
-    public boolean isPostPublished = false;
+    public boolean isFirstStart = true;
+    public boolean isPublishing = true;
+    public boolean hasPostPublished = false;
 
     private AccelerateInterpolator accelerateInterpolator;
 
@@ -68,14 +69,30 @@ public class WallPostLayout extends RelativeLayout {
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
-        int cancelMarginBottom = ((MarginLayoutParams) actionCancel.getLayoutParams()).bottomMargin;
-        ObjectAnimator appearing = ObjectAnimator.ofPropertyValuesHolder(actionCancel,
-                PropertyValuesHolder.ofFloat(TRANSLATION_Y, cancelMarginBottom + ViewUtil.dp2px(4), 0),
-                PropertyValuesHolder.ofFloat(View.ALPHA, 0, 1));
-        appearing.setRepeatCount(Animation.ABSOLUTE);
-        appearing.setInterpolator(accelerateInterpolator);
-        appearing.setDuration(300);
-        appearing.start();
+        if (isFirstStart) {
+            int cancelMarginBottom =
+                    ((MarginLayoutParams) actionCancel.getLayoutParams()).bottomMargin;
+            ObjectAnimator appearing = ObjectAnimator.ofPropertyValuesHolder(actionCancel,
+                    PropertyValuesHolder.ofFloat(TRANSLATION_Y,
+                            cancelMarginBottom + ViewUtil.dp2px(4), 0),
+                    PropertyValuesHolder.ofFloat(View.ALPHA, 0, 1));
+            appearing.setRepeatCount(Animation.ABSOLUTE);
+            appearing.setInterpolator(accelerateInterpolator);
+            appearing.setDuration(300);
+            appearing.start();
+        } else if (hasPostPublished) {
+            onPublishSucceed();
+        } else if (!isPublishing) {
+            onPublishFailed();
+        }
+    }
+
+    public void onPublishSucceed() {
+        loaderText.setText(R.string.main_publication_succeed);
+    }
+
+    public void onPublishFailed() {
+        loaderText.setText(R.string.main_publication_failed);
     }
 
     @Override

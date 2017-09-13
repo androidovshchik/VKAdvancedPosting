@@ -8,6 +8,8 @@
     <string name="main.button.send">Отправить</string>
     <string name="main.button.cancel">Отмена</string>
     <string name="main.button.repeat">Создать ещё</string>
+    <string name="main.button.retry">Попробовать ещё раз</string>
     <string name="main.publication_progress">Публикация&#8230;</string>
-    <string name="main.publication_end">Опубликовано!</string>
+    <string name="main.publication_succeed">Опубликовано!</string>
+    <string name="main.publication_failed">Не удалось опубликовать</string>
 </resources>

@@ -13,18 +13,22 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
 
 public class DialogWallPost extends DialogFragment {
 
-    public static final String EXTRA_POST_PUBLISHED = "postPublished";
+    public static final String EXTRA_IS_FIRST_START = "wallPostIsFirstStart";
+    public static final String EXTRA_IS_PUBLISHING = "wallPostIsPublishing";
+    public static final String EXTRA_HAS_POST_PUBLISHED = "wallPostHasPostPublished";
+
+    @BindView(R.id.wallPostContainer)
+    protected WallPostLayout wallPostLayout;
 
     private Unbinder unbinder;
-
-    private boolean isFirstStart = false;
-    private boolean isPostPublished = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,19 +37,16 @@ public class DialogWallPost extends DialogFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        isFirstStart = savedInstanceState == null;
-        if (savedInstanceState != null) {
-            isPostPublished = savedInstanceState.getBoolean(EXTRA_POST_PUBLISHED, false);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_wall_post, container, false);
         unbinder = ButterKnife.bind(this, view);
+        if (savedInstanceState != null) {
+            wallPostLayout.isFirstStart = savedInstanceState.getBoolean(EXTRA_IS_FIRST_START, true);
+            wallPostLayout.isPublishing = savedInstanceState.getBoolean(EXTRA_IS_PUBLISHING, true);
+            wallPostLayout.hasPostPublished =
+                    savedInstanceState.getBoolean(EXTRA_HAS_POST_PUBLISHED, false);
+        }
         return view;
     }
 
@@ -65,7 +66,7 @@ public class DialogWallPost extends DialogFragment {
     public void onStart() {
         super.onStart();
         Window window = getDialog().getWindow();
-        if (isFirstStart && window != null) {
+        if (wallPostLayout.isFirstStart && window != null) {
             ObjectAnimator appearing = ObjectAnimator.ofFloat(window.getDecorView(),
                     "alpha", 0f, 1f);
             appearing.setRepeatCount(Animation.ABSOLUTE);
@@ -88,7 +89,9 @@ public class DialogWallPost extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(EXTRA_POST_PUBLISHED, isPostPublished);
+        outState.putBoolean(EXTRA_IS_FIRST_START, false);
+        outState.putBoolean(EXTRA_IS_PUBLISHING, wallPostLayout.isPublishing);
+        outState.putBoolean(EXTRA_HAS_POST_PUBLISHED, wallPostLayout.hasPostPublished);
     }
 
     @Override

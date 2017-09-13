@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rf.androidovshchik.vkadvancedposting.views.BottomToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<rf.androidovshchik.vkadvancedposting.views.layout.BottomToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/bottomToolbarContainer"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/bottomToolbarHeight"
+    android:layout_height="@dimen/toolbar_bottom_height"
     android:orientation="horizontal">
+
+    <View
+        android:id="@+id/bottomBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/themesRecyclerView"
@@ -21,6 +27,6 @@
         android:paddingRight="16dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:text="@string/main.send"/>
+        android:text="@string/main.button.send"/>
 
-</rf.androidovshchik.vkadvancedposting.views.BottomToolbarLayout>
+</rf.androidovshchik.vkadvancedposting.views.layout.BottomToolbarLayout>
