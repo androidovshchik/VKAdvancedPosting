@@ -29,7 +29,7 @@ public class DecorationPhotos extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
-        int itemsCount = parent.getChildCount();
+        int itemsCount = parent.getAdapter().getItemCount();
         int columnsCount = itemsCount / 2 + (itemsCount % 2 != 0 ? 1 : 0);
         int minRightItemPosition = (columnsCount - 1) * 2;
         if (position % 2 == 0) {

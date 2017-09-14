@@ -34,7 +34,7 @@ public class DecorationStickers extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
-        int itemsCount = parent.getChildCount();
+        int itemsCount = parent.getAdapter().getItemCount();
         int linesCount = itemsCount / itemsPerLine + (itemsCount % itemsPerLine != 0 ? 1 : 0);
         int maxTopItemPosition = itemsPerLine - 1;
         int minBottomItemPosition = (linesCount - 1) * itemsPerLine;

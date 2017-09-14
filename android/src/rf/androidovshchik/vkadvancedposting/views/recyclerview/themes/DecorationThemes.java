@@ -21,7 +21,7 @@ public class DecorationThemes extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
         int position = parent.getChildAdapterPosition(view);
-        int itemsCount = parent.getChildCount();
+        int itemsCount = parent.getAdapter().getItemCount();
         outRect.top = TOP_SPACE;
         outRect.bottom = BOTTOM_SPACE;
         if (position == 0) {
