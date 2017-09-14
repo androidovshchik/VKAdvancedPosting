@@ -21,6 +21,6 @@ public class ThemesRecyclerView extends BaseRecyclerView {
         setAdapter(adapter);
         setupLinearLayoutManager(false);
         addItemDecoration(new DecorationThemes());
-        setupCacheProperties(adapter.itemsCount);
+        setupCacheProperties();
     }
 }

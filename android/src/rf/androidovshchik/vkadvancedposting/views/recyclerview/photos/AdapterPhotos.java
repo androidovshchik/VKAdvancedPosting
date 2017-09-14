@@ -14,18 +14,21 @@ import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.ViewHolderBa
 
 public class AdapterPhotos extends AdapterBase {
 
-    public static final int MIN_ITEM_SIZE = ViewUtil.dp2px(84);
+    // may be larger or smaller due to keyboard height
+    public static final int ITEM_SIZE = ViewUtil.dp2px(84);
 
     public ArrayList<File> photoPaths;
 
+    public int photoPickersCount = 0;
+
     public AdapterPhotos() {
-        super(2, MIN_ITEM_SIZE);
+        super(0, ITEM_SIZE);
         photoPaths = new ArrayList<>();
     }
 
     @Override
     public int getItemCount() {
-        return 2 + photoPaths.size();
+        return photoPickersCount + photoPaths.size();
     }
 
     @Override

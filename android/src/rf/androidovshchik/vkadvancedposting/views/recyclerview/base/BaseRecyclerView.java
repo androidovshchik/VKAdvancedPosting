@@ -44,9 +44,9 @@ public abstract class BaseRecyclerView extends RecyclerView {
         setLayoutManager(gridLayoutManager);
     }
 
-    protected void setupCacheProperties(int cacheSize) {
+    protected void setupCacheProperties() {
         setDrawingCacheEnabled(true);
-        setItemViewCacheSize(cacheSize);
+        setItemViewCacheSize(8);
         setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
     }
 
