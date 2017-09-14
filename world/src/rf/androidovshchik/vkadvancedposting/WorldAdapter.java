@@ -5,10 +5,10 @@ import com.badlogic.gdx.input.GestureDetector;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 
-public abstract class PostGeneratorAdapter extends GestureDetector.GestureAdapter
+public abstract class WorldAdapter extends GestureDetector.GestureAdapter
         implements ApplicationListener {
 
-    private static final String TAG = PostGeneratorAdapter.class.getSimpleName();
+    private static final String TAG = WorldAdapter.class.getSimpleName();
 
     @Override
     public void pause() {

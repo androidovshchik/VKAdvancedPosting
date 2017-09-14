@@ -14,13 +14,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
-import rf.androidovshchik.vkadvancedposting.listeners.StickerPressedListener;
-import rf.androidovshchik.vkadvancedposting.listeners.StickersDragListener;
+import rf.androidovshchik.vkadvancedposting.callbacks.StickerPressedListener;
+import rf.androidovshchik.vkadvancedposting.callbacks.StickersDragListener;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
-public class PostGenerator extends PostGeneratorAdapter {
+public class World extends WorldAdapter {
 
-	public static final String TAG = PostGenerator.class.getSimpleName();
+	public static final String TAG = World.class.getSimpleName();
 
 	private static final int SECOND_FINGER = 1;
 

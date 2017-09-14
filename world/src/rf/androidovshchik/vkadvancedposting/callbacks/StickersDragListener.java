@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.listeners;
+package rf.androidovshchik.vkadvancedposting.callbacks;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;

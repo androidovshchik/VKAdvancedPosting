@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.listeners;
+package rf.androidovshchik.vkadvancedposting.callbacks;
 
 public interface StickerPressedListener {
 
