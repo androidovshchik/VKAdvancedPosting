@@ -6,30 +6,48 @@ import android.view.View;
 
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
+@SuppressWarnings("all")
 public class DecorationPhotos extends RecyclerView.ItemDecoration {
 
-    public static final int MIN_ONE_SIDE_SPACE = ViewUtil.dp2px(12);
-    public static final int SPACE_BETWEEN_ITEMS = ViewUtil.dp2px(8);
+    private static final int MAX_TOP_SPACE = ViewUtil.dp2px(16);
+    private static final int TOP_SPACE = 0;
+    // bottom max space may be increased by 1 px
+    private static final int MIN_MAX_BOTTOM_SPACE = MAX_TOP_SPACE;
+    private static final int BOTTOM_SPACE = ViewUtil.dp2px(8);
+    private static final int MAX_LEFT_SPACE = MAX_TOP_SPACE;
+    private static final int LEFT_SPACE = TOP_SPACE;
+    private static final int MAX_RIGHT_SPACE = MAX_TOP_SPACE;
+    private static final int RIGHT_SPACE = BOTTOM_SPACE;
 
-    private int topItemsMaxPosition;
-    private int bottomItemsMinPosition;
+    private int maxBottomSpace;
 
-    public DecorationPhotos(int itemsCount, int itemsPerLine) {
-        this.topItemsMaxPosition = itemsPerLine - 1;
-        int linesCount = itemsCount / itemsPerLine + (itemsCount % itemsPerLine != 0 ? 1 : 0);
-        this.bottomItemsMinPosition = (linesCount - 1) * itemsPerLine;
+    public DecorationPhotos(int maxBottomSpace) {
+        this.maxBottomSpace = maxBottomSpace;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
-        outRect.right = SPACE_BETWEEN_ITEMS;
-        outRect.top = parent.getChildAdapterPosition(view) <= topItemsMaxPosition ? MIN_ONE_SIDE_SPACE : 0;
-        outRect.bottom = SPACE_BETWEEN_ITEMS;
-        if (parent.getChildAdapterPosition(view) >= bottomItemsMinPosition) {
-            outRect.bottom = MIN_ONE_SIDE_SPACE;
+        int position = parent.getChildAdapterPosition(view);
+        int itemsCount = parent.getChildCount();
+        int columnsCount = itemsCount / 2 + (itemsCount % 2 != 0 ? 1 : 0);
+        int minRightItemPosition = (columnsCount - 1) * 2;
+        if (position % 2 == 0) {
+            outRect.top = MAX_TOP_SPACE;
+            outRect.bottom = BOTTOM_SPACE;
         } else {
-            outRect.bottom = SPACE_BETWEEN_ITEMS;
+            outRect.top = TOP_SPACE;
+            outRect.bottom = maxBottomSpace;
+        }
+        if (position < 2) {
+            outRect.left = MAX_LEFT_SPACE;
+        } else {
+            outRect.left = LEFT_SPACE;
+        }
+        if (position >= minRightItemPosition) {
+            outRect.right = MAX_RIGHT_SPACE;
+        } else {
+            outRect.right = RIGHT_SPACE;
         }
     }
 }

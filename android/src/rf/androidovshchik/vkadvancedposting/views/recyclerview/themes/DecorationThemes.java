@@ -8,28 +8,28 @@ import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
 public class DecorationThemes extends RecyclerView.ItemDecoration {
 
-    private static final int VERTICAL_SPACE = ViewUtil.dp2px(12);
-    private static final int MIN_RIGHT_SPACE = ViewUtil.dp2px(5);
-    private static final int RIGHT_SPACE = ViewUtil.dp2px(6);
+    private static final int TOP_SPACE = ViewUtil.dp2px(12);
+    private static final int BOTTOM_SPACE = TOP_SPACE;
     private static final int MAX_LEFT_SPACE = ViewUtil.dp2px(16);
     private static final int LEFT_SPACE = 0;
+    private static final int MIN_RIGHT_SPACE = ViewUtil.dp2px(5);
+    private static final int RIGHT_SPACE = ViewUtil.dp2px(6);
 
-    private int itemsCount;
-
-    public DecorationThemes(int itemsCount) {
-        this.itemsCount = itemsCount;
-    }
+    public DecorationThemes() {}
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                RecyclerView.State state) {
-        outRect.top = outRect.bottom = VERTICAL_SPACE;
-        if (parent.getChildAdapterPosition(view) == 0) {
+        int position = parent.getChildAdapterPosition(view);
+        int itemsCount = parent.getChildCount();
+        outRect.top = TOP_SPACE;
+        outRect.bottom = BOTTOM_SPACE;
+        if (position == 0) {
             outRect.left = MAX_LEFT_SPACE;
         } else {
             outRect.left = LEFT_SPACE;
         }
-        if (parent.getChildAdapterPosition(view) == itemsCount - 1) {
+        if (position == itemsCount - 1) {
             outRect.right = MIN_RIGHT_SPACE;
         } else {
             outRect.right = RIGHT_SPACE;
