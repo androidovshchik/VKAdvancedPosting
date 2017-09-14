@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
 
-public class ThemesRecyclerView extends BaseRecyclerView<AdapterThemes> {
+public class ThemesRecyclerView extends BaseRecyclerView {
 
     public ThemesRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -17,7 +17,11 @@ public class ThemesRecyclerView extends BaseRecyclerView<AdapterThemes> {
 
     @Override
     protected void init() {
-        adapter = new AdapterThemes();
+        AdapterThemes adapter = new AdapterThemes(AdapterThemes.MIN_ITEM_SIZE);
+        setAdapter(adapter);
         setupLinearLayoutManager(false);
+        addItemDecoration(new DecorationThemes(adapter.itemsCount));
+        setHasFixedSize(true);
+        setupCacheProperties(adapter.itemsCount);
     }
 }
