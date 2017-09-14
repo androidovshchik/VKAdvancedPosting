@@ -40,7 +40,7 @@ public class SelectableImageView extends AppCompatImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (!isSelected) {
+        if (isSelected) {
             paint.setColor(colorInner);
             canvas.drawRect(RECT_SIZE * 1.5f, RECT_SIZE * 1.5f, getWidth() - RECT_SIZE * 1.5f,
                     getHeight() - RECT_SIZE * 1.5f, paint);
