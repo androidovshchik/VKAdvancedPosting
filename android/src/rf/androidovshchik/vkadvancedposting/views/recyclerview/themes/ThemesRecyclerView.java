@@ -17,7 +17,7 @@ public class ThemesRecyclerView extends BaseRecyclerView {
 
     @Override
     protected void init() {
-        AdapterThemes adapter = new AdapterThemes(AdapterThemes.MIN_ITEM_SIZE);
+        AdapterThemes adapter = new AdapterThemes();
         setAdapter(adapter);
         setupLinearLayoutManager(false);
         addItemDecoration(new DecorationThemes());

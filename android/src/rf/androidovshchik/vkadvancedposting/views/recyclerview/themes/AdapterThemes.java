@@ -12,7 +12,9 @@ import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.ViewHolderBa
 
 public class AdapterThemes extends AdapterBase {
 
-    public static final int MIN_ITEM_SIZE = ViewUtil.dp2px(32);
+    public static final int ITEM_SIZE = ViewUtil.dp2px(32);
+    // item size minus resource height and extra margin in image
+    public static final int MAX_PADDING = ViewUtil.dp2px((32 - 14 - 8) / 2);
 
     private static final ColorDrawable EMPTY_BACKGROUND = new ColorDrawable(0xffebebeb);
 
@@ -31,25 +33,29 @@ public class AdapterThemes extends AdapterBase {
             R.drawable.thumb_stars
     };
 
-    public AdapterThemes(int itemSize) {
-        super(1 + GRADIENT_IDS.length + THUMB_IDS.length + 1, itemSize);
+    public AdapterThemes() {
+        super(1 + GRADIENT_IDS.length + THUMB_IDS.length + 1, ITEM_SIZE);
     }
 
     @Override
     public void onBindViewHolder(ViewHolderBase holder, int position) {
         if (position == 0) {
+            holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackground(EMPTY_BACKGROUND);
             ((SelectableImageView) holder.itemView).setImageResource(0);
         } else if (position < GRADIENT_IDS.length + 1) {
+            holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackground(ContextCompat.getDrawable(holder.getApplicationContext(),
                     GRADIENT_IDS[position - 1]));
             ((SelectableImageView) holder.itemView).setImageResource(0);
         } else if (position < itemsCount - 1) {
+            holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackground(null);
             ((SelectableImageView) holder.itemView).setImageResource(THUMB_IDS[position -
                     GRADIENT_IDS.length - 1]);
         } else {
             // position == itemsCount - 1
+            holder.itemView.setPadding(MAX_PADDING, MAX_PADDING, MAX_PADDING, MAX_PADDING);
             holder.itemView.setBackground(VK_BACKGROUND);
             ((SelectableImageView) holder.itemView).setImageResource(R.drawable.ic_toolbar_new);
         }

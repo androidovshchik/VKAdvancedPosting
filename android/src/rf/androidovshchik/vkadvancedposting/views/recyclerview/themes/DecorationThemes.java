@@ -12,8 +12,8 @@ public class DecorationThemes extends RecyclerView.ItemDecoration {
     private static final int BOTTOM_SPACE = TOP_SPACE;
     private static final int MAX_LEFT_SPACE = ViewUtil.dp2px(16);
     private static final int LEFT_SPACE = 0;
-    private static final int MIN_RIGHT_SPACE = ViewUtil.dp2px(5);
-    private static final int RIGHT_SPACE = ViewUtil.dp2px(6);
+    private static final int MAX_RIGHT_SPACE = ViewUtil.dp2px(16);
+    private static final int RIGHT_SPACE = ViewUtil.dp2px(12);
 
     public DecorationThemes() {}
 
@@ -30,7 +30,7 @@ public class DecorationThemes extends RecyclerView.ItemDecoration {
             outRect.left = LEFT_SPACE;
         }
         if (position == itemsCount - 1) {
-            outRect.right = MIN_RIGHT_SPACE;
+            outRect.right = MAX_RIGHT_SPACE;
         } else {
             outRect.right = RIGHT_SPACE;
         }

@@ -14,7 +14,7 @@
         app:mpb_useIntrinsicPadding="false"
         app:mpb_indeterminateTint="@color/cornflower_blue_two"/>
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/loaderImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:visibility="invisible"
         android:contentDescription="@string/app_name"/>
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/loaderText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -3,7 +3,6 @@ package rf.androidovshchik.vkadvancedposting.views.layout;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -13,7 +12,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
-import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.AdapterThemes;
 
 public class BottomToolbarLayout extends RelativeLayout {
 
@@ -46,20 +44,6 @@ public class BottomToolbarLayout extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
-        setupRecyclerView();
-    }
-
-    private void setupRecyclerView() {
-        AdapterThemes adapter = new AdapterThemes();
-        recyclerView.setAdapter(adapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        //recyclerView.addItemDecoration(new DecorationThemes(itemsCount, itemsPerLine));
-        recyclerView.setHasFixedSize(true);
-        //recyclerView.setItemViewCacheSize(itemsCount);
-        recyclerView.setDrawingCacheEnabled(true);
-        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
     }
 
     @Override
