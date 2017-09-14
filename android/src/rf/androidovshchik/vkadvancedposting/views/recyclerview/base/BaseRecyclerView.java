@@ -1,6 +1,10 @@
 package rf.androidovshchik.vkadvancedposting.views.recyclerview.base;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +24,7 @@ public abstract class BaseRecyclerView extends RecyclerView {
     public BaseRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         deviceWidth = ViewUtil.getScreen(getApplicationContext()).x;
+        setHasFixedSize(true);
         init();
     }
 
@@ -43,6 +48,18 @@ public abstract class BaseRecyclerView extends RecyclerView {
         setDrawingCacheEnabled(true);
         setItemViewCacheSize(cacheSize);
         setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
+    }
+
+    @Nullable
+    protected LoaderManager getSupportLoaderManager() {
+        Context context = getContext();
+        while (context instanceof ContextWrapper) {
+            if (context instanceof AppCompatActivity) {
+                return ((AppCompatActivity) context).getSupportLoaderManager();
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
     protected Context getApplicationContext() {

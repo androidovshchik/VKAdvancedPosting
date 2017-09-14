@@ -1,11 +1,11 @@
 package rf.androidovshchik.vkadvancedposting.views.recyclerview.stickers;
 
 import android.net.Uri;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.SelectableImageView;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.AdapterBase;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.ViewHolderBase;
 
@@ -19,8 +19,8 @@ public class AdapterStickers extends AdapterBase {
 
     @Override
     public void onBindViewHolder(ViewHolderBase holder, int position) {
-        Glide.with(holder.itemView.getContext())
+        Glide.with(holder.getApplicationContext())
                 .load(Uri.parse("file:///android_asset/stickers/" + (position + 1) + ".png"))
-                .into((ImageView) holder.itemView);
+                .into((SelectableImageView) holder.itemView);
     }
 }

@@ -9,11 +9,11 @@ import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 @SuppressWarnings("all")
 public class DecorationPhotos extends RecyclerView.ItemDecoration {
 
-    private static final int MAX_TOP_SPACE = ViewUtil.dp2px(16);
+    public static final int MAX_TOP_SPACE = ViewUtil.dp2px(16);
     private static final int TOP_SPACE = 0;
     // bottom max space may be increased by 1 px
-    private static final int MIN_MAX_BOTTOM_SPACE = MAX_TOP_SPACE;
-    private static final int BOTTOM_SPACE = ViewUtil.dp2px(8);
+    public static final int MIN_MAX_BOTTOM_SPACE = MAX_TOP_SPACE;
+    public static final int BOTTOM_SPACE = ViewUtil.dp2px(8);
     private static final int MAX_LEFT_SPACE = MAX_TOP_SPACE;
     private static final int LEFT_SPACE = TOP_SPACE;
     private static final int MAX_RIGHT_SPACE = MAX_TOP_SPACE;

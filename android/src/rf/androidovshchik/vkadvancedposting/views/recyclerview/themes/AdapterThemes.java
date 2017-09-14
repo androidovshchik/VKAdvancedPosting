@@ -1,6 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.views.recyclerview.themes;
 
-import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ArrayRes;
 import android.support.v4.content.ContextCompat;
 
@@ -14,8 +14,7 @@ public class AdapterThemes extends AdapterBase {
 
     public static final int MIN_ITEM_SIZE = ViewUtil.dp2px(32);
 
-    private static final int COLOR_EMPTY = Color.parseColor("#ebebeb");
-    private static final int COLOR_ADD = Color.parseColor("#d2e3f1");
+    private static final ColorDrawable EMPTY_BACKGROUND = new ColorDrawable(0xffebebeb);
 
     @ArrayRes
     private final static int[] GRADIENT_IDS = new int[] {
@@ -39,7 +38,7 @@ public class AdapterThemes extends AdapterBase {
     @Override
     public void onBindViewHolder(ViewHolderBase holder, int position) {
         if (position == 0) {
-            holder.itemView.setBackgroundColor(COLOR_EMPTY);
+            holder.itemView.setBackground(EMPTY_BACKGROUND);
             ((SelectableImageView) holder.itemView).setImageResource(0);
         } else if (position < GRADIENT_IDS.length + 1) {
             holder.itemView.setBackground(ContextCompat.getDrawable(holder.getApplicationContext(),
@@ -51,7 +50,7 @@ public class AdapterThemes extends AdapterBase {
                     GRADIENT_IDS.length - 1]);
         } else {
             // position == itemsCount - 1
-            holder.itemView.setBackgroundColor(COLOR_ADD);
+            holder.itemView.setBackground(VK_BACKGROUND);
             ((SelectableImageView) holder.itemView).setImageResource(R.drawable.ic_toolbar_new);
         }
     }

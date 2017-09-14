@@ -1,5 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.views.recyclerview.base;
 
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -7,7 +8,9 @@ import rf.androidovshchik.vkadvancedposting.views.SelectableImageView;
 
 public abstract class AdapterBase extends RecyclerView.Adapter<ViewHolderBase> {
 
-    protected final int itemSize;
+    protected static final ColorDrawable VK_BACKGROUND = new ColorDrawable(0xffd2e3f1);
+
+    public int itemSize;
     public int itemsCount;
 
     public AdapterBase(int itemsCount, int itemSize) {
