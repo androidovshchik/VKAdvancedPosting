@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,7 +15,7 @@ import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.adapters.themes.AdapterThemes;
 
-public class BottomToolbarLayout extends LinearLayout {
+public class BottomToolbarLayout extends RelativeLayout {
 
     @BindView(R.id.bottomBackground)
     protected View background;

@@ -5,21 +5,25 @@
     </style>
     <style name="VKButton.Login" parent="VKButton.Base">
         <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/white</item>
         <item name="colorButtonNormal">#639fcd</item>
     </style>
     <style name="VKButton.Send" parent="VKButton.Base">
         <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/white</item>
         <item name="colorButtonNormal">#388cc7</item>
     </style>
     <style name="VKButton.Cancel" parent="VKButton.Base">
         <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/cornflower_blue_two</item>
         <item name="colorButtonNormal">#d2e3f1</item>
     </style>
     <style name="VKButton.Repeat" parent="VKButton.Base">
         <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/white</item>
         <item name="colorButtonNormal">#388cc7</item>
     </style>
