@@ -5,7 +5,7 @@ import android.os.StrictMode;
 
 import com.vk.sdk.VKSdk;
 
-import rf.androidovshchik.vkadvancedposting.components.VKTokenTracker;
+import rf.androidovshchik.vkadvancedposting.callbacks.VKTokenCallback;
 import rf.androidovshchik.vkadvancedposting.components.CrashReportingTree;
 import timber.log.Timber;
 
@@ -33,7 +33,7 @@ public class VKAdvancedPosting extends Application {
         } else {
             Timber.plant(new CrashReportingTree());
         }
-        new VKTokenTracker().startTracking();
+        new VKTokenCallback().startTracking();
         VKSdk.initialize(getApplicationContext());
     }
 }

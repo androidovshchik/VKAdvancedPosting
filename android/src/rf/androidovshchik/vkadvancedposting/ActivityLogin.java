@@ -15,7 +15,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rf.androidovshchik.vkadvancedposting.components.VKLoginCallback;
+import rf.androidovshchik.vkadvancedposting.callbacks.VKLoginCallback;
 import rf.androidovshchik.vkadvancedposting.events.VKLoginEvent;
 
 public class ActivityLogin extends AppCompatActivity {

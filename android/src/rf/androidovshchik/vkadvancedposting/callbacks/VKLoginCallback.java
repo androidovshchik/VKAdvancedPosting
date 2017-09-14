@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.components;
+package rf.androidovshchik.vkadvancedposting.callbacks;
 
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;

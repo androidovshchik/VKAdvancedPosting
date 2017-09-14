@@ -1,8 +1,9 @@
-package rf.androidovshchik.vkadvancedposting.components;
+package rf.androidovshchik.vkadvancedposting.listeners;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
+import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class StickersDragListener extends InputListener {

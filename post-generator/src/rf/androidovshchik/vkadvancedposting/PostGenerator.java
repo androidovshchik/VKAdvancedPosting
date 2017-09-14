@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
-import rf.androidovshchik.vkadvancedposting.components.StickersDragListener;
+import rf.androidovshchik.vkadvancedposting.listeners.StickersDragListener;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class PostGenerator extends PostGeneratorAdapter {

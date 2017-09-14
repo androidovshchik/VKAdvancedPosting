@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import rf.androidovshchik.vkadvancedposting.components.VKRequestCallback;
+import rf.androidovshchik.vkadvancedposting.callbacks.VKRequestCallback;
 import rf.androidovshchik.vkadvancedposting.events.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.utils.DiskUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
