@@ -1,5 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.views.recyclerview.base;
 
+import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,4 +21,8 @@ public class ViewHolderBase extends RecyclerView.ViewHolder {
 
     @OnClick(VIEW_ID)
     public void onItemClicked() {}
+
+    public Context getApplicationContext() {
+        return itemView.getContext().getApplicationContext();
+    }
 }

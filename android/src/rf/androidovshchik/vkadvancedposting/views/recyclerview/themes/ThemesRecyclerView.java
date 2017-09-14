@@ -20,7 +20,7 @@ public class ThemesRecyclerView extends BaseRecyclerView {
         AdapterThemes adapter = new AdapterThemes(AdapterThemes.MIN_ITEM_SIZE);
         setAdapter(adapter);
         setupLinearLayoutManager(false);
-        addItemDecoration(new DecorationThemes(adapter.itemsCount));
+        addItemDecoration(new DecorationThemes());
         setHasFixedSize(true);
         setupCacheProperties(adapter.itemsCount);
     }

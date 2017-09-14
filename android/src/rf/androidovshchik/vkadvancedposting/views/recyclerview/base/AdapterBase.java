@@ -2,12 +2,13 @@ package rf.androidovshchik.vkadvancedposting.views.recyclerview.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+
+import rf.androidovshchik.vkadvancedposting.views.SelectableImageView;
 
 public abstract class AdapterBase extends RecyclerView.Adapter<ViewHolderBase> {
 
     protected final int itemSize;
-    protected int itemsCount;
+    public int itemsCount;
 
     public AdapterBase(int itemsCount, int itemSize) {
         this.itemsCount = itemsCount;
@@ -16,7 +17,7 @@ public abstract class AdapterBase extends RecyclerView.Adapter<ViewHolderBase> {
 
     @Override
     public ViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
-        ImageView itemView = new ImageView(parent.getContext());
+        SelectableImageView itemView = new SelectableImageView(parent.getContext());
         itemView.setLayoutParams(new ViewGroup.LayoutParams(itemSize, itemSize));
         return new ViewHolderBase(itemView);
     }
@@ -29,7 +30,7 @@ public abstract class AdapterBase extends RecyclerView.Adapter<ViewHolderBase> {
     @Override
     public void onViewRecycled(ViewHolderBase holder) {
         if (holder != null) {
-            ((ImageView) holder.itemView).setImageDrawable(null);
+            ((SelectableImageView) holder.itemView).setImageDrawable(null);
         }
         super.onViewRecycled(holder);
     }

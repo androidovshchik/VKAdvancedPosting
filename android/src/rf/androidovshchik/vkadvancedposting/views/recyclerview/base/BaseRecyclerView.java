@@ -9,9 +9,7 @@ import android.view.View;
 
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
-public abstract class BaseRecyclerView<T extends AdapterBase> extends RecyclerView {
-
-    protected T adapter;
+public abstract class BaseRecyclerView extends RecyclerView {
 
     protected final int deviceWidth;
 
