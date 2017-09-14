@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"/>
 
-    <android.support.v7.widget.RecyclerView
+    <rf.androidovshchik.vkadvancedposting.views.recyclerview.ThemesRecyclerView
         android:id="@+id/themesRecyclerView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
