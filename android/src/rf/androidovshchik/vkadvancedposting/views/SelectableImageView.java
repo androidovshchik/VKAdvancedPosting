@@ -16,6 +16,7 @@ public class SelectableImageView extends AppCompatImageView {
     private static final int RECT_SIZE = ViewUtil.dp2px(2);
     private static final int CORNER_RADIUS = ViewUtil.dp2px(4);
 
+    public boolean isSelectEnabled = true;
     public boolean isSelected = false;
 
     private Paint paint;
@@ -26,20 +27,26 @@ public class SelectableImageView extends AppCompatImageView {
     private int colorInner;
     private int colorOuter;
 
-    public SelectableImageView(Context context) {
+    public SelectableImageView(Context context, boolean enableSelect) {
         super(context);
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(RECT_SIZE);
-        colorInner = ContextCompat.getColor(getApplicationContext(), R.color.white);
-        colorOuter = ContextCompat.getColor(getApplicationContext(), R.color.cornflower_blue_two);
-        rectOuter = new RectF();
-        rectCorners = new RectF();
+        isSelectEnabled = enableSelect;
+        if (isSelectEnabled) {
+            paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(RECT_SIZE);
+            colorInner = ContextCompat.getColor(getApplicationContext(), R.color.white);
+            colorOuter = ContextCompat.getColor(getApplicationContext(), R.color.cornflower_blue_two);
+            rectOuter = new RectF();
+            rectCorners = new RectF();
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (!isSelectEnabled) {
+            return;
+        }
         if (isSelected) {
             paint.setColor(colorInner);
             canvas.drawRect(RECT_SIZE * 1.5f, RECT_SIZE * 1.5f, getWidth() - RECT_SIZE * 1.5f,

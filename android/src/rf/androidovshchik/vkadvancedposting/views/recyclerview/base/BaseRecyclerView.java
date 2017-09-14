@@ -11,11 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
-
 public abstract class BaseRecyclerView extends RecyclerView {
-
-    protected final int deviceWidth;
 
     public BaseRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -23,7 +19,6 @@ public abstract class BaseRecyclerView extends RecyclerView {
 
     public BaseRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        deviceWidth = ViewUtil.getScreen(getApplicationContext()).x;
         setHasFixedSize(true);
         init();
     }

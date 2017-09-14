@@ -22,7 +22,7 @@ public class AdapterPhotos extends AdapterBase {
     public int photoPickersCount = 0;
 
     public AdapterPhotos() {
-        super(0, ITEM_SIZE);
+        super(0, ITEM_SIZE, true);
         photoPaths = new ArrayList<>();
     }
 

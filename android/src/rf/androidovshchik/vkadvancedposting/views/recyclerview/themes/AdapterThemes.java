@@ -34,7 +34,7 @@ public class AdapterThemes extends AdapterBase {
     };
 
     public AdapterThemes() {
-        super(1 + GRADIENT_IDS.length + THUMB_IDS.length + 1, ITEM_SIZE);
+        super(1 + GRADIENT_IDS.length + THUMB_IDS.length + 1, ITEM_SIZE, true);
     }
 
     @Override

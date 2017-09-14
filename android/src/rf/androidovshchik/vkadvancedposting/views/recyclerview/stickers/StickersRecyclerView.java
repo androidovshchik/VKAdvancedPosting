@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 
 import java.io.IOException;
 
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
 import timber.log.Timber;
 
@@ -27,6 +28,7 @@ public class StickersRecyclerView extends BaseRecyclerView {
             Timber.e(e.getMessage());
             return;
         }
+        int deviceWidth = ViewUtil.getScreen(getApplicationContext()).x;
         int maxLeftSpace = DecorationStickers.MIN_MAX_LEFT_SPACE;
         int maxRightSpace = DecorationStickers.MIN_MAX_RIGHT_SPACE;
         int rightSpace = DecorationStickers.RIGHT_SPACE;

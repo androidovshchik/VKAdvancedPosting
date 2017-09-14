@@ -12,15 +12,17 @@ public abstract class AdapterBase extends RecyclerView.Adapter<ViewHolderBase> {
 
     public int itemSize;
     public int itemsCount;
+    private boolean enableSelect;
 
-    public AdapterBase(int itemsCount, int itemSize) {
+    public AdapterBase(int itemsCount, int itemSize, boolean enableSelect) {
         this.itemsCount = itemsCount;
         this.itemSize = itemSize;
+        this.enableSelect = enableSelect;
     }
 
     @Override
     public ViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
-        SelectableImageView itemView = new SelectableImageView(parent.getContext());
+        SelectableImageView itemView = new SelectableImageView(parent.getContext(), enableSelect);
         itemView.setLayoutParams(new ViewGroup.LayoutParams(itemSize, itemSize));
         return new ViewHolderBase(itemView);
     }

@@ -14,7 +14,7 @@ public class AdapterStickers extends AdapterBase {
     public static final int MIN_ITEM_SIZE = ViewUtil.dp2px(78);
 
     public AdapterStickers(int itemsCount, int itemSize) {
-        super(itemsCount, itemSize);
+        super(itemsCount, itemSize, false);
     }
 
     @Override
