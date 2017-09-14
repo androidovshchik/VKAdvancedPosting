@@ -4,6 +4,7 @@
     <string name="login.button">Войти через ВКонтакте</string>
     <string name="main.post">Запись</string>
     <string name="main.history">История</string>
+    <string name="main.hint">Что у Вас нового?</string>
     <string name="main.stickers">Стикеры</string>
     <string name="main.button.send">Отправить</string>
     <string name="main.button.cancel">Отмена</string>
