@@ -1,9 +1,9 @@
-package rf.androidovshchik.vkadvancedposting.views.recyclerview;
+package rf.androidovshchik.vkadvancedposting.views.recyclerview.photos;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import rf.androidovshchik.vkadvancedposting.adapters.photos.AdapterPhotos;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
 
 public class PhotosRecyclerView extends BaseRecyclerView<AdapterPhotos> {
 
@@ -17,6 +17,7 @@ public class PhotosRecyclerView extends BaseRecyclerView<AdapterPhotos> {
 
     @Override
     protected void init() {
-
+        adapter = new AdapterPhotos();
+        setupGridLayoutManager(2, false);
     }
 }

@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.adapters.photos;
+package rf.androidovshchik.vkadvancedposting.views.recyclerview.photos;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;

@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.views.recyclerview;
+package rf.androidovshchik.vkadvancedposting.views.recyclerview.base;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,9 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 
-public abstract class BaseRecyclerView<T extends RecyclerView.Adapter<?>> extends RecyclerView {
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+
+public abstract class BaseRecyclerView<T extends AdapterBase> extends RecyclerView {
 
     protected T adapter;
+
+    protected final int deviceWidth;
 
     public BaseRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -17,6 +21,7 @@ public abstract class BaseRecyclerView<T extends RecyclerView.Adapter<?>> extend
 
     public BaseRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        deviceWidth = ViewUtil.getScreen(getApplicationContext()).x;
         init();
     }
 
@@ -24,14 +29,14 @@ public abstract class BaseRecyclerView<T extends RecyclerView.Adapter<?>> extend
 
     protected void setupLinearLayoutManager(boolean vertical) {
         LinearLayoutManager linearLayoutManager =
-                new LinearLayoutManager(getContext().getApplicationContext(), vertical ?
+                new LinearLayoutManager(getApplicationContext(), vertical ?
                         GridLayoutManager.VERTICAL : GridLayoutManager.HORIZONTAL, false);
         setLayoutManager(linearLayoutManager);
     }
 
     protected void setupGridLayoutManager(int spanCount, boolean vertical) {
         GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(getContext().getApplicationContext(), spanCount, vertical ?
+                new GridLayoutManager(getApplicationContext(), spanCount, vertical ?
                         GridLayoutManager.VERTICAL : GridLayoutManager.HORIZONTAL, false);
         setLayoutManager(gridLayoutManager);
     }
@@ -40,5 +45,9 @@ public abstract class BaseRecyclerView<T extends RecyclerView.Adapter<?>> extend
         setDrawingCacheEnabled(true);
         setItemViewCacheSize(cacheSize);
         setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_AUTO);
+    }
+
+    protected Context getApplicationContext() {
+        return getContext().getApplicationContext();
     }
 }

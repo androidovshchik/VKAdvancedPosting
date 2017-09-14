@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
-import rf.androidovshchik.vkadvancedposting.adapters.themes.AdapterThemes;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.AdapterThemes;
 
 public class BottomToolbarLayout extends RelativeLayout {
 

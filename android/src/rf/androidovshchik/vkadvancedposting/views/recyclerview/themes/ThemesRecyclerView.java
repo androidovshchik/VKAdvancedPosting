@@ -1,9 +1,9 @@
-package rf.androidovshchik.vkadvancedposting.views.recyclerview;
+package rf.androidovshchik.vkadvancedposting.views.recyclerview.themes;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
-import rf.androidovshchik.vkadvancedposting.adapters.themes.AdapterThemes;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
 
 public class ThemesRecyclerView extends BaseRecyclerView<AdapterThemes> {
 
@@ -17,6 +17,7 @@ public class ThemesRecyclerView extends BaseRecyclerView<AdapterThemes> {
 
     @Override
     protected void init() {
-
+        adapter = new AdapterThemes();
+        setupLinearLayoutManager(false);
     }
 }
