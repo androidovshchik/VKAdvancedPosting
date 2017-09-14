@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
+import rf.androidovshchik.vkadvancedposting.listeners.StickerPressedListener;
 import rf.androidovshchik.vkadvancedposting.listeners.StickersDragListener;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
@@ -31,6 +32,8 @@ public class PostGenerator extends PostGeneratorAdapter {
 	private Stage stickers;
 
 	private StickersDragListener stickersDragListener;
+
+	private StickerPressedListener stickerPressedListener;
 
 	@Override
 	public void create() {
@@ -88,6 +91,18 @@ public class PostGenerator extends PostGeneratorAdapter {
 	}
 
 	@Override
+	public boolean longPress(float x, float y) {
+		if (stickerPressedListener == null) {
+			return false;
+		}
+		Sticker sticker = getCurrentSticker();
+		if (sticker != null) {
+			stickerPressedListener.onStickerLongPressed();
+		}
+		return false;
+	}
+
+	@Override
 	public boolean pinch(Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1,
 						  Vector2 pointer2) {
 		// initialPointer doesn't change
@@ -136,18 +151,22 @@ public class PostGenerator extends PostGeneratorAdapter {
 		batch.dispose();
 	}
 
-	public void changeBackground(String path) {
-		Texture texture = new Texture(Gdx.files.internal(path));
-		Image backgroundImage = new Image(texture);
-		background.addActor(backgroundImage);
-	}
-
-	public Sticker getCurrentSticker() {
+	private Sticker getCurrentSticker() {
 		int index = stickersDragListener.index;
 		if (index != Sticker.NONE && index < stickers.getActors().size) {
 			return (Sticker) stickers.getActors().get(stickersDragListener.index);
 		}
 		return null;
+	}
+
+	public void setStickerPressedListener(StickerPressedListener stickerPressedListener) {
+		this.stickerPressedListener = stickerPressedListener;
+	}
+
+	public void changeBackground(String path) {
+		Texture texture = new Texture(Gdx.files.internal(path));
+		Image backgroundImage = new Image(texture);
+		background.addActor(backgroundImage);
 	}
 
 	public void addSticker(int filename, float x, float y, float scale, float rotation) {
