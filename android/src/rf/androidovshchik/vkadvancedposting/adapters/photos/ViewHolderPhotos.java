@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.stickers;
+package rf.androidovshchik.vkadvancedposting.adapters.photos;
 
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
@@ -7,12 +7,12 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ViewHolderStickers extends RecyclerView.ViewHolder {
+public class ViewHolderPhotos extends RecyclerView.ViewHolder {
 
     @IdRes
     private static final int VIEW_ID = 1;
 
-    public ViewHolderStickers(View itemView) {
+    public ViewHolderPhotos(View itemView) {
         super(itemView);
         itemView.setId(VIEW_ID);
         ButterKnife.bind(this, itemView);

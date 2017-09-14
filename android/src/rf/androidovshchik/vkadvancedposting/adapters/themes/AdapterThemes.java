@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.themes;
+package rf.androidovshchik.vkadvancedposting.adapters.themes;
 
 import android.support.annotation.ArrayRes;
 import android.support.v7.widget.RecyclerView;

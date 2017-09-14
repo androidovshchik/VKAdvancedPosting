@@ -13,8 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
-import rf.androidovshchik.vkadvancedposting.themes.AdapterThemes;
-import rf.androidovshchik.vkadvancedposting.themes.DecorationThemes;
+import rf.androidovshchik.vkadvancedposting.adapters.themes.AdapterThemes;
 
 public class BottomToolbarLayout extends LinearLayout {
 

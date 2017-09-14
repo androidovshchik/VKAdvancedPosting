@@ -5,7 +5,6 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
@@ -30,9 +29,6 @@ public class PostGenerator extends PostGeneratorAdapter {
 
 	private Stage background;
 	private Stage stickers;
-	private Stage text;
-
-	private BitmapFont font;
 
 	private StickersDragListener stickersDragListener;
 
@@ -56,10 +52,6 @@ public class PostGenerator extends PostGeneratorAdapter {
 		stickersDragListener = new StickersDragListener();
 		addSticker(5, 200, 200, 1, 0);
 
-		text = new Stage(new FitViewport(worldWidth, worldHeight, camera));
-
-		font = new BitmapFont();
-
 		GestureDetector gestureDetector = new GestureDetector(this);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(gestureDetector);
@@ -76,7 +68,6 @@ public class PostGenerator extends PostGeneratorAdapter {
 		batch.begin();
 		background.getRoot().draw(batch, 1);
 		stickers.getRoot().draw(batch, 1);
-		font.draw(batch, "hello", 200, 200);
 		batch.end();
 
 		Gdx.graphics.setContinuousRendering(false);
@@ -140,7 +131,6 @@ public class PostGenerator extends PostGeneratorAdapter {
 	@Override
 	public void dispose() {
 		GdxLog.print(TAG, "dispose");
-		font.dispose();
 		stickers.dispose();
 		background.dispose();
 		batch.dispose();

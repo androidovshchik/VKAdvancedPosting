@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.photos;
+package rf.androidovshchik.vkadvancedposting.adapters.stickers;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
@@ -6,7 +6,7 @@ import android.view.View;
 
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
-public class DecorationPhotos extends RecyclerView.ItemDecoration {
+public class DecorationStickers extends RecyclerView.ItemDecoration {
 
     public static final int MIN_ONE_SIDE_SPACE = ViewUtil.dp2px(12);
     public static final int SPACE_BETWEEN_ITEMS = ViewUtil.dp2px(8);
@@ -14,7 +14,7 @@ public class DecorationPhotos extends RecyclerView.ItemDecoration {
     private int topItemsMaxPosition;
     private int bottomItemsMinPosition;
 
-    public DecorationPhotos(int itemsCount, int itemsPerLine) {
+    public DecorationStickers(int itemsCount, int itemsPerLine) {
         this.topItemsMaxPosition = itemsPerLine - 1;
         int linesCount = itemsCount / itemsPerLine + (itemsCount % itemsPerLine != 0 ? 1 : 0);
         this.bottomItemsMinPosition = (linesCount - 1) * itemsPerLine;
