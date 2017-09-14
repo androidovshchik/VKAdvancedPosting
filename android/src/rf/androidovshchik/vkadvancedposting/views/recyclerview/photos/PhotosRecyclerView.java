@@ -51,15 +51,19 @@ public class PhotosRecyclerView extends BaseRecyclerView
                 normalViewHeight += 2;
                 itemHeight++;
             }
+            if (normalViewHeight != viewHeight) {
+                // 1px difference
+                maxBottomSpace++;
+            }
         } else if (viewHeight < normalViewHeight) {
             while (normalViewHeight - 2 >= viewHeight) {
                 normalViewHeight -= 2;
-                itemHeight++;
+                itemHeight--;
             }
-        }
-        if (normalViewHeight != viewHeight) {
-            // 1px difference
-            maxBottomSpace++;
+            if (normalViewHeight != viewHeight) {
+                // 1px difference
+                maxBottomSpace--;
+            }
         }
         adapterPhotos.itemSize = itemHeight;
         addItemDecoration(new DecorationPhotos(maxBottomSpace));

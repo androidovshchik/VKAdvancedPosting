@@ -18,7 +18,7 @@ public class DecorationStickers extends RecyclerView.ItemDecoration {
     private static final int LEFT_SPACE = TOP_SPACE;
     // right max space may be large on 1px if (itemsCount - 1) % 2 != 0
     public static final int MIN_MAX_RIGHT_SPACE = MAX_TOP_SPACE;
-    private static final int RIGHT_SPACE = BOTTOM_SPACE;
+    public static final int RIGHT_SPACE = BOTTOM_SPACE;
 
     private int itemsPerLine;
     private int maxLeftSpace;

@@ -8,7 +8,7 @@ import java.io.IOException;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
 import timber.log.Timber;
 
-public class StickersRecyclerView extends BaseRecyclerView<AdapterStickers> {
+public class StickersRecyclerView extends BaseRecyclerView {
 
     public StickersRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -27,21 +27,25 @@ public class StickersRecyclerView extends BaseRecyclerView<AdapterStickers> {
             Timber.e(e.getMessage());
             return;
         }
-        final int maxGridWidth = deviceWidth - DecorationStickers.MIN_ONE_SIDE_SPACE * 2 +
-                DecorationStickers.SPACE_BETWEEN_ITEMS;
-        int minItemWidth = AdapterStickers.MIN_ITEM_SIZE + DecorationStickers.SPACE_BETWEEN_ITEMS;
-        final int itemsPerLine = maxGridWidth / minItemWidth;
-        int freeSpace = maxGridWidth - itemsPerLine * minItemWidth;
+        int maxLeftSpace = DecorationStickers.MIN_MAX_LEFT_SPACE;
+        int maxRightSpace = DecorationStickers.MIN_MAX_RIGHT_SPACE;
+        int rightSpace = DecorationStickers.RIGHT_SPACE;
+        int itemWidth = AdapterStickers.MIN_ITEM_SIZE;
+        int maxGridWidth = deviceWidth - maxLeftSpace - maxRightSpace;
+        int itemsPerLine = maxGridWidth / (itemWidth + rightSpace);
+        int freeSpace = maxGridWidth - itemsPerLine * (itemWidth + rightSpace);
         while (freeSpace >= itemsPerLine) {
-            minItemWidth++;
+            itemWidth++;
             freeSpace -= itemsPerLine;
         }
-        int leftPadding = DecorationStickers.MIN_ONE_SIDE_SPACE + freeSpace / 2;
-        int rightPadding = DecorationStickers.MIN_ONE_SIDE_SPACE -
-                DecorationStickers.SPACE_BETWEEN_ITEMS + freeSpace / 2 + (freeSpace > 0 &&
-                freeSpace % 2 != 0 ? 1 : 0);
-        adapter = new AdapterStickers(itemsCount, minItemWidth -
-                DecorationStickers.SPACE_BETWEEN_ITEMS);
-        setupGridLayoutManager(2, true);
+        if (freeSpace > 0) {
+            maxLeftSpace += freeSpace / 2;
+            maxRightSpace += freeSpace / 2 + (freeSpace % 2 != 0 ? 1 : 0);
+        }
+        AdapterStickers adapter = new AdapterStickers(itemsCount, itemWidth);
+        setAdapter(adapter);
+        setupGridLayoutManager(itemsPerLine, true);
+        addItemDecoration(new DecorationStickers(itemsPerLine, maxLeftSpace, maxRightSpace));
+        setupCacheProperties();
     }
 }

@@ -11,7 +11,7 @@ public class DecorationPhotos extends RecyclerView.ItemDecoration {
 
     public static final int MAX_TOP_SPACE = ViewUtil.dp2px(16);
     private static final int TOP_SPACE = 0;
-    // bottom max space may be increased by 1 px
+    // bottom max space may be increased or decreased by 1 px
     public static final int MIN_MAX_BOTTOM_SPACE = MAX_TOP_SPACE;
     public static final int BOTTOM_SPACE = ViewUtil.dp2px(8);
     private static final int MAX_LEFT_SPACE = MAX_TOP_SPACE;
