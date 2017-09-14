@@ -19,18 +19,22 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
 import rf.androidovshchik.vkadvancedposting.views.layout.TopToolbarLayout;
+import rf.androidovshchik.vkadvancedposting.views.trash.TrashFab;
 
 public class ActivityMain extends AppCompatActivity implements AndroidFragmentApplication.Callbacks {
 
 	@BindView(R.id.topToolbarContainer)
 	public TopToolbarLayout topToolbar;
 
+	@BindView(R.id.actionTrash)
+	public TrashFab actionTrash;
+
 	@BindView(R.id.stickersContainer)
 	public ViewGroup stickersContainer;
 	@BindView(R.id.stickersRecyclerView)
 	public RecyclerView stickersRecyclerView;
 
-	private FragmentPostGenerator postGenerator;
+	private FragmentWorld fragment;
 
 	private DialogWallPost dialogWallPost;
 
@@ -59,14 +63,14 @@ public class ActivityMain extends AppCompatActivity implements AndroidFragmentAp
 	}
 
 	private void setupPostGenerator() {
-		postGenerator = (FragmentPostGenerator) getSupportFragmentManager().
-				findFragmentByTag(FragmentPostGenerator.class.getSimpleName());
-		if (postGenerator == null) {
-			postGenerator = new FragmentPostGenerator();
+		fragment = (FragmentWorld) getSupportFragmentManager().
+				findFragmentByTag(FragmentWorld.class.getSimpleName());
+		if (fragment == null) {
+			fragment = new FragmentWorld();
+			fragment.world.setStickerPressedListener(null);
 			getSupportFragmentManager()
 					.beginTransaction()
-					.replace(R.id.postGenerator, postGenerator,
-							FragmentPostGenerator.class.getSimpleName())
+					.replace(R.id.world, fragment, FragmentWorld.class.getSimpleName())
 					.commitAllowingStateLoss();
 		}
 	}
