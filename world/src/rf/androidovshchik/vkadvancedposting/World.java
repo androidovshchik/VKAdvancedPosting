@@ -11,15 +11,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import rf.androidovshchik.vkadvancedposting.callbacks.StickerPressCallback;
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.callbacks.StickersDragCallback;
-import rf.androidovshchik.vkadvancedposting.models.BackgroundBottom;
 import rf.androidovshchik.vkadvancedposting.models.BackgroundCenter;
-import rf.androidovshchik.vkadvancedposting.models.BackgroundTop;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class World extends WorldAdapter {
@@ -44,10 +41,8 @@ public class World extends WorldAdapter {
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch batch;
 
-	private Stage stage;
-	private BackgroundTop backgroundTop;
-	private BackgroundCenter backgroundCenter;
-	private BackgroundBottom backgroundBottom;
+	private Stage backgroundStage;
+	private Stage stickersStage;
 	private StickersDragCallback stickersDragCallback;
 	private StickerPressCallback stickerPressCallback;
 
@@ -74,19 +69,14 @@ public class World extends WorldAdapter {
 		shapeRenderer = new ShapeRenderer();
 		batch = new SpriteBatch();
 
-		stage = new Stage(viewport);
+		backgroundStage = new Stage(viewport);
+		stickersStage = new Stage(viewport);
 		stickersDragCallback = new StickersDragCallback();
-		backgroundTop = new BackgroundTop(stage.getActors().size);
-		stage.addActor(backgroundTop);
-		backgroundCenter = new BackgroundCenter(stage.getActors().size);
-		stage.addActor(backgroundTop);
-		backgroundBottom = new BackgroundBottom(stage.getActors().size);
-		stage.addActor(backgroundTop);
 
 		GestureDetector gestureDetector = new GestureDetector(this);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(gestureDetector);
-		inputMultiplexer.addProcessor(stage);
+		inputMultiplexer.addProcessor(stickersStage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
@@ -95,17 +85,18 @@ public class World extends WorldAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin();
 		if (drawGradient) {
 			shapeRenderer.setProjectionMatrix(camera.combined);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 			shapeRenderer.rect(0, 0, worldWidth, worldHeight, gradientBlendedColor,
 					gradientBottomRightColor, gradientBlendedColor, gradientTopLeftColor);
 			shapeRenderer.end();
+		} else {
+			backgroundStage.getRoot().draw(batch, 1);
 		}
-
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		stage.getRoot().draw(batch, 1);
+		stickersStage.getRoot().draw(batch, 1);
 		batch.end();
 
 		Gdx.graphics.setContinuousRendering(false);
@@ -114,7 +105,7 @@ public class World extends WorldAdapter {
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 		if (pointer == SECOND_FINGER) {
-			Vector2 coordinates = stage.screenToStageCoordinates(new Vector2(x, y));
+			Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
 			GdxLog.f(TAG, "touchDown pointer1 x: %f y: %f", coordinates.x, coordinates.y);
 			Sticker sticker = getCurrentSticker();
 			if (sticker != null) {
@@ -180,14 +171,15 @@ public class World extends WorldAdapter {
 	@Override
 	public void dispose() {
 		GdxLog.print(TAG, "dispose");
-		stage.dispose();
+		backgroundStage.dispose();
+		stickersStage.dispose();
 		batch.dispose();
 	}
 
 	private Sticker getCurrentSticker() {
 		int index = stickersDragCallback.index;
-		if (index != Sticker.NONE && index < stage.getActors().size) {
-			return (Sticker) stage.getActors().get(stickersDragCallback.index);
+		if (index != Sticker.NONE && index < stickersStage.getActors().size) {
+			return (Sticker) stickersStage.getActors().get(stickersDragCallback.index);
 		}
 		return null;
 	}
@@ -205,25 +197,20 @@ public class World extends WorldAdapter {
 	}
 
 	@SuppressWarnings("unused")
-	public void setSimpleImageBackground(String path) {
-		GdxLog.print(TAG, "path " + ("illustrations/" + path));
-		Texture texture = new Texture(Gdx.files.internal("illustrations/" + path));
-		stage.addActor(new Image(texture));
-		//backgroundCenter.setTexture(texture, worldWidth, worldHeight);
-		//backgroundCenter.setVisible(true);
-		drawGradient = false;
-		Gdx.graphics.requestRendering();
-	}
-
-	@SuppressWarnings("unused")
 	public void setComplexImageBackground(String topPath, String centerPath, String bottomPath) {
-		setSimpleImageBackground(centerPath);
+		for(int i = backgroundStage.getActors().size - 1; i >= 0; i--) {
+			backgroundStage.getActors().get(i).remove();
+		}
+		Texture texture = new Texture(Gdx.files.internal("illustrations/" + centerPath));
+		BackgroundCenter backgroundCenter =
+				new BackgroundCenter(backgroundStage.getActors().size, texture);
+		backgroundCenter.bind(worldWidth, worldHeight);
+		backgroundCenter.setVisible(true);
+		drawGradient = false;
+		backgroundStage.addActor(backgroundCenter);
 	}
 
 	public void setGradientBackground(String topLeftColor, String bottomRightColor) {
-		backgroundTop.setVisible(false);
-		backgroundCenter.setVisible(false);
-		backgroundBottom.setVisible(false);
 		gradientTopLeftColor = parseColor(topLeftColor);
 		gradientBottomRightColor = parseColor(bottomRightColor);
 		gradientBlendedColor = new Color(gradientTopLeftColor).add(gradientBottomRightColor);
@@ -234,20 +221,20 @@ public class World extends WorldAdapter {
 	@SuppressWarnings("unused")
 	public void addSticker(Integer filename, Float x, Float y, Float scale, Float rotation) {
 		Texture texture = new Texture(Gdx.files.internal("stickers/" + filename + ".png"));
-		Sticker sticker = new Sticker(stage.getActors().size, texture);
+		Sticker sticker = new Sticker(stickersStage.getActors().size, texture);
 		sticker.setOrigin(sticker.getWidth() / 2, sticker.getHeight() / 2);
 		sticker.setPosition(x, y);
 		sticker.setScale(scale);
 		sticker.setRotation(rotation);
 		sticker.addListener(stickersDragCallback);
-		stage.addActor(sticker);
+		stickersStage.addActor(sticker);
 	}
 
 	@SuppressWarnings("unused")
 	public void removeSticker() {
 		// TODO remove
-		for (int i = 0; i < stage.getActors().size; i++) {
-			Sticker sticker = (Sticker) stage.getActors().get(i);
+		for (int i = 0; i < stickersStage.getActors().size; i++) {
+			Sticker sticker = (Sticker) stickersStage.getActors().get(i);
 			sticker.index = i;
 		}
 	}
