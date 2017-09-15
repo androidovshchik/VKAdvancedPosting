@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.stats;
+package rf.androidovshchik.vkadvancedposting.states;
 
 import android.os.Parcel;
 
