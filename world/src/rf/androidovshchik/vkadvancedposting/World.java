@@ -39,7 +39,7 @@ public class World extends WorldAdapter {
 	private FitViewport viewport;
 
 	private ShapeRenderer shapeRenderer;
-	private SpriteBatch batch;
+	private SpriteBatch spriteBatch;
 
 	private Stage backgroundStage;
 	private Stage stickersStage;
@@ -67,7 +67,7 @@ public class World extends WorldAdapter {
 		viewport = new FitViewport(worldWidth, worldHeight, camera);
 
 		shapeRenderer = new ShapeRenderer();
-		batch = new SpriteBatch();
+		spriteBatch = new SpriteBatch();
 
 		backgroundStage = new Stage(viewport);
 		stickersStage = new Stage(viewport);
@@ -85,8 +85,8 @@ public class World extends WorldAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
+		spriteBatch.setProjectionMatrix(camera.combined);
+		spriteBatch.begin();
 		if (drawGradient) {
 			shapeRenderer.setProjectionMatrix(camera.combined);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -94,10 +94,10 @@ public class World extends WorldAdapter {
 					gradientBottomRightColor, gradientBlendedColor, gradientTopLeftColor);
 			shapeRenderer.end();
 		} else {
-			backgroundStage.getRoot().draw(batch, 1);
+			backgroundStage.getRoot().draw(spriteBatch, 1);
 		}
-		stickersStage.getRoot().draw(batch, 1);
-		batch.end();
+		stickersStage.getRoot().draw(spriteBatch, 1);
+		spriteBatch.end();
 
 		Gdx.graphics.setContinuousRendering(false);
 	}
@@ -173,7 +173,7 @@ public class World extends WorldAdapter {
 		GdxLog.print(TAG, "dispose");
 		backgroundStage.dispose();
 		stickersStage.dispose();
-		batch.dispose();
+		spriteBatch.dispose();
 	}
 
 	private Sticker getCurrentSticker() {
@@ -197,7 +197,7 @@ public class World extends WorldAdapter {
 	}
 
 	@SuppressWarnings("unused")
-	public void setComplexImageBackground(String topPath, String centerPath, String bottomPath) {
+	public void setImagesBackground(String topPath, String centerPath, String bottomPath) {
 		for(int i = backgroundStage.getActors().size - 1; i >= 0; i--) {
 			backgroundStage.getActors().get(i).remove();
 		}
