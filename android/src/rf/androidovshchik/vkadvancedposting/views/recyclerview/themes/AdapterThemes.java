@@ -1,7 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.views.recyclerview.themes;
 
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.ArrayRes;
 import android.view.ViewGroup;
 
 import rf.androidovshchik.vkadvancedposting.R;
@@ -18,14 +17,9 @@ public class AdapterThemes extends AdapterBase {
 
     private static final ColorDrawable EMPTY_BACKGROUND = new ColorDrawable(0xffebebeb);
 
-    @ArrayRes
-    public final static int[] THUMB_IDS = new int[] {
-            R.drawable.thumb_beach,
-            R.drawable.thumb_stars
-    };
-
     public AdapterThemes() {
-        super(1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length + THUMB_IDS.length + 1);
+        super(1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
+                ThemesRecyclerView.THUMB_IDS.length + 1);
     }
 
     @Override
@@ -49,8 +43,9 @@ public class AdapterThemes extends AdapterBase {
         } else if (position < itemsCount - 1) {
             holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackground(null);
-            ((SelectableImageView) holder.itemView).setImageResource(THUMB_IDS[position -
-                    ThemesRecyclerView.GRADIENT_DRAWABLES.length - 1]);
+            ((SelectableImageView) holder.itemView)
+                    .setImageResource(ThemesRecyclerView.THUMB_IDS[position -
+                            ThemesRecyclerView.GRADIENT_DRAWABLES.length - 1]);
         } else {
             // position == itemsCount - 1
             holder.itemView.setPadding(MAX_PADDING, MAX_PADDING, MAX_PADDING, MAX_PADDING);

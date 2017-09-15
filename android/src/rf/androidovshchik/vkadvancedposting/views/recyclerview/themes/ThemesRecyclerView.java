@@ -12,9 +12,18 @@ public class ThemesRecyclerView extends BaseRecyclerView {
 
     private static final int GRADIENTS_COUNT = 5;
 
+    private static final int THUMBS_COUNT = 2;
+
     public static GradientDrawable[] GRADIENT_DRAWABLES = new GradientDrawable[GRADIENTS_COUNT];
 
     public static String[][] GRADIENT_HEXES = new String[GRADIENTS_COUNT][2];
+
+    public final static int[] THUMB_IDS = new int[] {
+            R.drawable.thumb_beach,
+            R.drawable.thumb_stars
+    };
+
+    public static String[][] THUMB_PATHS = new String[THUMBS_COUNT][3];
 
     public AdapterThemes adapter;
 
@@ -29,6 +38,12 @@ public class ThemesRecyclerView extends BaseRecyclerView {
         initGradient(2, parseColor(R.color.sun_yellow), parseColor(R.color.orangish));
         initGradient(3, parseColor(R.color.reddish_pink), parseColor(R.color.berry));
         initGradient(4, parseColor(R.color.light_lavender), parseColor(R.color.dark_periwinkle));
+        THUMB_PATHS[0] = new String[] {
+                "beach/bg_beach_top.png", "beach/bg_beach_center.png", "beach/bg_beach_bottom.png"
+        };
+        THUMB_PATHS[1] = new String[] {
+                null, "stars/bg_stars_center.png", null
+        };
     }
 
     @Override
