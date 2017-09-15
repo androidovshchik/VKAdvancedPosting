@@ -17,14 +17,13 @@ public class FragmentWorld extends AndroidFragmentApplication {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Point screen = ViewUtil.getScreen(getContext().getApplicationContext());
         Point window = ViewUtil.getWindow(getContext().getApplicationContext());
         int worldWidth = getResources().getDimensionPixelSize(R.dimen.world_width);
         int worldHeight;
-        if (screen.y > screen.x) {
-            worldHeight = Math.round(1f * screen.y * worldWidth / screen.x);
+        if (window.y > window.x) {
+            worldHeight = Math.round(1f * window.y * worldWidth / window.x);
         } else {
-            worldHeight = Math.round(1f * screen.x * worldWidth / screen.y);
+            worldHeight = Math.round(1f * window.x * worldWidth / window.y);
         }
         world = new World(window.y, worldWidth, worldHeight);
         return initializeForView(world);

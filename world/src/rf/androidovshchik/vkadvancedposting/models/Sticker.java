@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RotateToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.pools.MoveToPool;
@@ -13,13 +12,11 @@ import rf.androidovshchik.vkadvancedposting.pools.ScaleToPool;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.parallel;
 
-public class Sticker extends Image {
+public class Sticker extends Player {
 
     private static final String TAG = Sticker.class.getSimpleName();
 
     public static final int NONE = -1;
-
-    public int index;
 
     public boolean isPinching = false;
 
@@ -35,9 +32,8 @@ public class Sticker extends Image {
     private RotateToPool rotateToPool;
 
     public Sticker(int index, Texture texture) {
-        super(texture);
+        super(index, texture);
         GdxLog.d(TAG, "Sticker index: %d", index);
-        this.index = index;
         moveToPool = new MoveToPool();
         scaleToPool = new ScaleToPool();
         rotateToPool = new RotateToPool();
