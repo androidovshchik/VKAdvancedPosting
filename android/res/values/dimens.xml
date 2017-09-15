@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="world_width">1080px</dimen>
+    <dimen name="toolbar_top_height">48dp</dimen>
     <dimen name="toolbar_bottom_height">56dp</dimen>
 </resources>
