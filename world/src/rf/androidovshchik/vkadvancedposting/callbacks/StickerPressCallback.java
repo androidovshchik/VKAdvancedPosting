@@ -1,6 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.callbacks;
 
-public interface StickerPressedListener {
+public interface StickerPressCallback {
 
     void onStickerLongPressed();
 }

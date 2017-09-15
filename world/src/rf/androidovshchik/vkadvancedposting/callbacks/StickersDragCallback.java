@@ -6,9 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
-public class StickersDragListener extends InputListener {
+public class StickersDragCallback extends InputListener {
 
-    private static final String TAG = StickersDragListener.class.getSimpleName();
+    private static final String TAG = StickersDragCallback.class.getSimpleName();
 
     private static final int FIRST_FINGER = 0;
 
