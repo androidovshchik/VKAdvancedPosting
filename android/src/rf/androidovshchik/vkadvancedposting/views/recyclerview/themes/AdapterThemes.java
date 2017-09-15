@@ -2,7 +2,7 @@ package rf.androidovshchik.vkadvancedposting.views.recyclerview.themes;
 
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ArrayRes;
-import android.support.v4.content.ContextCompat;
+import android.view.ViewGroup;
 
 import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
@@ -19,22 +19,21 @@ public class AdapterThemes extends AdapterBase {
     private static final ColorDrawable EMPTY_BACKGROUND = new ColorDrawable(0xffebebeb);
 
     @ArrayRes
-    private final static int[] GRADIENT_IDS = new int[] {
-            R.drawable.gradient_theme1,
-            R.drawable.gradient_theme2,
-            R.drawable.gradient_theme3,
-            R.drawable.gradient_theme4,
-            R.drawable.gradient_theme5
-    };
-
-    @ArrayRes
-    private final static int[] THUMB_IDS = new int[] {
+    public final static int[] THUMB_IDS = new int[] {
             R.drawable.thumb_beach,
             R.drawable.thumb_stars
     };
 
     public AdapterThemes() {
-        super(1 + GRADIENT_IDS.length + THUMB_IDS.length + 1, ITEM_SIZE, true);
+        super(1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length + THUMB_IDS.length + 1);
+    }
+
+    @Override
+    public ViewHolderBase onCreateViewHolder(ViewGroup parent, int viewType) {
+        SelectableImageView itemView = new SelectableImageView(parent.getContext(), true);
+        itemView.setId(ViewHolderBase.THEME_VIEW_ID);
+        itemView.setLayoutParams(new ViewGroup.LayoutParams(ITEM_SIZE, ITEM_SIZE));
+        return new ViewHolderBase(itemView);
     }
 
     @Override
@@ -43,16 +42,15 @@ public class AdapterThemes extends AdapterBase {
             holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackground(EMPTY_BACKGROUND);
             ((SelectableImageView) holder.itemView).setImageResource(0);
-        } else if (position < GRADIENT_IDS.length + 1) {
+        } else if (position < ThemesRecyclerView.GRADIENT_DRAWABLES.length + 1) {
             holder.itemView.setPadding(0, 0, 0, 0);
-            holder.itemView.setBackground(ContextCompat.getDrawable(holder.getApplicationContext(),
-                    GRADIENT_IDS[position - 1]));
+            holder.itemView.setBackground(ThemesRecyclerView.GRADIENT_DRAWABLES[position - 1]);
             ((SelectableImageView) holder.itemView).setImageResource(0);
         } else if (position < itemsCount - 1) {
             holder.itemView.setPadding(0, 0, 0, 0);
             holder.itemView.setBackground(null);
             ((SelectableImageView) holder.itemView).setImageResource(THUMB_IDS[position -
-                    GRADIENT_IDS.length - 1]);
+                    ThemesRecyclerView.GRADIENT_DRAWABLES.length - 1]);
         } else {
             // position == itemsCount - 1
             holder.itemView.setPadding(MAX_PADDING, MAX_PADDING, MAX_PADDING, MAX_PADDING);
