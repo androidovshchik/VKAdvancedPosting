@@ -1,8 +1,12 @@
 package rf.androidovshchik.vkadvancedposting;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.input.GestureDetector;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 
@@ -19,6 +23,39 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
     @Override
     public void resume() {
         GdxLog.print(TAG, "resume");
+    }
+
+    // Null may be only String params
+    public void postRunnable(final String name, final Object... params) {
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                Method method = null;
+                Class[] classes = new Class[params.length];
+                for (int i = 0; i < params.length; i++) {
+                    classes[i] = params[i] == null ? String.class : params[i].getClass();
+                }
+                try {
+                    method = World.class.getMethod(name, classes);
+                } catch (SecurityException e) {
+                    GdxLog.print(TAG, e.toString());
+                } catch (NoSuchMethodException e) {
+                    GdxLog.print(TAG, e.toString());
+                }
+                if (method == null) {
+                    return;
+                }
+                try {
+                    method.invoke(WorldAdapter.this, params);
+                } catch (IllegalArgumentException e) {
+                    GdxLog.print(TAG, e.toString());
+                } catch (IllegalAccessException e) {
+                    GdxLog.print(TAG, e.toString());
+                } catch (InvocationTargetException e) {
+                    GdxLog.print(TAG, e.toString());
+                }
+            }
+        });
     }
 
     protected static Color parseColor(String hex) {
