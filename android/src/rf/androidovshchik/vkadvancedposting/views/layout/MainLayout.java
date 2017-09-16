@@ -16,26 +16,27 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.BottomToolbarLayout;
+import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.TopToolbarLayout;
 
 public class MainLayout extends CoordinatorLayout
         implements ViewTreeObserver.OnGlobalLayoutListener {
 
-    private boolean isPostMode = false;
+    private boolean isPostMode = true;
 
-    private int screenWidth;
-    private int screenHeight;
-    private int windowWidth;
     private int windowHeight;
-    private int worldWidth;
-    private int worldHeight;
     private int toolbarTopHeight;
     private int toolbarBottomHeight;
+    private int worldHeight;
 
+    @BindView(R.id.topToolbarLayout)
+    public TopToolbarLayout topToolbar;
     @BindView(R.id.world)
-    View world;
+    public View world;
+    @BindView(R.id.bottomToolbarLayout)
+    public BottomToolbarLayout bottomToolbar;
 
     private View decorView;
-
     private Rect rectResizedWindow;
 
     private Unbinder unbinder;
@@ -46,16 +47,13 @@ public class MainLayout extends CoordinatorLayout
 
     public MainLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        Point screen = ViewUtil.getScreen(getApplicationContext());
-        screenWidth = screen.x;
-        screenHeight =  screen.y;
         Point window = ViewUtil.getWindow(getApplicationContext());
-        windowWidth = window.x;
+        int windowWidth = window.x;
         windowHeight =  window.y;
-        worldWidth = getResources().getDimensionPixelSize(R.dimen.world_width);
-        worldHeight = Math.round(1f * screen.y * worldWidth / screen.x);
         toolbarTopHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_top_height);
         toolbarBottomHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
+        int worldWidth = getResources().getDimensionPixelSize(R.dimen.world_width);
+        worldHeight = Math.round(1f * windowHeight * worldWidth / windowWidth);
         decorView = getDecorView();
         rectResizedWindow = new Rect();
     }
@@ -86,8 +84,8 @@ public class MainLayout extends CoordinatorLayout
     public void setMode(boolean isPostMode) {
         this.isPostMode = isPostMode;
         if (isPostMode) {
-            float scale = 1f * getViewportHeight() / screenHeight;
-            //world.setY((toolbarTopHeight - toolbarBottomHeight + windowHeight - screenHeight) / 2);
+            float scale = 1f * getViewportHeight() / windowHeight;
+            //world.setY((toolbarTopHeight - toolbarBottomHeight + windowHeight - deviceHeight) / 2);
             world.setScaleX(scale);
             world.setScaleY(scale);
         } else {
@@ -100,8 +98,8 @@ public class MainLayout extends CoordinatorLayout
     public void setModeImmediately(boolean isPostMode) {
         this.isPostMode = isPostMode;
         if (isPostMode) {
-            float scale = 1f * getViewportHeight() / screenHeight;
-            //world.setY((toolbarTopHeight - toolbarBottomHeight + windowHeight - screenHeight) / 2);
+            float scale = 1f * getViewportHeight() / worldHeight;
+            //world.setY((toolbarTopHeight - toolbarBottomHeight + windowHeight - deviceHeight) / 2);
             world.setScaleX(scale);
             world.setScaleY(scale);
         } else {
