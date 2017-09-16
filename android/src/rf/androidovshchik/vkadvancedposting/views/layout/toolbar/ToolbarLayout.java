@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.views.layout;
+package rf.androidovshchik.vkadvancedposting.views.layout.toolbar;
 
 import android.annotation.TargetApi;
 import android.content.Context;
