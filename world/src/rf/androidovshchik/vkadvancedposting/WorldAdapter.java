@@ -19,17 +19,28 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
 
     private static final String TAG = WorldAdapter.class.getSimpleName();
 
+    // changes on external ui
+    protected boolean isPostMode = true;
+
+    // changes on resize
+    protected int viewportHeight;
+
     protected int worldWidth;
     protected int worldHeight;
+    protected int worldHalfDifference;
+
+    protected int toolbarTopHeight;
+    protected int toolbarBottomHeight;
+    protected int toolbarHalfDifference;
 
     @Override
     public void pause() {
-        GdxLog.print(TAG, "pause");
+        GdxLog.print(TAG, "lifecycle pause");
     }
 
     @Override
     public void resume() {
-        GdxLog.print(TAG, "resume");
+        GdxLog.print(TAG, "lifecycle resume");
     }
 
     // null may be only String params
@@ -89,7 +100,7 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
 
     public boolean saveScreenshot(Pixmap pixmap) {
         try {
-            PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap);
+            PixmapIO.writePNG(Gdx.files.external("screenshot.png"), pixmap);
         } finally {
             pixmap.dispose();
         }
