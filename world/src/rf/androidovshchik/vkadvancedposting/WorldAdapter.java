@@ -3,7 +3,11 @@ package rf.androidovshchik.vkadvancedposting;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.utils.BufferUtils;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,6 +19,10 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
 
     private static final String TAG = WorldAdapter.class.getSimpleName();
 
+    protected int windowHeight;
+    protected int worldWidth;
+    protected int worldHeight;
+
     @Override
     public void pause() {
         GdxLog.print(TAG, "pause");
@@ -25,7 +33,7 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
         GdxLog.print(TAG, "resume");
     }
 
-    // Null may be only String params
+    // null may be only String params
     public void postRunnable(final String name, final Object... params) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
@@ -69,5 +77,23 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
         int v3 = Integer.parseInt(s3, 16);
         float f3 = 1f * v3 / 255f;
         return new Color(f1, f2, f3, 1f);
+    }
+
+    public Pixmap getScreenshot() {
+        byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0,
+                Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
+        Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(),
+                Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
+        BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+        return pixmap;
+    }
+
+    public boolean saveScreenshot(Pixmap pixmap) {
+        try {
+            PixmapIO.writePNG(Gdx.files.external("mypixmap.png"), pixmap);
+        } finally {
+            pixmap.dispose();
+        }
+        return true;
     }
 }

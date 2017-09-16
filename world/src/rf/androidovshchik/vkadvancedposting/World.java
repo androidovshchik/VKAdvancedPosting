@@ -25,10 +25,7 @@ public class World extends WorldAdapter {
 
 	private static final int SECOND_FINGER = 1;
 
-	private final int windowHeight;
-
-	private final int worldWidth;
-	private final int worldHeight;
+	private int rendersCount = 0;
 
 	private boolean drawGradient = false;
 	private Color gradientTopLeftColor = Color.CLEAR;
@@ -82,11 +79,11 @@ public class World extends WorldAdapter {
 
 	@Override
 	public void render() {
+		GdxLog.print(TAG, "render");
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		spriteBatch.setProjectionMatrix(camera.combined);
-		spriteBatch.begin();
 		if (drawGradient) {
 			shapeRenderer.setProjectionMatrix(camera.combined);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -94,19 +91,28 @@ public class World extends WorldAdapter {
 					gradientBottomRightColor, gradientBlendedColor, gradientTopLeftColor);
 			shapeRenderer.end();
 		} else {
+			spriteBatch.begin();
 			backgroundStage.getRoot().draw(spriteBatch, 1);
+			spriteBatch.end();
 		}
+		spriteBatch.begin();
 		stickersStage.getRoot().draw(spriteBatch, 1);
 		spriteBatch.end();
 
-		Gdx.graphics.setContinuousRendering(false);
+		if (rendersCount >= 2) {
+			rendersCount = 0;
+			Gdx.graphics.setContinuousRendering(false);
+		} else {
+			Gdx.graphics.setContinuousRendering(true);
+			rendersCount++;
+		}
 	}
 
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
+		Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
+		GdxLog.f(TAG, "touchDown pointer1 x: %f y: %f", coordinates.x, coordinates.y);
 		if (pointer == SECOND_FINGER) {
-			Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
-			GdxLog.f(TAG, "touchDown pointer1 x: %f y: %f", coordinates.x, coordinates.y);
 			Sticker sticker = getCurrentSticker();
 			if (sticker != null) {
 				sticker.isPinching = true;
@@ -219,13 +225,10 @@ public class World extends WorldAdapter {
 	}
 
 	@SuppressWarnings("unused")
-	public void addSticker(Integer filename, Float x, Float y, Float scale, Float rotation) {
+	public void addSticker(Integer filename) {
 		Texture texture = new Texture(Gdx.files.internal("stickers/" + filename + ".png"));
-		Sticker sticker = new Sticker(stickersStage.getActors().size, texture);
-		sticker.setOrigin(sticker.getWidth() / 2, sticker.getHeight() / 2);
-		sticker.setPosition(x, y);
-		sticker.setScale(scale);
-		sticker.setRotation(rotation);
+		Sticker sticker = new Sticker(stickersStage.getActors().size, texture,
+				worldWidth, worldHeight);
 		sticker.addListener(stickersDragCallback);
 		stickersStage.addActor(sticker);
 	}
