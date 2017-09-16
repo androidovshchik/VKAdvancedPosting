@@ -16,7 +16,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import rf.androidovshchik.vkadvancedposting.callbacks.StickerPressCallback;
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.callbacks.StickersDragCallback;
-import rf.androidovshchik.vkadvancedposting.models.BackgroundCenter;
+import rf.androidovshchik.vkadvancedposting.models.Background;
+import rf.androidovshchik.vkadvancedposting.models.Player;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class World extends WorldAdapter {
@@ -24,13 +25,6 @@ public class World extends WorldAdapter {
 	public static final String TAG = World.class.getSimpleName();
 
 	private static final int SECOND_FINGER = 1;
-
-	private int rendersCount = 0;
-
-	private boolean drawGradient = false;
-	private Color gradientTopLeftColor = Color.CLEAR;
-	private Color gradientBottomRightColor = Color.CLEAR;
-	private Color gradientBlendedColor = Color.CLEAR;
 
 	private OrthographicCamera camera;
 	private FitViewport viewport;
@@ -40,25 +34,31 @@ public class World extends WorldAdapter {
 
 	private Stage backgroundStage;
 	private Stage stickersStage;
+	//private TopCurtain worldTopCurtain;
+	//private BottomCurtain worldBottomCurtain;
 	private StickersDragCallback stickersDragCallback;
 	private StickerPressCallback stickerPressCallback;
 
-	public World(int worldWidth, int worldHeight) {
+	private boolean drawGradient = false;
+	private Color gradientTopLeftColor = Color.CLEAR;
+	private Color gradientBottomRightColor = Color.CLEAR;
+	private Color gradientBlendedColor = Color.CLEAR;
+
+	public World(boolean debug, int worldWidth, int worldHeight) {
+		GdxLog.DEBUG = debug;
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
+		this.worldHalfDifference = (worldHeight - worldWidth) / 2;
 	}
 
 	@Override
 	public void create() {
-		GdxLog.DEBUG = true;
-		GdxLog.print(TAG, "create");
+		GdxLog.print(TAG, "lifecycle create");
 		GdxLog.d(TAG, "worldWidth: %d", worldWidth);
 		GdxLog.d(TAG, "worldHeight: %d", worldHeight);
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, worldWidth, worldHeight);
-		//camera.zoom = 1f * worldHeight / windowHeight;
-		GdxLog.print(TAG, "zoom: " + camera.zoom);
 		viewport = new FitViewport(worldWidth, worldHeight, camera);
 
 		shapeRenderer = new ShapeRenderer();
@@ -77,8 +77,8 @@ public class World extends WorldAdapter {
 
 	@Override
 	public void render() {
-		GdxLog.print(TAG, "render");
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		GdxLog.print(TAG, "lifecycle render");
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
@@ -174,42 +174,26 @@ public class World extends WorldAdapter {
 
 	@Override
 	public void resize(int width, int height) {
-		GdxLog.print(TAG, "resize");
+		GdxLog.print(TAG, "lifecycle resize");
 		viewport.update(width, height, true);
 	}
 
 	@Override
 	public void dispose() {
-		GdxLog.print(TAG, "dispose");
+		GdxLog.print(TAG, "lifecycle dispose");
 		backgroundStage.dispose();
 		stickersStage.dispose();
 		spriteBatch.dispose();
+		shapeRenderer.dispose();
 	}
 
 	public void setStickerPressCallback(StickerPressCallback stickerPressCallback) {
 		this.stickerPressCallback = stickerPressCallback;
 	}
 
-	public void notify(int topMargin, int viewportHeight, int worldHeight) {
-		GdxLog.print(TAG, "notify");
-		camera.translate(0, 100, 0);
-		camera.zoom = 5f;
-		camera.update();
-		Gdx.graphics.requestRendering();
-	}
+	public void setModeImmediately(boolean isPostMode) {
+		this.isPostMode = isPostMode;
 
-	@SuppressWarnings("unused")
-	public void setImagesBackground(String topPath, String centerPath, String bottomPath) {
-		for(int i = backgroundStage.getActors().size - 1; i >= 0; i--) {
-			backgroundStage.getActors().get(i).remove();
-		}
-		Texture texture = new Texture(Gdx.files.internal("illustrations/" + centerPath));
-		BackgroundCenter backgroundCenter =
-				new BackgroundCenter(backgroundStage.getActors().size, texture);
-		backgroundCenter.bind(worldWidth, worldHeight);
-		backgroundCenter.setVisible(true);
-		drawGradient = false;
-		backgroundStage.addActor(backgroundCenter);
 	}
 
 	public void setGradientBackground(String topLeftColor, String bottomRightColor) {
@@ -221,12 +205,24 @@ public class World extends WorldAdapter {
 	}
 
 	@SuppressWarnings("unused")
+	public void setImagesBackground(String topPath, String centerPath, String bottomPath) {
+		for(int i = backgroundStage.getActors().size - 1; i >= 0; i--) {
+			backgroundStage.getActors().get(i).remove();
+		}
+		Texture texture = new Texture(Gdx.files.internal("illustrations/" + centerPath));
+		Background backgroundCenter = new Background(texture,
+				Player.TYPE_CENTER_BACKGROUND, centerPath);
+		backgroundCenter.setup(worldWidth, worldHeight);
+		drawGradient = false;
+		backgroundStage.addActor(backgroundCenter);
+	}
+
+	@SuppressWarnings("unused")
 	public void addSticker(Integer filename) {
 		Texture texture = new Texture(Gdx.files.internal("stickers/" + filename + ".png"));
-		Sticker sticker = new Sticker(stickersStage.getActors().size, texture,
+		Sticker sticker = new Sticker(texture, Player.TYPE_STICKER, String.valueOf(filename),
 				worldWidth, worldHeight);
 		sticker.addListener(stickersDragCallback);
-		sticker.onAppear();
 		stickersStage.addActor(sticker);
 	}
 
@@ -235,15 +231,14 @@ public class World extends WorldAdapter {
 		// TODO remove
 		for (int i = 0; i < stickersStage.getActors().size; i++) {
 			Sticker sticker = (Sticker) stickersStage.getActors().get(i);
-			sticker.index = i;
 		}
 	}
 
 	private Sticker getCurrentSticker() {
-		int index = stickersDragCallback.index;
+		/*int index = stickersDragCallback.index;
 		if (index != Sticker.NONE && index < stickersStage.getActors().size) {
 			return (Sticker) stickersStage.getActors().get(stickersDragCallback.index);
-		}
+		}*/
 		return null;
 	}
 }

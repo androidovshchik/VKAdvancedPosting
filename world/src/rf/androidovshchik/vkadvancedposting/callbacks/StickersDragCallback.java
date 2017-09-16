@@ -12,14 +12,14 @@ public class StickersDragCallback extends InputListener {
 
     private static final int FIRST_FINGER = 0;
 
-    public int index = Sticker.NONE;
+    public int index = -1;
 
     @Override
     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
         if (pointer == FIRST_FINGER) {
             GdxLog.print(TAG, "touchDown pointer0");
             Sticker sticker = (Sticker) event.getListenerActor();
-            index = sticker.index;
+            index = -1;
             sticker.setDragStarts(x, y);
         }
         return true;
@@ -40,7 +40,7 @@ public class StickersDragCallback extends InputListener {
     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
         if (pointer == FIRST_FINGER) {
             GdxLog.f(TAG, "touchDown pointer0 x: %f y: %f", x, y);
-            index = Sticker.NONE;
+            index = -1;
         }
     }
 }

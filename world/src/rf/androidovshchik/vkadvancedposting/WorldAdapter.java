@@ -22,16 +22,11 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
     // changes on external ui
     protected boolean isPostMode = true;
 
-    // changes on resize
-    protected int viewportHeight;
-
     protected int worldWidth;
     protected int worldHeight;
     protected int worldHalfDifference;
 
-    protected int toolbarTopHeight;
-    protected int toolbarBottomHeight;
-    protected int toolbarHalfDifference;
+    protected int rendersCount = 0;
 
     @Override
     public void pause() {
