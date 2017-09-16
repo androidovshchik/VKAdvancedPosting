@@ -43,8 +43,7 @@ public class World extends WorldAdapter {
 	private StickersDragCallback stickersDragCallback;
 	private StickerPressCallback stickerPressCallback;
 
-	public World(int windowHeight, int worldWidth, int worldHeight) {
-		this.windowHeight = windowHeight;
+	public World(int worldWidth, int worldHeight) {
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
 	}
@@ -53,7 +52,6 @@ public class World extends WorldAdapter {
 	public void create() {
 		GdxLog.DEBUG = true;
 		GdxLog.print(TAG, "create");
-		GdxLog.d(TAG, "windowHeight: %d", windowHeight);
 		GdxLog.d(TAG, "worldWidth: %d", worldWidth);
 		GdxLog.d(TAG, "worldHeight: %d", worldHeight);
 
@@ -83,9 +81,9 @@ public class World extends WorldAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		shapeRenderer.setProjectionMatrix(camera.combined);
 		spriteBatch.setProjectionMatrix(camera.combined);
 		if (drawGradient) {
-			shapeRenderer.setProjectionMatrix(camera.combined);
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 			shapeRenderer.rect(0, 0, worldWidth, worldHeight, gradientBlendedColor,
 					gradientBottomRightColor, gradientBlendedColor, gradientTopLeftColor);
@@ -95,6 +93,11 @@ public class World extends WorldAdapter {
 			backgroundStage.getRoot().draw(spriteBatch, 1);
 			spriteBatch.end();
 		}
+		int worldSizeDifference = Math.round(1f * (worldHeight - worldWidth) / 2);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.rect(0, worldSizeDifference, worldWidth, worldWidth,
+				Color.OLIVE, Color.OLIVE, Color.OLIVE, Color.OLIVE);
+		shapeRenderer.end();
 		spriteBatch.begin();
 		stickersStage.act();
 		stickersStage.getRoot().draw(spriteBatch, 1);

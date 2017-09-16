@@ -19,7 +19,6 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
 
     private static final String TAG = WorldAdapter.class.getSimpleName();
 
-    protected int windowHeight;
     protected int worldWidth;
     protected int worldHeight;
 
