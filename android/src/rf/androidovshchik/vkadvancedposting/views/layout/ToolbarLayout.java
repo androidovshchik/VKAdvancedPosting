@@ -3,7 +3,6 @@ package rf.androidovshchik.vkadvancedposting.views.layout;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -15,12 +14,10 @@ import rf.androidovshchik.vkadvancedposting.R;
 
 public class ToolbarLayout extends RelativeLayout {
 
-    @BindView(R.id.bottomBackground)
+    @BindView(R.id.background)
     protected View background;
-    @BindView(R.id.themesRecyclerView)
-    protected RecyclerView recyclerView;
 
-    private Unbinder unbinder;
+    protected Unbinder unbinder;
 
     public ToolbarLayout(Context context) {
         super(context);

@@ -8,14 +8,11 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.RelativeLayout;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
 
-public class TopToolbarLayout extends RelativeLayout {
+public class TopToolbarLayout extends ToolbarLayout {
 
     public static final String EXTRA_ACTIVE_POST = "activePost";
 
@@ -31,8 +28,6 @@ public class TopToolbarLayout extends RelativeLayout {
     protected View slider;
     @BindView(R.id.actionHistory)
     protected View actionHistory;
-
-    private Unbinder unbinder;
 
     public boolean isActivePost = true;
 
@@ -65,14 +60,14 @@ public class TopToolbarLayout extends RelativeLayout {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("unused")
-    public TopToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TopToolbarLayout(Context context, AttributeSet attrs, int defStyleAttr,
+                            int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        unbinder = ButterKnife.bind(this);
         sliderTranslationX = ObjectAnimator.ofFloat(slider, "translationX", 0f);
         sliderTranslationX.setRepeatCount(Animation.ABSOLUTE);
         sliderScaleX = ObjectAnimator.ofFloat(slider, "scaleX", 0f);
@@ -151,11 +146,5 @@ public class TopToolbarLayout extends RelativeLayout {
 
     private float getRatio(float factor, float x) {
         return 1 + factor * x / sliderMaxDistance;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        unbinder.unbind();
     }
 }
