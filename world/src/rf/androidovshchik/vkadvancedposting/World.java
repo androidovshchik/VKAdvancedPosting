@@ -96,6 +96,7 @@ public class World extends WorldAdapter {
 			spriteBatch.end();
 		}
 		spriteBatch.begin();
+		stickersStage.act();
 		stickersStage.getRoot().draw(spriteBatch, 1);
 		spriteBatch.end();
 
@@ -182,14 +183,6 @@ public class World extends WorldAdapter {
 		spriteBatch.dispose();
 	}
 
-	private Sticker getCurrentSticker() {
-		int index = stickersDragCallback.index;
-		if (index != Sticker.NONE && index < stickersStage.getActors().size) {
-			return (Sticker) stickersStage.getActors().get(stickersDragCallback.index);
-		}
-		return null;
-	}
-
 	public void setStickerPressCallback(StickerPressCallback stickerPressCallback) {
 		this.stickerPressCallback = stickerPressCallback;
 	}
@@ -230,6 +223,7 @@ public class World extends WorldAdapter {
 		Sticker sticker = new Sticker(stickersStage.getActors().size, texture,
 				worldWidth, worldHeight);
 		sticker.addListener(stickersDragCallback);
+		sticker.onAppear();
 		stickersStage.addActor(sticker);
 	}
 
@@ -240,5 +234,13 @@ public class World extends WorldAdapter {
 			Sticker sticker = (Sticker) stickersStage.getActors().get(i);
 			sticker.index = i;
 		}
+	}
+
+	private Sticker getCurrentSticker() {
+		int index = stickersDragCallback.index;
+		if (index != Sticker.NONE && index < stickersStage.getActors().size) {
+			return (Sticker) stickersStage.getActors().get(stickersDragCallback.index);
+		}
+		return null;
 	}
 }
