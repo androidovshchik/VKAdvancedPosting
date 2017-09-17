@@ -13,6 +13,8 @@ public abstract class Player extends Image {
     public static final int TYPE_CENTER_BACKGROUND = 21;
     public static final int TYPE_BOTTOM_BACKGROUND = 22;
 
+    public static final int TYPE_PHOTO = 30;
+
     protected static final float ANIMATION_TIME_MODE_TRANSLATION = 0.3f;
 
     protected static MoveToPool moveToPool = new MoveToPool();

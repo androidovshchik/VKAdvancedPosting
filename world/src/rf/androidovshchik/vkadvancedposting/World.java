@@ -185,6 +185,7 @@ public class World extends WorldAdapter {
 	}
 
 	public void setGradientBackground(String topLeftColor, String bottomRightColor) {
+		clearBackground();
 		gradientTopLeftColor = parseColor(topLeftColor);
 		gradientBottomRightColor = parseColor(bottomRightColor);
 		gradientBlendedColor = new Color(gradientTopLeftColor).add(gradientBottomRightColor);
@@ -194,13 +195,35 @@ public class World extends WorldAdapter {
 
 	@SuppressWarnings("unused")
 	public void setImagesBackground(String topPath, String centerPath, String bottomPath) {
-		for(int i = backgroundStage.getActors().size - 1; i >= 0; i--) {
-			backgroundStage.getActors().get(i).remove();
-		}
-		Texture texture = new Texture(Gdx.files.internal("illustrations/" + centerPath));
-		Background backgroundCenter = new Background(texture,
+		clearBackground();
+		Texture textureCenter = new Texture(Gdx.files.internal("illustrations/" + centerPath));
+		Background backgroundCenter = new Background(textureCenter,
 				Player.TYPE_CENTER_BACKGROUND, centerPath);
-		backgroundCenter.setup(worldWidth, worldHeight);
+		backgroundCenter.center(worldWidth, worldHeight);
+		drawGradient = false;
+		backgroundStage.addActor(backgroundCenter);
+		if (topPath != null) {
+			Texture textureTop = new Texture(Gdx.files.internal("illustrations/" + topPath));
+			Background backgroundTop = new Background(textureTop,
+					Player.TYPE_TOP_BACKGROUND, topPath);
+			backgroundTop.top(worldWidth, worldHeight);
+			backgroundStage.addActor(backgroundTop);
+		}
+		if (bottomPath != null) {
+			Texture textureBottom = new Texture(Gdx.files.internal("illustrations/" + bottomPath));
+			Background backgroundBottom = new Background(textureBottom,
+					Player.TYPE_BOTTOM_BACKGROUND, bottomPath);
+			backgroundBottom.bottom(worldWidth, worldHeight);
+			backgroundStage.addActor(backgroundBottom);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	public void setPhotoBackground(String photoPath) {
+		clearBackground();
+		Texture textureCenter = new Texture(Gdx.files.external(photoPath));
+		Background backgroundCenter = new Background(textureCenter, Player.TYPE_PHOTO, photoPath);
+		backgroundCenter.center(worldWidth, worldHeight);
 		drawGradient = false;
 		backgroundStage.addActor(backgroundCenter);
 	}
@@ -214,11 +237,15 @@ public class World extends WorldAdapter {
 		stickersStage.addActor(sticker);
 	}
 
-	@SuppressWarnings("unused")
-	public void removeSticker() {
-		// TODO remove
+	private void removeSticker() {
 		for (int i = 0; i < stickersStage.getActors().size; i++) {
 			Sticker sticker = (Sticker) stickersStage.getActors().get(i);
+		}
+	}
+
+	private void clearBackground() {
+		for (int i = backgroundStage.getActors().size - 1; i >= 0; i--) {
+			backgroundStage.getActors().get(i).remove();
 		}
 	}
 

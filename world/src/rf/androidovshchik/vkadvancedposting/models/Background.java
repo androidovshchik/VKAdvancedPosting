@@ -28,7 +28,8 @@ public class Background extends Player {
         setOrigin(getWidth() / 2, getHeight() / 2);
         setX(worldWidth / 2 - getWidth() / 2);
         setY(worldHeight / 2 - getHeight() / 2);
-        setScale(1f * worldHeight / getHeight());
+        float minSize = getHeight() > getWidth() ? getWidth() : getHeight();
+        setScale(1f * worldHeight / minSize);
     }
 
     public void bottom(int worldWidth, int worldHeight) {
