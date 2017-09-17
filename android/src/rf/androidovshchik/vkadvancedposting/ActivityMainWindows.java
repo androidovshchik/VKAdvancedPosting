@@ -24,6 +24,7 @@ import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.PostEditText;
 import rf.androidovshchik.vkadvancedposting.views.layout.MainLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
+import timber.log.Timber;
 
 public abstract class ActivityMainWindows extends ActivityMainWorld {
 
@@ -36,15 +37,13 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	@BindView(R.id.popupShadow)
 	View popupShadow;
 
-	@BindView(R.id.fakePhotos)
-	View fakePhotos;
-
 	private PopupWindow photosPopup;
 	private PopupWindow stickersPopup;
 	private DialogWallPost dialogWallPost;
 
 	private Rect rectResizedWindow;
 	private int windowHeight;
+	private int bottomToolbarHeight;
 	private int keyboardHeight;
 	private boolean isKeyboardShowing;
 	// when keyboard is shown photosPopup don't disappear
@@ -59,6 +58,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		dialogWallPost = new DialogWallPost();
 		rectResizedWindow = new Rect();
 		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
+		bottomToolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
 		keyboardHeight = 0;
 		isKeyboardShowing = false;
 		needShowPhotos = false;
@@ -78,9 +78,19 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			isKeyboardShowing = true;
 			keyboardHeight = difference;
 			photosPopup.setHeight(keyboardHeight);
-			fakePhotos.getLayoutParams().height = keyboardHeight;
+			boolean firstTime = mainLayout.bottomToolbar.getLayoutParams().height ==
+					bottomToolbarHeight;
 			if (mainLayout.bottomToolbar.getY() > rectResizedWindow.bottom) {
-				moveBottomToolbarUp();
+				moveBottomToolbarUp(keyboardHeight);
+				if (firstTime) {
+					mainLayout.bottomToolbar.post(new Runnable() {
+						@Override
+						public void run() {
+							mainLayout.bottomToolbar.getLayoutParams().height =
+									keyboardHeight + bottomToolbarHeight;
+						}
+					});
+				}
 			}
 		} else {
 			isKeyboardShowing = false;
@@ -154,7 +164,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 
 	private void showPhotosPopup() {
 		if (!isKeyboardShowing) {
-			moveBottomToolbarUp();
+			moveBottomToolbarUp(0);
 		}
 		showPopup(photosPopup);
 	}
@@ -173,7 +183,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			mainLayout.post(new Runnable() {
 				@Override
 				public void run() {
-					moveBottomToolbarUp();
+					moveBottomToolbarUp(0);
 				}
 			});
 		}
@@ -206,13 +216,13 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		}
 	}
 
-	private void moveBottomToolbarUp() {
-		mainLayout.bottomToolbar.setY(windowHeight - keyboardHeight -
-				mainLayout.bottomToolbar.getHeight());
+	private void moveBottomToolbarUp(int plusOffset) {
+		mainLayout.bottomToolbar.setY(windowHeight -
+				mainLayout.bottomToolbar.getHeight() - plusOffset);
 	}
 
 	private void moveBottomToolbarDown() {
-		mainLayout.bottomToolbar.setY(windowHeight - mainLayout.bottomToolbar.getHeight());
+		mainLayout.bottomToolbar.setY(windowHeight - bottomToolbarHeight);
 	}
 
 	@Override
