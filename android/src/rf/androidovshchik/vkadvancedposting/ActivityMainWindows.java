@@ -130,7 +130,9 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 
 	@OnTouch(R.id.postText)
 	public boolean onPostTextTouch() {
-		hidePhotosPopup();
+		if (photosPopup.isShowing()) {
+			hidePopup(photosPopup);
+		}
 		return false;
 	}
 
@@ -164,7 +166,16 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 
 	private void showStickersPopup() {
 		popupShadow.setVisibility(View.VISIBLE);
-		needShowPhotos = photosPopup.isShowing() && !isKeyboardShowing;
+		if (photosPopup.isShowing() && !isKeyboardShowing) {
+			needShowPhotos = true;
+			mainLayout.post(new Runnable() {
+				@Override
+				public void run() {
+					mainLayout.bottomToolbar.setY(windowHeight - keyboardHeight -
+							mainLayout.bottomToolbar.getHeight());
+				}
+			});
+		}
 		showPopup(stickersPopup);
 	}
 
@@ -172,6 +183,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		popupShadow.setVisibility(View.GONE);
 		hidePopup(stickersPopup);
 		if (needShowPhotos) {
+			needShowPhotos = false;
 			mainLayout.post(new Runnable() {
 				@Override
 				public void run() {
