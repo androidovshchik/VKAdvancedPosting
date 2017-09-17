@@ -27,7 +27,7 @@ public class PhotosRecyclerView extends BaseRecyclerView
 
     private Paint paint;
 
-    private AdapterPhotos adapterPhotos;
+    public AdapterPhotos adapterPhotos;
 
     public PhotosRecyclerView(Context context) {
         super(context, null, 0);

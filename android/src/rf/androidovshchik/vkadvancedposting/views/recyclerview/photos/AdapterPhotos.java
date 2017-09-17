@@ -27,6 +27,8 @@ public class AdapterPhotos extends AdapterBase {
 
     public int itemSize = ITEM_SIZE;
 
+    public int currentPhoto = 0;
+
     public AdapterPhotos() {
         super(0);
         photoPaths = new ArrayList<>();
@@ -53,5 +55,6 @@ public class AdapterPhotos extends AdapterBase {
                 .load(photoPaths.get(position))
                 .apply(options)
                 .into((ImageView) holder.itemView);
+        ((SelectableImageView) holder.itemView).isSelected = position == currentPhoto;
     }
 }
