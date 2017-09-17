@@ -9,9 +9,6 @@ public abstract class Player extends Image {
 
     public static final int TYPE_STICKER = 1;
 
-    public static final int TYPE_TOP_CURTAIN = 10;
-    public static final int TYPE_BOTTOM_CURTAIN = 11;
-
     public static final int TYPE_TOP_BACKGROUND = 20;
     public static final int TYPE_CENTER_BACKGROUND = 21;
     public static final int TYPE_BOTTOM_BACKGROUND = 22;
