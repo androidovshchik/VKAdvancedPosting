@@ -19,11 +19,7 @@ public class DecorationPhotos extends RecyclerView.ItemDecoration {
     private static final int MAX_RIGHT_SPACE = MAX_TOP_SPACE;
     private static final int RIGHT_SPACE = BOTTOM_SPACE;
 
-    private int maxBottomSpace;
-
-    public DecorationPhotos(int maxBottomSpace) {
-        this.maxBottomSpace = maxBottomSpace;
-    }
+    public DecorationPhotos() {}
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
@@ -32,13 +28,8 @@ public class DecorationPhotos extends RecyclerView.ItemDecoration {
         int itemsCount = parent.getAdapter().getItemCount();
         int columnsCount = itemsCount / 2 + (itemsCount % 2 != 0 ? 1 : 0);
         int minRightItemPosition = (columnsCount - 1) * 2;
-        if (position % 2 == 0) {
-            outRect.top = MAX_TOP_SPACE;
-            outRect.bottom = BOTTOM_SPACE;
-        } else {
-            outRect.top = TOP_SPACE;
-            outRect.bottom = maxBottomSpace;
-        }
+        outRect.top = TOP_SPACE;
+        outRect.bottom = BOTTOM_SPACE;
         if (position < 2) {
             outRect.left = MAX_LEFT_SPACE;
         } else {

@@ -2,20 +2,30 @@ package rf.androidovshchik.vkadvancedposting.views.recyclerview.photos;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 
 import java.io.File;
 
+import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.components.CursorPhotos;
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
 
 public class PhotosRecyclerView extends BaseRecyclerView
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CURSOR_PHOTOS = 1;
+
+    private static final int DIVIDER_HEIGHT = ViewUtil.dp2px(0.5f);
+
+    private Paint paint;
 
     private AdapterPhotos adapterPhotos;
 
@@ -25,6 +35,11 @@ public class PhotosRecyclerView extends BaseRecyclerView
 
     @Override
     protected void init() {
+        setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(DIVIDER_HEIGHT);
+        paint.setColor(Color.parseColor("#1e000000"));
         adapterPhotos = new AdapterPhotos();
         setAdapter(adapterPhotos);
         setupGridLayoutManager(2, false);
@@ -36,6 +51,12 @@ public class PhotosRecyclerView extends BaseRecyclerView
                 loaderManager.initLoader(CURSOR_PHOTOS, null, this);
             }
         }
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.drawLine(0, DIVIDER_HEIGHT / 2, getWidth(), DIVIDER_HEIGHT / 2, paint);
     }
 
     @Override
@@ -66,11 +87,14 @@ public class PhotosRecyclerView extends BaseRecyclerView
             }
         }
         adapterPhotos.itemSize = itemHeight;
-        addItemDecoration(new DecorationPhotos(maxBottomSpace));
+        setPadding(0, DecorationPhotos.MAX_TOP_SPACE, 0,
+                maxBottomSpace - DecorationPhotos.BOTTOM_SPACE);
+        addItemDecoration(new DecorationPhotos());
         setupCacheProperties();
-        // ui is prepared
-        adapterPhotos.photoPickersCount = 2;
-        adapterPhotos.notifyDataSetChanged();
+        adapterPhotos.hasUiPrepared = true;
+        if (adapterPhotos.getItemCount() > 0) {
+            adapterPhotos.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -85,8 +109,7 @@ public class PhotosRecyclerView extends BaseRecyclerView
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                 adapterPhotos.photoPaths.add(new File(path));
             } while (cursor.moveToNext());
-            if (adapterPhotos.photoPickersCount > 0) {
-                // onSizeChanged called before and ui was prepared
+            if (adapterPhotos.hasUiPrepared) {
                 adapterPhotos.notifyDataSetChanged();
             }
         }
