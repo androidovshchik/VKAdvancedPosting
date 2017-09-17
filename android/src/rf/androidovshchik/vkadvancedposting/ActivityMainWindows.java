@@ -36,6 +36,9 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	@BindView(R.id.popupShadow)
 	View popupShadow;
 
+	@BindView(R.id.fakePhotos)
+	View fakePhotos;
+
 	private PopupWindow photosPopup;
 	private PopupWindow stickersPopup;
 	private DialogWallPost dialogWallPost;
@@ -75,16 +78,16 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			isKeyboardShowing = true;
 			keyboardHeight = difference;
 			photosPopup.setHeight(keyboardHeight);
+			fakePhotos.getLayoutParams().height = keyboardHeight;
 			if (mainLayout.bottomToolbar.getY() > rectResizedWindow.bottom) {
-				mainLayout.bottomToolbar.setY(windowHeight - keyboardHeight -
-						mainLayout.bottomToolbar.getHeight());
+				moveBottomToolbarUp();
 			}
 		} else {
 			isKeyboardShowing = false;
 			hidePhotosPopup();
 			if (keyboardHeight != 0 &&
 					mainLayout.bottomToolbar.getY() < windowHeight - keyboardHeight) {
-				mainLayout.bottomToolbar.setY(windowHeight - mainLayout.bottomToolbar.getHeight());
+				moveBottomToolbarDown();
 			}
 		}
 	}
@@ -151,8 +154,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 
 	private void showPhotosPopup() {
 		if (!isKeyboardShowing) {
-			mainLayout.bottomToolbar.setY(windowHeight - keyboardHeight -
-					mainLayout.bottomToolbar.getHeight());
+			moveBottomToolbarUp();
 		}
 		showPopup(photosPopup);
 	}
@@ -160,7 +162,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	private void hidePhotosPopup() {
 		hidePopup(photosPopup);
 		if (!isKeyboardShowing) {
-			mainLayout.bottomToolbar.setY(windowHeight - mainLayout.bottomToolbar.getHeight());
+			moveBottomToolbarDown();
 		}
 	}
 
@@ -171,8 +173,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			mainLayout.post(new Runnable() {
 				@Override
 				public void run() {
-					mainLayout.bottomToolbar.setY(windowHeight - keyboardHeight -
-							mainLayout.bottomToolbar.getHeight());
+					moveBottomToolbarUp();
 				}
 			});
 		}
@@ -205,9 +206,20 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		}
 	}
 
+	private void moveBottomToolbarUp() {
+		mainLayout.bottomToolbar.setY(windowHeight - keyboardHeight -
+				mainLayout.bottomToolbar.getHeight());
+	}
+
+	private void moveBottomToolbarDown() {
+		mainLayout.bottomToolbar.setY(windowHeight - mainLayout.bottomToolbar.getHeight());
+	}
+
 	@Override
 	public void onBackPressed() {
-		if (photosPopup.isShowing() && !isKeyboardShowing) {
+		if (stickersPopup.isShowing()) {
+			hideStickersPopup();
+		} else if (photosPopup.isShowing() && !isKeyboardShowing) {
 			hidePhotosPopup();
 		} else {
 			super.onBackPressed();
