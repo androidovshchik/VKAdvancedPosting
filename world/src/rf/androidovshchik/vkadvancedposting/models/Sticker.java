@@ -25,6 +25,8 @@ public class Sticker extends Player {
     private static ScaleToPool scaleToPool = new ScaleToPool();
     private static RotateToPool rotateToPool = new RotateToPool();
 
+    public int index;
+
     public boolean isPinching = false;
 
     public float startDragX;
@@ -35,8 +37,10 @@ public class Sticker extends Player {
     public float startScale;
     public float startRotation;
 
-    public Sticker(Texture texture, int type, String path, int worldWidth, int worldHeight) {
+    public Sticker(Texture texture, int type, String path, int worldWidth,
+                   int worldHeight, int index) {
         super(texture, type, path);
+        this.index = index;
         setOrigin(getWidth() / 2, getHeight() / 2);
         setScale(MIN_SCALE);
         // 0.6f < scale < 0.8f

@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import java.util.ArrayList;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
-import rf.androidovshchik.vkadvancedposting.callbacks.StickersDragCallback;
 import rf.androidovshchik.vkadvancedposting.models.Background;
 import rf.androidovshchik.vkadvancedposting.models.Player;
 import rf.androidovshchik.vkadvancedposting.models.Record;
@@ -26,6 +25,7 @@ public class World extends WorldAdapter {
 
 	public static final String TAG = World.class.getSimpleName();
 
+	private static final int FIRST_FINGER = 0;
 	private static final int SECOND_FINGER = 1;
 
 	protected int worldWidth;
@@ -39,7 +39,8 @@ public class World extends WorldAdapter {
 
 	private Stage backgroundStage;
 	private Stage stickersStage;
-	private StickersDragCallback stickersDragCallback;
+
+	protected int currentSticker = Sticker.INDEX_NONE;
 
 	private boolean drawGradient = false;
 	private Color gradientTopLeftColor = Color.CLEAR;
@@ -69,7 +70,6 @@ public class World extends WorldAdapter {
 
 		backgroundStage = new Stage(viewport);
 		stickersStage = new Stage(viewport);
-		stickersDragCallback = new StickersDragCallback();
 
 		GestureDetector gestureDetector = new GestureDetector(this);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -114,13 +114,17 @@ public class World extends WorldAdapter {
 
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
-		Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
-		GdxLog.f(TAG, "touchDown pointer1 x: %f y: %f", coordinates.x, coordinates.y);
-		if (pointer == SECOND_FINGER) {
+		if (pointer == FIRST_FINGER) {
+			Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
+			Sticker sticker = (Sticker) stickersStage.hit(coordinates.x, coordinates.y, false);
+			if (sticker != null) {
+				currentSticker = sticker.index;
+			}
+		} else if (pointer == SECOND_FINGER) {
 			Sticker sticker = getCurrentSticker();
 			if (sticker != null) {
 				sticker.isPinching = true;
-				sticker.setPinchStarts(coordinates.x, coordinates.y);
+				//sticker.setPinchStarts(coordinates.x, coordinates.y);
 			}
 		}
 		return false;
@@ -130,7 +134,7 @@ public class World extends WorldAdapter {
 	public boolean longPress(float x, float y) {
 		Sticker sticker = getCurrentSticker();
 		if (sticker != null) {
-
+			removeSticker();
 		}
 		return false;
 	}
@@ -232,14 +236,14 @@ public class World extends WorldAdapter {
 	public void addSticker(Integer filename) {
 		Texture texture = new Texture(Gdx.files.internal("stickers/" + filename + ".png"));
 		Sticker sticker = new Sticker(texture, Player.TYPE_STICKER, String.valueOf(filename),
-				worldWidth, worldHeight);
-		sticker.addListener(stickersDragCallback);
+				worldWidth, worldHeight, stickersStage.getActors().size);
 		stickersStage.addActor(sticker);
 	}
 
 	private void removeSticker() {
+		stickersStage.getActors().get(currentSticker).remove();
 		for (int i = 0; i < stickersStage.getActors().size; i++) {
-			Sticker sticker = (Sticker) stickersStage.getActors().get(i);
+			((Sticker) stickersStage.getActors().get(i)).index = i;
 		}
 	}
 
@@ -250,10 +254,10 @@ public class World extends WorldAdapter {
 	}
 
 	private Sticker getCurrentSticker() {
-		/*int index = stickersDragCallback.index;
-		if (index != Sticker.NONE && index < stickersStage.getActors().size) {
-			return (Sticker) stickersStage.getActors().get(stickersDragCallback.index);
-		}*/
+		if (currentSticker != Sticker.INDEX_NONE
+				&& currentSticker < stickersStage.getActors().size) {
+			return (Sticker) stickersStage.getActors().get(currentSticker);
+		}
 		return null;
 	}
 }

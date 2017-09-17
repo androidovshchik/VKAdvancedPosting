@@ -7,6 +7,8 @@ import rf.androidovshchik.vkadvancedposting.pools.MoveToPool;
 
 public abstract class Player extends Image {
 
+    public static final int INDEX_NONE = -1;
+
     public static final int TYPE_STICKER = 1;
 
     public static final int TYPE_TOP_BACKGROUND = 20;
