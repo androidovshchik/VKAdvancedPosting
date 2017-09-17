@@ -23,13 +23,14 @@ import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class World extends WorldAdapter {
 
-	public static final String TAG = World.class.getSimpleName();
+	private static final String TAG = World.class.getSimpleName();
 
 	private static final int FIRST_FINGER = 0;
 	private static final int SECOND_FINGER = 1;
 
-	protected int worldWidth;
-	protected int worldHeight;
+	private int worldWidth;
+	private int worldHeight;
+	private float worldDensity;
 
 	private OrthographicCamera camera;
 	private FitViewport viewport;
@@ -40,14 +41,14 @@ public class World extends WorldAdapter {
 	private Stage backgroundStage;
 	private Stage stickersStage;
 
-	protected int currentSticker = Sticker.INDEX_NONE;
+	private int currentSticker = Sticker.INDEX_NONE;
 
 	private boolean drawGradient = false;
 	private Color gradientTopLeftColor = Color.CLEAR;
 	private Color gradientBottomRightColor = Color.CLEAR;
 	private Color gradientBlendedColor = Color.CLEAR;
 
-	protected int rendersCount = 0;
+	private int rendersCount = 0;
 
 	public World(boolean debug, int worldWidth, int worldHeight, ArrayList<Record> records) {
 		GdxLog.DEBUG = debug;
@@ -115,16 +116,33 @@ public class World extends WorldAdapter {
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 		if (pointer == FIRST_FINGER) {
+			GdxLog.print(TAG, "touchDown FIRST_FINGER");
 			Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
 			Sticker sticker = (Sticker) stickersStage.hit(coordinates.x, coordinates.y, false);
 			if (sticker != null) {
 				currentSticker = sticker.index;
 			}
-		} else if (pointer == SECOND_FINGER) {
+		} else {
+			currentSticker = Sticker.INDEX_NONE;
+		}
+		/* else if (pointer == SECOND_FINGER) {
+			GdxLog.print(TAG, "touchDown SECOND_FINGER");
 			Sticker sticker = getCurrentSticker();
 			if (sticker != null) {
 				sticker.isPinching = true;
 				//sticker.setPinchStarts(coordinates.x, coordinates.y);
+			}
+		}*/
+		return false;
+	}
+
+	@Override
+	public boolean pan(float x, float y, float deltaX, float deltaY) {
+		if (currentSticker != Sticker.INDEX_NONE) {
+			GdxLog.print(TAG, "!INDEX_NONE FINGER");
+			Sticker sticker = getCurrentSticker();
+			if (sticker != null) {
+				sticker.moveBy(deltaX * worldDensity, - deltaY * worldDensity);
 			}
 		}
 		return false;
@@ -176,6 +194,11 @@ public class World extends WorldAdapter {
 	@Override
 	public void resize(int width, int height) {
 		GdxLog.print(TAG, "lifecycle resize");
+		if (height > width) {
+			worldDensity = 1f * worldWidth / width;
+		} else {
+			worldDensity = 1f * worldHeight / height;
+		}
 		viewport.update(width, height, true);
 	}
 

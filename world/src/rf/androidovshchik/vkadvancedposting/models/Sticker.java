@@ -29,8 +29,9 @@ public class Sticker extends Player {
 
     public boolean isPinching = false;
 
-    public float startDragX;
-    public float startDragY;
+    public float halfWidth;
+    public float halfHeight;
+
     public float startPinchX;
     public float startPinchY;
 
@@ -41,7 +42,9 @@ public class Sticker extends Player {
                    int worldHeight, int index) {
         super(texture, type, path);
         this.index = index;
-        setOrigin(getWidth() / 2, getHeight() / 2);
+        halfWidth = getWidth() / 2;
+        halfHeight = getHeight() / 2;
+        setOrigin(halfWidth, halfHeight);
         setScale(MIN_SCALE);
         // 0.6f < scale < 0.8f
         startScale = 1f * random.nextInt(20) / 100 + 0.6f;
@@ -69,12 +72,6 @@ public class Sticker extends Player {
         setRotation(startRotation);
         setY(y);
         onAppear();
-    }
-
-    public void setDragStarts(float x, float y) {
-        startDragX = x;
-        startDragY = y;
-        GdxLog.f(TAG, "setDragStarts startDragX: %f startDragY: %f", startDragX, startDragY);
     }
 
     public void setPinchStarts(float x, float y) {
