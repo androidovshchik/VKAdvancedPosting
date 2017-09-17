@@ -36,9 +36,6 @@ public abstract class Player extends Image {
         this.path = record.path;
     }
 
-    public abstract void onModeTranslation(boolean isPostMode, int worldHeight,
-                                           int worldHalfDifference);
-
     public Record save2Record() {
         Record record = new Record();
         record.type = type;

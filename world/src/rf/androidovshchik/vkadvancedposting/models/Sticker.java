@@ -1,7 +1,6 @@
 package rf.androidovshchik.vkadvancedposting.models;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 
 import java.util.Random;
@@ -87,22 +86,6 @@ public class Sticker extends Player {
         scaleToAction.setScale(startScale);
         scaleToAction.setDuration(ANIMATION_TIME_APPEAR);
         addAction(scaleToAction);
-    }
-
-    @Override
-    public void onModeTranslation(boolean isPostMode, int worldHeight, int worldHalfDifference) {
-        float centerY = getY() + getHeight() / 2;
-        MoveToAction moveToAction = moveToPool.obtain();
-        moveToAction.setPool(moveToPool);
-        if (isPostMode) {
-            moveToAction.setPosition(getX(),
-                    getY() + worldHalfDifference * (centerY < worldHeight / 2 ? 1 : -1));
-        } else {
-            moveToAction.setPosition(getX(),
-                    getY() + worldHalfDifference * (centerY < worldHeight / 2 ? -1 : 1));
-        }
-        moveToAction.setDuration(ANIMATION_TIME_MODE_TRANSLATION);
-        addAction(moveToAction);
     }
 
     public void onPinch(float x, float y, float scale, float rotation) {
