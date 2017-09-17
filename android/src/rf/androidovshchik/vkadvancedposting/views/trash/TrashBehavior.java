@@ -6,12 +6,11 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import rf.androidovshchik.vkadvancedposting.callbacks.StickerPressedListener;
 import timber.log.Timber;
 
 @SuppressWarnings("unused")
 public class TrashBehavior extends CoordinatorLayout.Behavior<TrashFab>
-        implements GestureDetector.OnGestureListener, StickerPressedListener {
+        implements GestureDetector.OnGestureListener {
 
     private GestureDetector gestureDetector;
 
@@ -51,11 +50,6 @@ public class TrashBehavior extends CoordinatorLayout.Behavior<TrashFab>
     public void onLongPress(MotionEvent event) {
         Timber.d("Event: onLongPress");
         hasLongPressed = true;
-    }
-
-    @Override
-    public void onStickerLongPressed() {
-
     }
 
     @Override
