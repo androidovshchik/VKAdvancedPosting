@@ -24,7 +24,6 @@ import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.PostEditText;
 import rf.androidovshchik.vkadvancedposting.views.layout.MainLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
-import timber.log.Timber;
 
 public abstract class ActivityMainWindows extends ActivityMainWorld {
 
@@ -83,13 +82,8 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			if (mainLayout.bottomToolbar.getY() > rectResizedWindow.bottom) {
 				moveBottomToolbarUp(keyboardHeight);
 				if (firstTime) {
-					mainLayout.bottomToolbar.post(new Runnable() {
-						@Override
-						public void run() {
-							mainLayout.bottomToolbar.getLayoutParams().height =
-									keyboardHeight + bottomToolbarHeight;
-						}
-					});
+					mainLayout.bottomToolbar.getLayoutParams().height =
+							keyboardHeight + bottomToolbarHeight;
 				}
 			}
 		} else {
@@ -145,6 +139,8 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	public boolean onPostTextTouch() {
 		if (photosPopup.isShowing()) {
 			hidePopup(photosPopup);
+		} else {
+			moveBottomToolbarUp(0);
 		}
 		return false;
 	}
@@ -178,14 +174,18 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 
 	private void showStickersPopup() {
 		popupShadow.setVisibility(View.VISIBLE);
-		if (photosPopup.isShowing() && !isKeyboardShowing) {
-			needShowPhotos = true;
-			mainLayout.post(new Runnable() {
-				@Override
-				public void run() {
-					moveBottomToolbarUp(0);
-				}
-			});
+		if (photosPopup.isShowing()) {
+			if (!isKeyboardShowing) {
+				needShowPhotos = true;
+				mainLayout.bottomToolbar.post(new Runnable() {
+					@Override
+					public void run() {
+						moveBottomToolbarUp(0);
+					}
+				});
+			} else {
+				moveBottomToolbarUp(0);
+			}
 		}
 		showPopup(stickersPopup);
 	}
@@ -195,7 +195,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		hidePopup(stickersPopup);
 		if (needShowPhotos) {
 			needShowPhotos = false;
-			mainLayout.post(new Runnable() {
+			mainLayout.bottomToolbar.post(new Runnable() {
 				@Override
 				public void run() {
 					showPhotosPopup();

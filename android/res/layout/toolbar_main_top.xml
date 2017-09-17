@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rf.androidovshchik.vkadvancedposting.views.layout.TopToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/topToolbarContainer"
+<rf.androidovshchik.vkadvancedposting.views.layout.toolbar.TopToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topToolbarLayout"
     android:layout_width="match_parent"
-    android:layout_height="48dp">
+    android:layout_height="@dimen/toolbar_top_height">
 
     <View
-        android:id="@+id/topBackground"
+        android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"/>
+        android:background="#66000000"/>
 
     <ImageView
         android:id="@+id/actionFont"
@@ -77,4 +77,4 @@
         android:scaleType="centerInside"
         android:contentDescription="@string/app_name"/>
 
-</rf.androidovshchik.vkadvancedposting.views.layout.TopToolbarLayout>
+</rf.androidovshchik.vkadvancedposting.views.layout.toolbar.TopToolbarLayout>
