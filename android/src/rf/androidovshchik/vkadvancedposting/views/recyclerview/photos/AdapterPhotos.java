@@ -4,11 +4,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.SelectableImageView;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.AdapterBase;
@@ -19,20 +19,24 @@ public class AdapterPhotos extends AdapterBase {
     // may be larger or smaller due to keyboard height
     public static final int ITEM_SIZE = ViewUtil.dp2px(84);
 
+    private RequestOptions options;
+
     public ArrayList<File> photoPaths;
 
-    public int photoPickersCount = 0;
+    public boolean hasUiPrepared = false;
 
     public int itemSize = ITEM_SIZE;
 
     public AdapterPhotos() {
         super(0);
         photoPaths = new ArrayList<>();
+        options = new RequestOptions();
+        options.centerCrop();
     }
 
     @Override
     public int getItemCount() {
-        return photoPickersCount + photoPaths.size();
+        return photoPaths.size();
     }
 
     @Override
@@ -45,18 +49,9 @@ public class AdapterPhotos extends AdapterBase {
 
     @Override
     public void onBindViewHolder(ViewHolderBase holder, int position) {
-        if (position <= 1) {
-            holder.itemView.setBackground(VK_BACKGROUND);
-            Glide.with(holder.getApplicationContext())
-                    .load(position == 0 ? R.drawable.ic_photopicker_albums :
-                            R.drawable.ic_photopicker_camera)
-                    .into((ImageView) holder.itemView);
-        } else {
-            // position > 1
-            holder.itemView.setBackground(null);
-            Glide.with(holder.getApplicationContext())
-                    .load(photoPaths.get(position - 2))
-                    .into((ImageView) holder.itemView);
-        }
+        Glide.with(holder.getApplicationContext())
+                .load(photoPaths.get(position))
+                .apply(options)
+                .into((ImageView) holder.itemView);
     }
 }

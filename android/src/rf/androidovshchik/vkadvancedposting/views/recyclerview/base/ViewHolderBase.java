@@ -31,21 +31,21 @@ public class ViewHolderBase extends RecyclerView.ViewHolder {
     @SuppressWarnings("unused")
     @OnClick(THEME_VIEW_ID)
     public void onThemeClicked() {
-        EventUtil.postSticky(new ThemeClickEvent(getAdapterPosition()));
+        EventUtil.post(new ThemeClickEvent(getAdapterPosition()));
     }
 
     @Optional
     @SuppressWarnings("unused")
     @OnClick(STICKER_VIEW_ID)
     public void onStickerClicked() {
-        EventUtil.postSticky(new StickerClickEvent(getAdapterPosition()));
+        EventUtil.post(new StickerClickEvent(getAdapterPosition()));
     }
 
     @Optional
     @SuppressWarnings("unused")
     @OnClick(PHOTO_VIEW_ID)
     public void onPhotoClicked() {
-        EventUtil.postSticky(new PhotoClickEvent(getAdapterPosition()));
+        EventUtil.post(new PhotoClickEvent(getAdapterPosition()));
     }
 
     public Context getApplicationContext() {
