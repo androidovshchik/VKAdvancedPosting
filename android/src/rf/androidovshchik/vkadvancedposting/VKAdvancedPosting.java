@@ -23,6 +23,7 @@ public class VKAdvancedPosting extends Application {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectAll()
                     .permitDiskReads()
+                    .permitDiskWrites()
                     .penaltyDialog()
                     .penaltyLog()
                     .build());

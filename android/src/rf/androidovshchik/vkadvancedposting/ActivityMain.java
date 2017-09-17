@@ -8,7 +8,4 @@ public class ActivityMain extends ActivityMainWindows {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-
-	@Override
-	public void exit() {}
 }

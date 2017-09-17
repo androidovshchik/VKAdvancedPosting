@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Base">
         <activity
-            android:name=".ActivityMainWorld"
+            android:name=".ActivityMain"
             android:theme="@style/Theme.Main"
             android:screenOrientation="sensorPortrait">
             <intent-filter>

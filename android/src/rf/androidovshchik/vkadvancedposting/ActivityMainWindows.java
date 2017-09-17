@@ -1,11 +1,16 @@
 package rf.androidovshchik.vkadvancedposting;
 
+import android.Manifest;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -16,12 +21,17 @@ import butterknife.OnClick;
 import butterknife.OnTouch;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.PostEditText;
 import rf.androidovshchik.vkadvancedposting.views.layout.MainLayout;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
 
 public abstract class ActivityMainWindows extends ActivityMainWorld {
 
 	@BindView(R.id.mainLayout)
 	public MainLayout mainLayout;
+
+	@BindView(R.id.postText)
+	public PostEditText postText;
 
 	@BindView(R.id.popupShadow)
 	View popupShadow;
@@ -34,6 +44,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	private int windowHeight;
 	private int keyboardHeight;
 	private boolean isKeyboardShowing;
+	// when keyboard is shown photosPopup don't disappear
 	private boolean needShowPhotos;
 
 	@Override
@@ -51,10 +62,9 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-		getWindow().getDecorView().getViewTreeObserver()
-				.addOnGlobalLayoutListener(this);
+	public void onResume() {
+		super.onResume();
+		postText.requestFocus();
 	}
 
 	@Override
@@ -93,7 +103,29 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	@SuppressWarnings("all")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onThemeClickEvent(ThemeClickEvent event) {
-		showPhotosPopup();
+		int position = event.position;
+		if (position <= 0) {
+			String white = "ffffff";
+			fragment.world.setGradientBackground(white, white);
+		} else if (position < 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length) {
+			String topLeftColor = ThemesRecyclerView.GRADIENT_HEXES[position - 1][0];
+			String bottomRightColor = ThemesRecyclerView.GRADIENT_HEXES[position - 1][1];
+			fragment.world.setGradientBackground(topLeftColor, bottomRightColor);
+		} else if (position >= 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length) {
+			if (position >= 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
+					ThemesRecyclerView.THUMB_PATHS.length) {
+				if (!hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+					requirePermission(Manifest.permission.READ_EXTERNAL_STORAGE,
+							REQUEST_READ_EXTERNAL_STORAGE);
+				} else {
+					showPhotosPopup();
+				}
+				return;
+			}
+			String[] paths = ThemesRecyclerView.THUMB_PATHS[position -
+					ThemesRecyclerView.GRADIENT_DRAWABLES.length - 1];
+			fragment.world.postRunnable("setImagesBackground", paths[0], paths[1], paths[2]);
+		}
 	}
 
 	@OnTouch(R.id.postText)
@@ -171,9 +203,30 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	}
 
 	@Override
-	public void onStop() {
-		super.onStop();
-		getWindow().getDecorView().getViewTreeObserver()
-				.removeOnGlobalLayoutListener(this);
+	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+										   @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		switch (requestCode) {
+			case REQUEST_READ_EXTERNAL_STORAGE:
+				if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+					showPhotosPopup();
+				}
+				break;
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		switch (requestCode) {
+			case REQUEST_VK_LOGIN:
+				if (resultCode == AppCompatActivity.RESULT_OK) {
+					((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
+							.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+				}
+				break;
+			default:
+				break;
+		}
 	}
 }
