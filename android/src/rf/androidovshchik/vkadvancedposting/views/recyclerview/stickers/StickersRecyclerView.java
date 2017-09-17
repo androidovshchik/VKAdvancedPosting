@@ -49,7 +49,8 @@ public class StickersRecyclerView extends BaseRecyclerView {
         AdapterStickers adapter = new AdapterStickers(itemsCount, itemWidth);
         setAdapter(adapter);
         setupGridLayoutManager(itemsPerLine, true);
-        addItemDecoration(new DecorationStickers(itemsPerLine, maxLeftSpace, maxRightSpace));
+        setPadding(maxLeftSpace, 0, maxRightSpace - DecorationStickers.RIGHT_SPACE, 0);
+        addItemDecoration(new DecorationStickers(itemsPerLine));
         setupCacheProperties();
     }
 

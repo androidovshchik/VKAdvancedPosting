@@ -21,13 +21,9 @@ public class DecorationStickers extends RecyclerView.ItemDecoration {
     public static final int RIGHT_SPACE = BOTTOM_SPACE;
 
     private int itemsPerLine;
-    private int maxLeftSpace;
-    private int maxRightSpace;
 
-    public DecorationStickers(int itemsPerLine, int maxLeftSpace, int maxRightSpace) {
+    public DecorationStickers(int itemsPerLine) {
         this.itemsPerLine = itemsPerLine;
-        this.maxLeftSpace = maxLeftSpace;
-        this.maxRightSpace = maxRightSpace;
     }
 
     @Override
@@ -48,15 +44,7 @@ public class DecorationStickers extends RecyclerView.ItemDecoration {
         } else {
             outRect.bottom = BOTTOM_SPACE;
         }
-        if (position % itemsPerLine == 0) {
-            outRect.left = maxLeftSpace;
-        } else {
-            outRect.left = LEFT_SPACE;
-        }
-        if ((position + 1) % itemsPerLine == 0) {
-            outRect.right = maxRightSpace;
-        } else {
-            outRect.right = RIGHT_SPACE;
-        }
+        outRect.left = LEFT_SPACE;
+        outRect.right = RIGHT_SPACE;
     }
 }
