@@ -35,7 +35,8 @@ public class SelectableImageView extends AppCompatImageView {
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(RECT_SIZE);
             colorInner = ContextCompat.getColor(getApplicationContext(), R.color.white);
-            colorOuter = ContextCompat.getColor(getApplicationContext(), R.color.cornflower_blue_two);
+            colorOuter = ContextCompat.getColor(getApplicationContext(),
+                    R.color.cornflower_blue_two);
             rectOuter = new RectF();
             rectCorners = new RectF();
         }

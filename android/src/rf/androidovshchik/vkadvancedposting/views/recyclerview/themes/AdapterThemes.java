@@ -17,6 +17,8 @@ public class AdapterThemes extends AdapterBase {
 
     private static final ColorDrawable EMPTY_BACKGROUND = new ColorDrawable(0xffebebeb);
 
+    public int currentTheme = 0;
+
     public AdapterThemes() {
         super(1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
                 ThemesRecyclerView.THUMB_IDS.length + 1);
@@ -52,5 +54,6 @@ public class AdapterThemes extends AdapterBase {
             holder.itemView.setBackground(VK_BACKGROUND);
             ((SelectableImageView) holder.itemView).setImageResource(R.drawable.ic_toolbar_new);
         }
+        ((SelectableImageView) holder.itemView).isSelected = position == currentTheme;
     }
 }

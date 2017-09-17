@@ -15,7 +15,7 @@ import timber.log.Timber;
 public final class ViewUtil {
 
     @SuppressWarnings("unused")
-    public static int dp2px(int dp) {
+    public static int dp2px(float dp) {
         float density = Resources.getSystem().getDisplayMetrics().density;
         return Math.round(dp * density);
     }
