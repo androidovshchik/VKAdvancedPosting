@@ -19,15 +19,6 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
 
     private static final String TAG = WorldAdapter.class.getSimpleName();
 
-    // changes on external ui
-    protected boolean isPostMode = true;
-
-    protected int worldWidth;
-    protected int worldHeight;
-    protected int worldHalfDifference;
-
-    protected int rendersCount = 0;
-
     @Override
     public void pause() {
         GdxLog.print(TAG, "lifecycle pause");
@@ -71,19 +62,6 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
         });
     }
 
-    protected static Color parseColor(String hex) {
-        String s1 = hex.substring(0, 2);
-        int v1 = Integer.parseInt(s1, 16);
-        float f1 = 1f * v1 / 255f;
-        String s2 = hex.substring(2, 4);
-        int v2 = Integer.parseInt(s2, 16);
-        float f2 = 1f * v2 / 255f;
-        String s3 = hex.substring(4, 6);
-        int v3 = Integer.parseInt(s3, 16);
-        float f3 = 1f * v3 / 255f;
-        return new Color(f1, f2, f3, 1f);
-    }
-
     public Pixmap getScreenshot() {
         byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0,
                 Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
@@ -100,5 +78,18 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
             pixmap.dispose();
         }
         return true;
+    }
+
+    protected Color parseColor(String hex) {
+        String s1 = hex.substring(0, 2);
+        int v1 = Integer.parseInt(s1, 16);
+        float f1 = 1f * v1 / 255f;
+        String s2 = hex.substring(2, 4);
+        int v2 = Integer.parseInt(s2, 16);
+        float f2 = 1f * v2 / 255f;
+        String s3 = hex.substring(4, 6);
+        int v3 = Integer.parseInt(s3, 16);
+        float f3 = 1f * v3 / 255f;
+        return new Color(f1, f2, f3, 1f);
     }
 }

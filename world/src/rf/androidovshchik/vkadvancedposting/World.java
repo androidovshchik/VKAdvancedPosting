@@ -13,11 +13,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import rf.androidovshchik.vkadvancedposting.callbacks.StickerPressCallback;
+import java.util.ArrayList;
+
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.callbacks.StickersDragCallback;
 import rf.androidovshchik.vkadvancedposting.models.Background;
 import rf.androidovshchik.vkadvancedposting.models.Player;
+import rf.androidovshchik.vkadvancedposting.models.Record;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class World extends WorldAdapter {
@@ -25,6 +27,9 @@ public class World extends WorldAdapter {
 	public static final String TAG = World.class.getSimpleName();
 
 	private static final int SECOND_FINGER = 1;
+
+	protected int worldWidth;
+	protected int worldHeight;
 
 	private OrthographicCamera camera;
 	private FitViewport viewport;
@@ -34,21 +39,19 @@ public class World extends WorldAdapter {
 
 	private Stage backgroundStage;
 	private Stage stickersStage;
-	//private TopCurtain worldTopCurtain;
-	//private BottomCurtain worldBottomCurtain;
 	private StickersDragCallback stickersDragCallback;
-	private StickerPressCallback stickerPressCallback;
 
 	private boolean drawGradient = false;
 	private Color gradientTopLeftColor = Color.CLEAR;
 	private Color gradientBottomRightColor = Color.CLEAR;
 	private Color gradientBlendedColor = Color.CLEAR;
 
-	public World(boolean debug, int worldWidth, int worldHeight) {
+	protected int rendersCount = 0;
+
+	public World(boolean debug, int worldWidth, int worldHeight, ArrayList<Record> records) {
 		GdxLog.DEBUG = debug;
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
-		this.worldHalfDifference = (worldHeight - worldWidth) / 2;
 	}
 
 	@Override
@@ -83,6 +86,7 @@ public class World extends WorldAdapter {
 
 		shapeRenderer.setProjectionMatrix(camera.combined);
 		spriteBatch.setProjectionMatrix(camera.combined);
+
 		if (drawGradient) {
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 			shapeRenderer.rect(0, 0, worldWidth, worldHeight, gradientBlendedColor,
@@ -93,11 +97,7 @@ public class World extends WorldAdapter {
 			backgroundStage.getRoot().draw(spriteBatch, 1);
 			spriteBatch.end();
 		}
-		int worldSizeDifference = Math.round(1f * (worldHeight - worldWidth) / 2);
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		shapeRenderer.rect(0, worldSizeDifference, worldWidth, worldWidth,
-				Color.OLIVE, Color.OLIVE, Color.OLIVE, Color.OLIVE);
-		shapeRenderer.end();
+
 		spriteBatch.begin();
 		stickersStage.act();
 		stickersStage.getRoot().draw(spriteBatch, 1);
@@ -128,12 +128,9 @@ public class World extends WorldAdapter {
 
 	@Override
 	public boolean longPress(float x, float y) {
-		if (stickerPressCallback == null) {
-			return false;
-		}
 		Sticker sticker = getCurrentSticker();
 		if (sticker != null) {
-			stickerPressCallback.onStickerLongPressed();
+
 		}
 		return false;
 	}
@@ -185,15 +182,6 @@ public class World extends WorldAdapter {
 		stickersStage.dispose();
 		spriteBatch.dispose();
 		shapeRenderer.dispose();
-	}
-
-	public void setStickerPressCallback(StickerPressCallback stickerPressCallback) {
-		this.stickerPressCallback = stickerPressCallback;
-	}
-
-	public void setModeImmediately(boolean isPostMode) {
-		this.isPostMode = isPostMode;
-
 	}
 
 	public void setGradientBackground(String topLeftColor, String bottomRightColor) {
