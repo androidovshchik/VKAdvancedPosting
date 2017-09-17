@@ -15,6 +15,7 @@
         layout="@layout/toolbar_main_top" />
 
     <rf.androidovshchik.vkadvancedposting.views.PostEditText
+        android:id="@+id/postText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -33,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:src="@drawable/ic_fab_trash"
-        android:visibility="visible"
+        android:visibility="gone"
         android:clickable="true"
         app:backgroundTint="@null"
         app:layout_behavior=".views.trash.TrashBehavior"
@@ -47,7 +48,11 @@
         android:layout_gravity="bottom"
         layout="@layout/toolbar_main_bottom" />
 
-    <include
-        layout="@layout/bottom_sheet_stickers" />
+    <View
+        android:id="@+id/popupShadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#7a000000"
+        android:visibility="gone"/>
 
 </rf.androidovshchik.vkadvancedposting.views.layout.MainLayout>
