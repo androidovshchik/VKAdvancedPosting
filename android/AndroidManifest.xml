@@ -17,8 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.Base">
         <activity
-            android:name=".ActivityMain"
-            android:theme="@style/Theme.Main">
+            android:name=".ActivityMainWorld"
+            android:theme="@style/Theme.Main"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -26,11 +27,12 @@
         </activity>
         <activity
             android:name=".ActivityLogin"
-            android:theme="@style/Theme.Login"/>
+            android:theme="@style/Theme.Login"
+            android:screenOrientation="sensorPortrait"/>
         <activity
             android:name="com.vk.sdk.VKServiceActivity"
-            android:label="ServiceActivity"
-            android:theme="@style/VK.Transparent"/>
+            android:theme="@style/VK.Transparent"
+            android:screenOrientation="sensorPortrait"/>
     </application>
 
 </manifest>
