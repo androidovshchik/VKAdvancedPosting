@@ -25,12 +25,12 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"/>
+        android:layout_height="0.5dp"
+        android:background="#1f000000"/>
 
     <rf.androidovshchik.vkadvancedposting.views.recyclerview.stickers.StickersRecyclerView
         android:id="@+id/stickersRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxHeight="328dp"/>
+        android:layout_height="wrap_content"/>
 
 </android.support.v7.widget.LinearLayoutCompat>

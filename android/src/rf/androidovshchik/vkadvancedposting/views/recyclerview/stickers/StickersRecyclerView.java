@@ -11,6 +11,8 @@ import timber.log.Timber;
 
 public class StickersRecyclerView extends BaseRecyclerView {
 
+    private static final int MAX_HEIGHT = ViewUtil.dp2px(328);
+
     public StickersRecyclerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -49,5 +51,13 @@ public class StickersRecyclerView extends BaseRecyclerView {
         setupGridLayoutManager(itemsPerLine, true);
         addItemDecoration(new DecorationStickers(itemsPerLine, maxLeftSpace, maxRightSpace));
         setupCacheProperties();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldW, int oldH) {
+        super.onSizeChanged(w, h, oldW, oldH);
+        if (getHeight() > MAX_HEIGHT) {
+            getLayoutParams().height = MAX_HEIGHT;
+        }
     }
 }
