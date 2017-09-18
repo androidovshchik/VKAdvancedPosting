@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AnimationPhotosAppear">
+        <item name="android:windowEnterAnimation">@animator/popup_photos_appear</item>
+    </style>
+    <style name="AnimationStickersAppear">
+        <item name="android:windowEnterAnimation">@animator/popup_stickers_appear</item>
+    </style>
+</resources>
