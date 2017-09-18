@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 import com.vk.sdk.VKSdk;
@@ -31,7 +32,6 @@ public abstract class ActivityMainBase extends AppCompatActivity
 
 	protected static final int REQUEST_VK_LOGIN = 1;
 	protected static final int REQUEST_PROMPT_SETTINGS = 2;
-
 	protected static final int REQUEST_READ_EXTERNAL_STORAGE = 10;
 
 	@Override
@@ -56,7 +56,8 @@ public abstract class ActivityMainBase extends AppCompatActivity
 	@SuppressWarnings("unused")
 	@Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
 	public void onVKInvalidTokenEvent(VKInvalidTokenEvent event) {
-
+		startActivityForResult(new Intent(getApplicationContext(), ActivityLogin.class),
+				REQUEST_VK_LOGIN);
 	}
 
 	protected boolean hasPermission(String permission) {
@@ -101,6 +102,10 @@ public abstract class ActivityMainBase extends AppCompatActivity
 			case REQUEST_VK_LOGIN:
 				if (resultCode != AppCompatActivity.RESULT_OK) {
 					finish();
+				} else {
+					// show keyboard
+					((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
+							.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
 				}
 				break;
 			default:
