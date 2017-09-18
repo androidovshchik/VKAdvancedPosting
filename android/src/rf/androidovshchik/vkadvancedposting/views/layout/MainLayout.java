@@ -41,19 +41,22 @@ public class MainLayout extends CoordinatorLayout {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
         animatorSet = new AnimatorSet();
+        animatorSet.playTogether(topToolbar.sliderTranslationX, topToolbar.sliderScaleX,
+                topToolbar.alphaPost, topToolbar.alphaHistory, topToolbar.alphaBackground,
+                bottomToolbar.alphaBackground);
     }
 
     public void onPostMode() {
         if (!isPostMode) {
             isPostMode = true;
-            startSlideAnimation(false);
+            topToolbar.startSlideAnimation(false, true, bottomToolbar.alphaBackground, animatorSet);
         }
     }
 
     public void onHistoryMode() {
         if (isPostMode) {
             isPostMode = false;
-            startSlideAnimation(false);
+            topToolbar.startSlideAnimation(false, false, bottomToolbar.alphaBackground, animatorSet);
         }
     }
 
