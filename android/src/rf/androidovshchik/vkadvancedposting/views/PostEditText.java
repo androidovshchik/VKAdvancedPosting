@@ -6,9 +6,10 @@ import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 
-public class PostEditText extends AppCompatEditText {
+import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
+import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 
-    private KeyImeChangeListener keyImeChangeListener;
+public class PostEditText extends AppCompatEditText {
 
     public PostEditText(Context context) {
         super(context, null);
@@ -26,15 +27,11 @@ public class PostEditText extends AppCompatEditText {
 
     }
 
-    public void setKeyImeChangeListener(KeyImeChangeListener listener) {
-        keyImeChangeListener = listener;
-    }
-
     @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        if (keyImeChangeListener != null && KeyEvent.KEYCODE_BACK == event.getKeyCode() &&
+        if (KeyEvent.KEYCODE_BACK == event.getKeyCode() &&
                 event.getAction() == KeyEvent.ACTION_DOWN) {
-            keyImeChangeListener.onBackKeyboardPressed();
+            EventUtil.post(new KeyBackEvent());
         }
         return true;
     }
@@ -42,10 +39,5 @@ public class PostEditText extends AppCompatEditText {
     @Override
     public boolean hasOverlappingRendering() {
         return false;
-    }
-
-    public interface KeyImeChangeListener {
-
-        void onBackKeyboardPressed();
     }
 }

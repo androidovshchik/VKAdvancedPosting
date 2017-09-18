@@ -1,37 +1,49 @@
 package rf.androidovshchik.vkadvancedposting;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
+import butterknife.OnTouch;
+import butterknife.Unbinder;
+import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
+import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 import rf.androidovshchik.vkadvancedposting.views.PostEditText;
 
 public class FragmentPostText extends Fragment {
 
+    private Unbinder unbinder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_post_text, container, false);
-    }
-
-    @Nullable
-    public PostEditText getPostEditText() {
-        return (PostEditText) getView();
-    }
-
-    public void setKeyImeChangeListener(PostEditText.KeyImeChangeListener keyImeChangeListener) {
-        PostEditText postEditText = getPostEditText();
-        if (postEditText != null) {
-            postEditText.setKeyImeChangeListener(keyImeChangeListener);
-        }
+        View view = inflater.inflate(R.layout.fragment_post_text, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //postText.requestFocus();
+        getPostEditText().requestFocus();
+    }
+
+    @OnTouch(R.id.popupShadow)
+    public boolean onPopupShadowTouch() {
+        EventUtil.post(new TextTouchEvent());
+        return false;
+    }
+
+    private PostEditText getPostEditText() {
+        return (PostEditText) getView();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
