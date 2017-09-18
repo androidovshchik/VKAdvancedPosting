@@ -259,6 +259,9 @@ public class World extends WorldAdapter {
 
 	@SuppressWarnings("unused")
 	public void addSticker(Integer filename) {
+		if (stickersStage.getActors().size >= Sticker.MAX_COUNT) {
+			return;
+		}
 		Texture texture = new Texture(Gdx.files.internal("stickers/" + filename + ".png"));
 		Sticker sticker = new Sticker(texture, Player.TYPE_STICKER, String.valueOf(filename),
 				worldWidth, worldHeight, stickersStage.getActors().size);
