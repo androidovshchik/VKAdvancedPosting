@@ -74,8 +74,8 @@ public class World extends WorldAdapter {
 
 		GestureDetector gestureDetector = new GestureDetector(this);
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer.addProcessor(this);
 		inputMultiplexer.addProcessor(gestureDetector);
-		inputMultiplexer.addProcessor(stickersStage);
 		Gdx.input.setInputProcessor(inputMultiplexer);
 	}
 
@@ -116,35 +116,36 @@ public class World extends WorldAdapter {
 	@Override
 	public boolean touchDown(float x, float y, int pointer, int button) {
 		if (pointer == FIRST_FINGER) {
-			GdxLog.print(TAG, "touchDown FIRST_FINGER");
 			Vector2 coordinates = stickersStage.screenToStageCoordinates(new Vector2(x, y));
 			Sticker sticker = (Sticker) stickersStage.hit(coordinates.x, coordinates.y, false);
 			if (sticker != null) {
+				sticker.setPinchStarts();
 				currentSticker = sticker.index;
 			}
-		} else {
-			currentSticker = Sticker.INDEX_NONE;
 		}
-		/* else if (pointer == SECOND_FINGER) {
-			GdxLog.print(TAG, "touchDown SECOND_FINGER");
-			Sticker sticker = getCurrentSticker();
-			if (sticker != null) {
-				sticker.isPinching = true;
-				//sticker.setPinchStarts(coordinates.x, coordinates.y);
-			}
-		}*/
+		return false;
+	}
+
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		GdxLog.print(TAG, "touchUp pointer" + pointer);
 		return false;
 	}
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
 		if (currentSticker != Sticker.INDEX_NONE) {
-			GdxLog.print(TAG, "!INDEX_NONE FINGER");
 			Sticker sticker = getCurrentSticker();
 			if (sticker != null) {
 				sticker.moveBy(deltaX * worldDensity, - deltaY * worldDensity);
 			}
 		}
+		return false;
+	}
+
+	@Override
+	public boolean panStop(float x, float y, int pointer, int button) {
+		currentSticker = Sticker.INDEX_NONE;
 		return false;
 	}
 
@@ -170,25 +171,26 @@ public class World extends WorldAdapter {
 		Vector2 startVector = new Vector2(initialPointer1).sub(initialPointer2);
 		Vector2 currentVector = new Vector2(pointer1).sub(pointer2);
 
-		float startAngle = (float) Math.toDegrees(Math.atan2(startVector.y, startVector.x));
-		float endAngle = (float) Math.toDegrees(Math.atan2(currentVector.y, currentVector.x));
+		sticker.setScale(sticker.startScale * currentVector.len() / startVector.len());
 
-		Vector2 startCenter = new Vector2(startVector).scl(0.5f).add(initialPointer2);
-		Vector2 currentCenter = new Vector2(currentVector).scl(0.5f).add(pointer2);
-		Vector2 rawTrans = new Vector2(currentCenter).sub(startCenter);
+		float startAngle = (float) Math.toDegrees(Math.atan2(startVector.x, startVector.y));
+		float endAngle = (float) Math.toDegrees(Math.atan2(currentVector.x, currentVector.y));
+		if (startAngle < 0) {
+			startAngle += 360;
+		}
+		if (endAngle < 0) {
+			endAngle += 360;
+		}
 
-		sticker.onPinch(rawTrans.x, rawTrans.y, sticker.startScale * currentVector.len() /
-				startVector.len(), sticker.startRotation + endAngle - startAngle);
+		GdxLog.print(TAG, "startAngle " + startAngle + " endAngle " + endAngle);
+
+		sticker.setRotation(sticker.startRotation + endAngle - startAngle);
 		return false;
 	}
 
 	@Override
 	public void pinchStop() {
-		GdxLog.print(TAG, "pinchStop");
-		Sticker sticker = getCurrentSticker();
-		if (sticker != null) {
-			sticker.isPinching = false;
-		}
+		currentSticker = Sticker.INDEX_NONE;
 	}
 
 	@Override

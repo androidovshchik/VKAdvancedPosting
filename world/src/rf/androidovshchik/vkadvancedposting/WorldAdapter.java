@@ -2,6 +2,7 @@ package rf.androidovshchik.vkadvancedposting;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
@@ -14,8 +15,8 @@ import java.lang.reflect.Method;
 
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 
-public abstract class WorldAdapter extends GestureDetector.GestureAdapter
-        implements ApplicationListener {
+public abstract class WorldAdapter extends InputAdapter
+        implements ApplicationListener, GestureDetector.GestureListener {
 
     private static final String TAG = WorldAdapter.class.getSimpleName();
 
@@ -27,6 +28,21 @@ public abstract class WorldAdapter extends GestureDetector.GestureAdapter
     @Override
     public void resume() {
         GdxLog.print(TAG, "lifecycle resume");
+    }
+
+    @Override
+    public boolean tap (float x, float y, int count, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean zoom(float initialDistance, float distance) {
+        return false;
+    }
+
+    @Override
+    public boolean fling(float velocityX, float velocityY, int button) {
+        return false;
     }
 
     // null may be only String params

@@ -5,8 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.ScaleToAction;
 
 import java.util.Random;
 
-import rf.androidovshchik.vkadvancedposting.components.GdxLog;
-import rf.androidovshchik.vkadvancedposting.pools.RotateToPool;
 import rf.androidovshchik.vkadvancedposting.pools.ScaleToPool;
 
 public class Sticker extends Player {
@@ -23,17 +21,8 @@ public class Sticker extends Player {
     private static Random random = new Random();
 
     private static ScaleToPool scaleToPool = new ScaleToPool();
-    private static RotateToPool rotateToPool = new RotateToPool();
 
     public int index;
-
-    public boolean isPinching = false;
-
-    public float halfWidth;
-    public float halfHeight;
-
-    public float startPinchX;
-    public float startPinchY;
 
     public float startScale;
     public float startRotation;
@@ -42,9 +31,7 @@ public class Sticker extends Player {
                    int worldHeight, int index) {
         super(texture, type, path);
         this.index = index;
-        halfWidth = getWidth() / 2;
-        halfHeight = getHeight() / 2;
-        setOrigin(halfWidth, halfHeight);
+        setOrigin(getWidth() / 2, getHeight() / 2);
         setScale(MIN_SCALE);
         // 0.6f < scale < 0.8f
         startScale = 1f * random.nextInt(20) / 100 + 0.6f;
@@ -74,11 +61,16 @@ public class Sticker extends Player {
         onAppear();
     }
 
-    public void setPinchStarts(float x, float y) {
-        startPinchX = x;
-        startPinchY = y;
-        GdxLog.f(TAG, "setPinchStarts startPinchX: %f startPinchY: %f startScale: %f startRotation: %f",
-                startPinchX, startPinchY, startScale, startRotation);
+    public void setPinchStarts() {
+        this.startScale = getScaleX();
+        this.startRotation = getRotation();
+    }
+
+    @Override
+    public void setScale(float scale) {
+        if (scale > MIN_SCALE && scale < MAX_SCALE) {
+            super.setScale(scale);
+        }
     }
 
     public void onAppear() {
@@ -87,18 +79,5 @@ public class Sticker extends Player {
         scaleToAction.setScale(startScale);
         scaleToAction.setDuration(ANIMATION_TIME_APPEAR);
         addAction(scaleToAction);
-    }
-
-    public void onPinch(float x, float y, float scale, float rotation) {
-        /*MoveToAction moveToAction = moveToPool.obtain();
-        moveToAction.setPool(moveToPool);
-        moveToAction.setPosition(x, y);
-        ScaleToAction scaleToAction = scaleToPool.obtain();
-        scaleToAction.setPool(scaleToPool);
-        scaleToAction.setScale(scale);
-        RotateToAction rotateToAction = rotateToPool.obtain();
-        rotateToAction.setPool(rotateToPool);
-        rotateToAction.setRotation(rotation);
-        addAction(parallel(moveToAction, scaleToAction, rotateToAction));*/
     }
 }
