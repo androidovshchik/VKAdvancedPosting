@@ -13,9 +13,6 @@ import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.BottomToolbarLayout;
 import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.TopToolbarLayout;
-import timber.log.Timber;
-
-import static com.vk.sdk.VKUIHelper.getApplicationContext;
 
 public class MainLayout extends CoordinatorLayout {
 
@@ -33,7 +30,6 @@ public class MainLayout extends CoordinatorLayout {
     private int availableHeight;
     private int toolbarTopHeight;
     private int toolbarBottomHeight;
-    private int worldSize;
 
     private Unbinder unbinder;
 
@@ -49,8 +45,6 @@ public class MainLayout extends CoordinatorLayout {
         windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
         toolbarTopHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_top_height);
         toolbarBottomHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
-        worldSize = getResources().getDimensionPixelSize(R.dimen.world_width);
-        setPivotY(0);
     }
 
     @Override
@@ -61,6 +55,13 @@ public class MainLayout extends CoordinatorLayout {
         animatorSet.playTogether(topToolbar.sliderTranslationX, topToolbar.sliderScaleX,
                 topToolbar.alphaPost, topToolbar.alphaHistory, topToolbar.alphaBackground,
                 bottomToolbar.alphaBackground);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                topToolbar.startSlideAnimation(true, isPostMode,
+                        bottomToolbar.alphaBackground, animatorSet);
+            }
+        });
     }
 
     public void onPostMode() {
@@ -103,6 +104,10 @@ public class MainLayout extends CoordinatorLayout {
 
     private int getViewportHeight() {
         return availableHeight - (isPostMode ? toolbarTopHeight + toolbarBottomHeight : 0);
+    }
+
+    private Context getApplicationContext() {
+        return getContext().getApplicationContext();
     }
 
     @Override
