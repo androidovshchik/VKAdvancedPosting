@@ -4,7 +4,7 @@ import android.animation.AnimatorSet;
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.FrameLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +19,7 @@ public class MainLayout extends CoordinatorLayout {
     @BindView(R.id.topToolbarLayout)
     public TopToolbarLayout topToolbar;
     @BindView(R.id.world)
-    public View world;
+    public FrameLayout world;
     @BindView(R.id.bottomToolbarLayout)
     public BottomToolbarLayout bottomToolbar;
 

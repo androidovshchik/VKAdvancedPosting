@@ -38,7 +38,7 @@ public final class DiskUtil {
     @Nullable
     public static Bitmap getPhoto(Context context) {
         try {
-            return BitmapFactory.decodeStream(context.getAssets().open("stickers/1.png"));
+            return BitmapFactory.decodeStream(context.getAssets().open("stickers/5.png"));
         } catch (IOException e) {
             Timber.e(e.getMessage());
         }

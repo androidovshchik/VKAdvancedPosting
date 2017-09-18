@@ -10,12 +10,20 @@ public class PostEditText extends AppCompatEditText {
 
     private KeyImeChangeListener keyImeChangeListener;
 
+    public PostEditText(Context context) {
+        super(context, null);
+    }
+
     public PostEditText(Context context, @NonNull AttributeSet attrs) {
         this(context, attrs, android.support.v7.appcompat.R.attr.editTextStyle);
     }
 
     public PostEditText(Context context, @NonNull AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setPostText(String text) {
+
     }
 
     public void setKeyImeChangeListener(KeyImeChangeListener listener) {

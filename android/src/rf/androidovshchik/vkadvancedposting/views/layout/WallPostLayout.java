@@ -40,6 +40,8 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
     private AccelerateInterpolator accelerateInterpolator;
     @Nullable
     private ObjectAnimator cancelAppearing;
+    private ObjectAnimator cancelDisappearing;
+    private ObjectAnimator backwardsAppearing;
 
     private Unbinder unbinder;
 
@@ -125,9 +127,10 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
             cancelAppearing.end();
         }
         progressBar.overDrawProgress = true;
+        progressBar.setVisibility(INVISIBLE);
         loaderText.setText(R.string.main_publication_failed);
         loaderImage.setVisibility(VISIBLE);
-        loaderImage.setImageResource(R.drawable.ic_close);
+        loaderImage.setImageResource(R.drawable.ic_sentiment_dissatisfied);
     }
 
     public void onPublishRetry() {

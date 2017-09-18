@@ -2,7 +2,6 @@ package rf.androidovshchik.vkadvancedposting;
 
 import android.Manifest;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -20,28 +19,16 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
-import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
-import rf.androidovshchik.vkadvancedposting.views.PostEditText;
-import rf.androidovshchik.vkadvancedposting.views.layout.MainLayout;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
 
 public abstract class ActivityMainWindows extends ActivityMainWorld {
 
-	@BindView(R.id.mainLayout)
-	public MainLayout mainLayout;
-
-	@BindView(R.id.postText)
-	public PostEditText postText;
-
 	@BindView(R.id.popupShadow)
 	View popupShadow;
 
-	private PopupWindow photosPopup;
-	private PopupWindow stickersPopup;
 	private DialogWallPost dialogWallPost;
 
-	private Rect rectResizedWindow;
-	private int windowHeight;
 	private int bottomToolbarHeight;
 	private int keyboardHeight;
 	private boolean isKeyboardShowing;
@@ -51,12 +38,11 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		photosPopup = createPopup(R.layout.popup_photos);
+		fragmentPostText.setKeyImeChangeListener(this);
+		photosPopup = createPopup(new PhotosRecyclerView(this));
 		stickersPopup = createPopup(R.layout.popup_stickers);
 		stickersPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 		dialogWallPost = new DialogWallPost();
-		rectResizedWindow = new Rect();
-		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
 		bottomToolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
 		keyboardHeight = 0;
 		isKeyboardShowing = false;
@@ -66,12 +52,12 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	@Override
 	public void onResume() {
 		super.onResume();
-		postText.requestFocus();
+		//postText.requestFocus();
 	}
 
 	@Override
 	public void onGlobalLayout() {
-		getWindow().getDecorView().getWindowVisibleDisplayFrame(rectResizedWindow);
+		super.onGlobalLayout();
 		int difference = windowHeight - rectResizedWindow.bottom;
 		if (difference != 0) {
 			isKeyboardShowing = true;
@@ -80,11 +66,11 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			boolean firstTime = mainLayout.bottomToolbar.getLayoutParams().height ==
 					bottomToolbarHeight;
 			if (mainLayout.bottomToolbar.getY() > rectResizedWindow.bottom) {
-				moveBottomToolbarUp(keyboardHeight);
 				if (firstTime) {
 					mainLayout.bottomToolbar.getLayoutParams().height =
 							keyboardHeight + bottomToolbarHeight;
 				}
+				moveBottomToolbarUp(keyboardHeight);
 			}
 		} else {
 			isKeyboardShowing = false;
@@ -111,13 +97,17 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onThemeClickEvent(ThemeClickEvent event) {
 		int position = event.position;
+		mainLayout.bottomToolbar.themesRecyclerView
+				.adapter.currentTheme = position;
+		mainLayout.bottomToolbar.themesRecyclerView
+				.adapter.notifyDataSetChanged();
 		if (position <= 0) {
 			String white = "ffffff";
-			fragment.world.setGradientBackground(white, white);
+			fragmentWorld.world.setGradientBackground(white, white);
 		} else if (position < 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length) {
 			String topLeftColor = ThemesRecyclerView.GRADIENT_HEXES[position - 1][0];
 			String bottomRightColor = ThemesRecyclerView.GRADIENT_HEXES[position - 1][1];
-			fragment.world.setGradientBackground(topLeftColor, bottomRightColor);
+			fragmentWorld.world.setGradientBackground(topLeftColor, bottomRightColor);
 		} else if (position >= 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length) {
 			if (position >= 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
 					ThemesRecyclerView.THUMB_PATHS.length) {
@@ -131,11 +121,11 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			}
 			String[] paths = ThemesRecyclerView.THUMB_PATHS[position -
 					ThemesRecyclerView.GRADIENT_DRAWABLES.length - 1];
-			fragment.world.postRunnable("setImagesBackground", paths[0], paths[1], paths[2]);
+			fragmentWorld.world.postRunnable("setImagesBackground", paths[0], paths[1], paths[2]);
 		}
 	}
 
-	@OnTouch(R.id.postText)
+	/*@OnTouch(R.id.postText)
 	public boolean onPostTextTouch() {
 		if (photosPopup.isShowing()) {
 			hidePopup(photosPopup);
@@ -143,7 +133,7 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 			moveBottomToolbarUp(0);
 		}
 		return false;
-	}
+	}*/
 
 	@OnClick(R.id.actionSend)
 	public void onSend() {
@@ -151,7 +141,10 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	}
 
 	private PopupWindow createPopup(@LayoutRes int id) {
-		View view = View.inflate(getApplicationContext(), id, null);
+		return createPopup(View.inflate(getApplicationContext(), id, null));
+	}
+
+	private PopupWindow createPopup(View view) {
 		PopupWindow popupWindow = new PopupWindow(view);
 		popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 		popupWindow.setOutsideTouchable(false);
@@ -226,11 +219,19 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	}
 
 	@Override
+	public void onBackKeyboardPressed() {
+		onBackPressed();
+	}
+
+	@Override
 	public void onBackPressed() {
 		if (stickersPopup.isShowing()) {
 			hideStickersPopup();
 		} else if (photosPopup.isShowing() && !isKeyboardShowing) {
 			hidePhotosPopup();
+		} else if (isKeyboardShowing) {
+			((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
+					.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
 		} else {
 			super.onBackPressed();
 		}

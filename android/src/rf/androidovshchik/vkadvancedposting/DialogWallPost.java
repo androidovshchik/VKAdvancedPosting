@@ -35,15 +35,16 @@ import rf.androidovshchik.vkadvancedposting.callbacks.VKRequestCallback;
 import rf.androidovshchik.vkadvancedposting.events.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.utils.DiskUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
-import timber.log.Timber;
 
 public class DialogWallPost extends DialogFragment {
 
-    @BindView(R.id.wallPostContainer)
+    @BindView(R.id.wallPostLayout)
     protected WallPostLayout wallPostLayout;
 
     private Unbinder unbinder;
 
+    private VKRequest requestUploadImage;
+    private VKRequest requestWallPost;
     private VKRequestCallback vkRequestCallback;
 
     @Override
@@ -94,10 +95,13 @@ public class DialogWallPost extends DialogFragment {
     public void onVKResponseEvent(VKResponseEvent event) {
         if (event.isSuccessful) {
             if (event.isPhotoUploadRequest) {
-                makeWallPost(new VKAttachments(((VKPhotoArray) event.parsedModel).get(0)));
+                wallPostLayout.onPublishFailed();
+                //makeWallPost(new VKAttachments(((VKPhotoArray) event.parsedModel).get(0)));
             } else {
-                Timber.d("onVKResponseEvent IS DONE");
+                wallPostLayout.onPublishFailed();
             }
+        } else {
+            wallPostLayout.onPublishFailed();
         }
     }
 
@@ -117,8 +121,7 @@ public class DialogWallPost extends DialogFragment {
             return;
         }
         long userId = Long.parseLong(VKAccessToken.currentToken().userId);
-        VKRequest request =
-                VKApi.uploadWallPhotoRequest(new VKUploadImage(DiskUtil.getPhoto(getContext()),
+        VKRequest request = VKApi.uploadWallPhotoRequest(new VKUploadImage(DiskUtil.getPhoto(getContext()),
                         VKImageParameters.pngImage()), userId, 0);
         request.attempts = 3;
         request.executeWithListener(vkRequestCallback);

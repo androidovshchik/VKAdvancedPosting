@@ -21,4 +21,11 @@ public class FragmentPostText extends Fragment {
     public PostEditText getPostEditText() {
         return (PostEditText) getView();
     }
+
+    public void setKeyImeChangeListener(PostEditText.KeyImeChangeListener keyImeChangeListener) {
+        PostEditText postEditText = getPostEditText();
+        if (postEditText != null) {
+            postEditText.setKeyImeChangeListener(keyImeChangeListener);
+        }
+    }
 }
