@@ -21,10 +21,11 @@ public abstract class ActivityMainWorld extends ActivityMainBase {
 	@BindView(R.id.mainLayout)
 	public MainLayout mainLayout;
 
-	protected Rect rectResizedWindow;
 	protected int windowHeight;
+	protected Rect rectResizedWindow;
 
-	protected FragmentWorld fragment;
+	protected FragmentWorld fragmentWorld;
+	protected FragmentPostText fragmentPostText;
 
 	protected PopupWindow photosPopup;
 	protected PopupWindow stickersPopup;
@@ -32,20 +33,21 @@ public abstract class ActivityMainWorld extends ActivityMainBase {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		rectResizedWindow = new Rect();
 		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
-		fragment = new FragmentWorld();
+		rectResizedWindow = new Rect();
+		fragmentWorld = new FragmentWorld();
+		fragmentPostText = new FragmentPostText();
 		getSupportFragmentManager()
 				.beginTransaction()
-				.add(R.id.world, fragment, FragmentWorld.class.getSimpleName())
+				.add(R.id.world, fragmentWorld, FragmentWorld.class.getSimpleName())
+				.add(R.id.world, fragmentPostText, FragmentPostText.class.getSimpleName())
 				.commitAllowingStateLoss();
 	}
 
 	@Override
 	public void onGlobalLayout() {
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(rectResizedWindow);
-		int difference = windowHeight - rectResizedWindow.bottom;
-		mainLayout.onViewportChange(difference);
+		mainLayout.onViewportChange(rectResizedWindow.bottom);
 	}
 
 	@OnClick(R.id.actionPost)
@@ -61,7 +63,7 @@ public abstract class ActivityMainWorld extends ActivityMainBase {
 	@SuppressWarnings("unused")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onStickerClickEvent(StickerClickEvent event) {
-		fragment.world.postRunnable("addSticker", event.position + 1);
+		fragmentWorld.world.postRunnable("addSticker", event.position + 1);
 	}
 
 	@SuppressWarnings("unused")
@@ -70,6 +72,6 @@ public abstract class ActivityMainWorld extends ActivityMainBase {
 		String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
 		String path = ((PhotosRecyclerView) photosPopup.getContentView()).adapterPhotos
 				.photoPaths.get(event.position).getPath().substring(sdcardPath.length());
-		fragment.world.postRunnable("setPhotoBackground", path);
+		fragmentWorld.world.postRunnable("setPhotoBackground", path);
 	}
 }
