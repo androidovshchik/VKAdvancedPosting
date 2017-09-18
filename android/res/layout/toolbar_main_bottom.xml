@@ -9,7 +9,7 @@
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#cbffffff"/>
+        android:background="@color/white"/>
 
     <rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView
         android:id="@+id/themesRecyclerView"
