@@ -16,10 +16,12 @@ import rf.androidovshchik.vkadvancedposting.R;
 
 public class ToolbarLayout extends RelativeLayout {
 
+    public static final float MIN_BACKGROUND_OPACITY = 0.92f;
+
     @BindView(R.id.background)
     public View background;
 
-    protected ObjectAnimator alphaBackground;
+    public ObjectAnimator alphaBackground;
 
     protected Unbinder unbinder;
 
