@@ -39,7 +39,7 @@ public class ActivityLogin extends AppCompatActivity {
     @OnClick(R.id.actionLogin)
     public void onLogin() {
         actionLogin.setEnabled(false);
-        VKSdk.login(this, VKScope.WALL);
+        VKSdk.login(this, VKScope.WALL, VKScope.PHOTOS);
     }
 
     @SuppressWarnings("unused")

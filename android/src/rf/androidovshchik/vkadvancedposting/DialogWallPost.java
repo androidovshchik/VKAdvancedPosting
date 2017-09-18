@@ -15,7 +15,11 @@ import android.view.animation.Animation;
 
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.model.VKAttachments;
+import com.vk.sdk.api.model.VKPhotoArray;
 import com.vk.sdk.api.photo.VKImageParameters;
 import com.vk.sdk.api.photo.VKUploadImage;
 
@@ -31,23 +35,22 @@ import rf.androidovshchik.vkadvancedposting.callbacks.VKRequestCallback;
 import rf.androidovshchik.vkadvancedposting.events.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.utils.DiskUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
+import timber.log.Timber;
 
 public class DialogWallPost extends DialogFragment {
-
-    public static final String EXTRA_IS_FIRST_START = "wallPostIsFirstStart";
-    public static final String EXTRA_IS_PUBLISHING = "wallPostIsPublishing";
-    public static final String EXTRA_HAS_POST_PUBLISHED = "wallPostHasPostPublished";
 
     @BindView(R.id.wallPostContainer)
     protected WallPostLayout wallPostLayout;
 
     private Unbinder unbinder;
 
+    private VKRequestCallback vkRequestCallback;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Dialog_WallPost);
-        uploadImage();
+        vkRequestCallback = new VKRequestCallback();
     }
 
     @Override
@@ -55,12 +58,6 @@ public class DialogWallPost extends DialogFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_wall_post, container, false);
         unbinder = ButterKnife.bind(this, view);
-        if (savedInstanceState != null) {
-            wallPostLayout.isFirstStart = savedInstanceState.getBoolean(EXTRA_IS_FIRST_START, true);
-            wallPostLayout.isPublishing = savedInstanceState.getBoolean(EXTRA_IS_PUBLISHING, true);
-            wallPostLayout.hasPostPublished =
-                    savedInstanceState.getBoolean(EXTRA_HAS_POST_PUBLISHED, false);
-        }
         return view;
     }
 
@@ -89,20 +86,19 @@ public class DialogWallPost extends DialogFragment {
             appearing.setDuration(300);
             appearing.start();
         }
+        uploadImage();
     }
 
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
     public void onVKResponseEvent(VKResponseEvent event) {
-
-    }
-
-    private void uploadImage() {
-        long userId = Long.parseLong(VKAccessToken.currentToken().userId);
-        VKRequest request =
-                VKApi.uploadWallPhotoRequest(new VKUploadImage(DiskUtil.getPhoto(getContext()),
-                        VKImageParameters.pngImage()), userId, 0);
-        request.executeWithListener(new VKRequestCallback());
+        if (event.isSuccessful) {
+            if (event.isPhotoUploadRequest) {
+                makeWallPost(new VKAttachments(((VKPhotoArray) event.parsedModel).get(0)));
+            } else {
+                Timber.d("onVKResponseEvent IS DONE");
+            }
+        }
     }
 
     @OnClick(R.id.actionCancel)
@@ -116,12 +112,23 @@ public class DialogWallPost extends DialogFragment {
         dismissAllowingStateLoss();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(EXTRA_IS_FIRST_START, false);
-        outState.putBoolean(EXTRA_IS_PUBLISHING, wallPostLayout.isPublishing);
-        outState.putBoolean(EXTRA_HAS_POST_PUBLISHED, wallPostLayout.hasPostPublished);
+    private void uploadImage() {
+        if (VKAccessToken.currentToken() == null) {
+            return;
+        }
+        long userId = Long.parseLong(VKAccessToken.currentToken().userId);
+        VKRequest request =
+                VKApi.uploadWallPhotoRequest(new VKUploadImage(DiskUtil.getPhoto(getContext()),
+                        VKImageParameters.pngImage()), userId, 0);
+        request.attempts = 3;
+        request.executeWithListener(vkRequestCallback);
+    }
+
+    private void makeWallPost(VKAttachments attachments) {
+        VKRequest request = VKApi.wall()
+                .post(VKParameters.from(VKApiConst.ATTACHMENTS, attachments));
+        request.attempts = 3;
+        request.executeWithListener(vkRequestCallback);
     }
 
     @Override
