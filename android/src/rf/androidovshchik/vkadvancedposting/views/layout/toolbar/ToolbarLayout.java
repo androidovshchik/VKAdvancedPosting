@@ -1,10 +1,12 @@
 package rf.androidovshchik.vkadvancedposting.views.layout.toolbar;
 
+import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import butterknife.BindView;
@@ -16,6 +18,8 @@ public class ToolbarLayout extends RelativeLayout {
 
     @BindView(R.id.background)
     public View background;
+
+    protected ObjectAnimator alphaBackground;
 
     protected Unbinder unbinder;
 
@@ -41,6 +45,8 @@ public class ToolbarLayout extends RelativeLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
+        alphaBackground = ObjectAnimator.ofFloat(background, "alpha", 0f);
+        alphaBackground.setRepeatCount(Animation.ABSOLUTE);
     }
 
     @Override
