@@ -24,11 +24,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
-import rf.androidovshchik.vkadvancedposting.views.PostEditText;
 
 public abstract class ActivityMainBase extends AppCompatActivity
-		implements AndroidFragmentApplication.Callbacks, ViewTreeObserver.OnGlobalLayoutListener,
-		PostEditText.KeyImeChangeListener {
+		implements AndroidFragmentApplication.Callbacks, ViewTreeObserver.OnGlobalLayoutListener {
 
 	protected static final int REQUEST_VK_LOGIN = 1;
 	protected static final int REQUEST_PROMPT_SETTINGS = 2;

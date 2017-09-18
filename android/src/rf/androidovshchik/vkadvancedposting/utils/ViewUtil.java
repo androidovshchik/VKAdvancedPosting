@@ -4,8 +4,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.annotation.StyleRes;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.PopupWindow;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,5 +57,28 @@ public final class ViewUtil {
             }
         }
         return size;
+    }
+
+    @SuppressWarnings("unused")
+    public static PopupWindow createPopup(View view, @StyleRes int style) {
+        PopupWindow popupWindow = new PopupWindow(view);
+        popupWindow.setAnimationStyle(style);
+        popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        popupWindow.setOutsideTouchable(false);
+        return popupWindow;
+    }
+
+    @SuppressWarnings("unused")
+    public static void showPopup(PopupWindow popupWindow, View parent) {
+        if (!popupWindow.isShowing()) {
+            popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static void hidePopup(PopupWindow popupWindow) {
+        if (popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
     }
 }

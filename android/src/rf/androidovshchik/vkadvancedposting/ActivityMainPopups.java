@@ -1,12 +1,11 @@
 package rf.androidovshchik.vkadvancedposting;
 
 import android.Manifest;
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -18,41 +17,44 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import rf.androidovshchik.vkadvancedposting.events.clicks.PhotoClickEvent;
+import rf.androidovshchik.vkadvancedposting.events.clicks.StickerClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
+import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
+import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
 
-public abstract class ActivityMainWindows extends ActivityMainWorld {
+public class ActivityMainPopups extends ActivityMainLayouts {
 
 	@BindView(R.id.popupShadow)
 	View popupShadow;
 
-	private DialogWallPost dialogWallPost;
+	protected PopupWindow photosPopup;
+	protected PopupWindow stickersPopup;
 
+	protected int windowHeight;
 	private int bottomToolbarHeight;
-	private int keyboardHeight;
-	private boolean isKeyboardShowing;
-	// when keyboard is shown photosPopup don't disappear
-	private boolean needShowPhotos;
+	private int keyboardHeight = 0;
+
+	private boolean isKeyboardShowing = false;
+	// when keyboard is shown photosPopup doesn't disappear
+	private boolean needShowPhotos = false;
 
 	@Override
+	@SuppressLint("InflateParams")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		fragmentPostText.setKeyImeChangeListener(this);
-		photosPopup = createPopup(new PhotosRecyclerView(this));
-		stickersPopup = createPopup(R.layout.popup_stickers);
+		stickersPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_stickers,
+				null, false), R.style.AnimationStickersAppear);
 		stickersPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-		dialogWallPost = new DialogWallPost();
+		if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+			photosPopup = ViewUtil.createPopup(new PhotosRecyclerView(this),
+					R.style.AnimationPhotosAppear);
+		}
+		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
 		bottomToolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
-		keyboardHeight = 0;
-		isKeyboardShowing = false;
-		needShowPhotos = false;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		//postText.requestFocus();
 	}
 
 	@Override
@@ -93,6 +95,22 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		return false;
 	}
 
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onStickerClickEvent(StickerClickEvent event) {
+		hideStickersPopup();
+		fragmentWorld.world.postRunnable("addSticker", event.position + 1);
+	}
+
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onPhotoClickEvent(PhotoClickEvent event) {
+		String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
+		String path = ((PhotosRecyclerView) photosPopup.getContentView()).adapterPhotos
+				.photoPaths.get(event.position).getPath().substring(sdcardPath.length());
+		fragmentWorld.world.postRunnable("setPhotoBackground", path);
+	}
+
 	@SuppressWarnings("all")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onThemeClickEvent(ThemeClickEvent event) {
@@ -125,41 +143,31 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		}
 	}
 
-	/*@OnTouch(R.id.postText)
-	public boolean onPostTextTouch() {
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onTextTouchEvent(TextTouchEvent event) {
 		if (photosPopup.isShowing()) {
-			hidePopup(photosPopup);
+			ViewUtil.hidePopup(photosPopup);
 		} else {
 			moveBottomToolbarUp(0);
 		}
-		return false;
-	}*/
-
-	@OnClick(R.id.actionSend)
-	public void onSend() {
-		dialogWallPost.show(getSupportFragmentManager(), DialogWallPost.class.getSimpleName());
 	}
 
-	private PopupWindow createPopup(@LayoutRes int id) {
-		return createPopup(View.inflate(getApplicationContext(), id, null));
-	}
-
-	private PopupWindow createPopup(View view) {
-		PopupWindow popupWindow = new PopupWindow(view);
-		popupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-		popupWindow.setOutsideTouchable(false);
-		return popupWindow;
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onKeyBackEvent(KeyBackEvent event) {
+		onBackPressed();
 	}
 
 	private void showPhotosPopup() {
 		if (!isKeyboardShowing) {
 			moveBottomToolbarUp(0);
 		}
-		showPopup(photosPopup);
+		ViewUtil.showPopup(photosPopup, mainLayout);
 	}
 
 	private void hidePhotosPopup() {
-		hidePopup(photosPopup);
+		ViewUtil.hidePopup(photosPopup);
 		if (!isKeyboardShowing) {
 			moveBottomToolbarDown();
 		}
@@ -180,12 +188,12 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 				moveBottomToolbarUp(0);
 			}
 		}
-		showPopup(stickersPopup);
+		ViewUtil.showPopup(stickersPopup, mainLayout);
 	}
 
 	private void hideStickersPopup() {
 		popupShadow.setVisibility(View.GONE);
-		hidePopup(stickersPopup);
+		ViewUtil.hidePopup(stickersPopup);
 		if (needShowPhotos) {
 			needShowPhotos = false;
 			mainLayout.bottomToolbar.post(new Runnable() {
@@ -194,18 +202,6 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 					showPhotosPopup();
 				}
 			});
-		}
-	}
-
-	private void showPopup(PopupWindow popupWindow) {
-		if (!popupWindow.isShowing()) {
-			popupWindow.showAtLocation(mainLayout, Gravity.BOTTOM, 0, 0);
-		}
-	}
-
-	private void hidePopup(PopupWindow popupWindow) {
-		if (popupWindow.isShowing()) {
-			popupWindow.dismiss();
 		}
 	}
 
@@ -219,15 +215,10 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 	}
 
 	@Override
-	public void onBackKeyboardPressed() {
-		onBackPressed();
-	}
-
-	@Override
 	public void onBackPressed() {
 		if (stickersPopup.isShowing()) {
 			hideStickersPopup();
-		} else if (photosPopup.isShowing() && !isKeyboardShowing) {
+		} else if (photosPopup.isShowing()) {
 			hidePhotosPopup();
 		} else if (isKeyboardShowing) {
 			((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
@@ -244,23 +235,10 @@ public abstract class ActivityMainWindows extends ActivityMainWorld {
 		switch (requestCode) {
 			case REQUEST_READ_EXTERNAL_STORAGE:
 				if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+					photosPopup = ViewUtil.createPopup(new PhotosRecyclerView(this),
+							R.style.AnimationPhotosAppear);
 					showPhotosPopup();
 				}
-				break;
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		super.onActivityResult(requestCode, resultCode, intent);
-		switch (requestCode) {
-			case REQUEST_VK_LOGIN:
-				if (resultCode == AppCompatActivity.RESULT_OK) {
-					((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
-							.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-				}
-				break;
-			default:
 				break;
 		}
 	}

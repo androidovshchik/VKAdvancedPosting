@@ -28,4 +28,10 @@ public class FragmentPostText extends Fragment {
             postEditText.setKeyImeChangeListener(keyImeChangeListener);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //postText.requestFocus();
+    }
 }
