@@ -10,8 +10,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.BottomToolbarLayout;
 import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.TopToolbarLayout;
+import timber.log.Timber;
+
+import static com.vk.sdk.VKUIHelper.getApplicationContext;
 
 public class MainLayout extends CoordinatorLayout {
 
@@ -22,7 +26,14 @@ public class MainLayout extends CoordinatorLayout {
     @BindView(R.id.bottomToolbarLayout)
     public BottomToolbarLayout bottomToolbar;
 
-    public boolean isPostMode = true;
+    private boolean isPostMode = true;
+
+    private int windowWidth;
+    private int windowHeight;
+    private int availableHeight;
+    private int toolbarTopHeight;
+    private int toolbarBottomHeight;
+    private int worldSize;
 
     private Unbinder unbinder;
 
@@ -34,6 +45,12 @@ public class MainLayout extends CoordinatorLayout {
 
     public MainLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        windowWidth = ViewUtil.getWindow(getApplicationContext()).x;
+        windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
+        toolbarTopHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_top_height);
+        toolbarBottomHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
+        worldSize = getResources().getDimensionPixelSize(R.dimen.world_width);
+        setPivotY(0);
     }
 
     @Override
@@ -49,32 +66,43 @@ public class MainLayout extends CoordinatorLayout {
     public void onPostMode() {
         if (!isPostMode) {
             isPostMode = true;
-            topToolbar.startSlideAnimation(false, true, bottomToolbar.alphaBackground, animatorSet);
+            topToolbar.startSlideAnimation(false, true,
+                    bottomToolbar.alphaBackground, animatorSet);
+            onViewportChange(null);
         }
     }
 
     public void onHistoryMode() {
         if (isPostMode) {
             isPostMode = false;
-            topToolbar.startSlideAnimation(false, false, bottomToolbar.alphaBackground, animatorSet);
+            topToolbar.startSlideAnimation(false, false,
+                    bottomToolbar.alphaBackground, animatorSet);
+            onViewportChange(null);
         }
     }
 
-    public void setModeImmediately() {
-        /*if (isPostMode) {
-            float scale = 1f * getViewportHeight() / windowHeight;
-            world.setY((toolbarTopHeight - toolbarBottomHeight) / 2);
+    public void onViewportChange(Integer availableHeight) {
+        if (availableHeight != null) {
+            this.availableHeight = availableHeight;
+        }
+        float scale;
+        if (windowWidth > getViewportHeight()) {
+            scale = 1f * getViewportHeight() / windowWidth;
+        } else {
+            scale = 1f;
+            world.setY(0);
             world.setScaleX(scale);
             world.setScaleY(scale);
-        } else {
-            world.setY(0);
-            world.setScaleX(1f);
-            world.setScaleY(1f);
-        }*/
+            return;
+        }
+        world.setY(- (windowHeight - this.availableHeight) / 2 -
+                (isPostMode ? (toolbarBottomHeight - toolbarTopHeight) / 2 : 0));
+        world.setScaleX(scale);
+        world.setScaleY(scale);
     }
 
     private int getViewportHeight() {
-        return 0;//windowHeight - toolbarTopHeight - toolbarBottomHeight;
+        return availableHeight - (isPostMode ? toolbarTopHeight + toolbarBottomHeight : 0);
     }
 
     @Override
