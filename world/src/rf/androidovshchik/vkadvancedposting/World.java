@@ -175,12 +175,6 @@ public class World extends WorldAdapter {
 
 		float startAngle = (float) Math.toDegrees(Math.atan2(startVector.x, startVector.y));
 		float endAngle = (float) Math.toDegrees(Math.atan2(currentVector.x, currentVector.y));
-		if (startAngle < 0) {
-			startAngle += 360;
-		}
-		if (endAngle < 0) {
-			endAngle += 360;
-		}
 		sticker.setRotation(sticker.startRotation + endAngle - startAngle);
 		return false;
 	}
