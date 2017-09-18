@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/wallPostContainer"
+    android:id="@+id/wallPostLayout"
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:background="@color/white">
 
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+    <rf.androidovshchik.vkadvancedposting.views.ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -20,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_loader_success"
         android:visibility="invisible"
         android:contentDescription="@string/app_name"/>
 

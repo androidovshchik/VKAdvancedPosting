@@ -56,4 +56,9 @@ public class ToolbarLayout extends RelativeLayout {
         super.onDetachedFromWindow();
         unbinder.unbind();
     }
+
+    @Override
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
 }

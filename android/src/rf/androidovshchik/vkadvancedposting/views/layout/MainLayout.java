@@ -115,4 +115,9 @@ public class MainLayout extends CoordinatorLayout {
         super.onDetachedFromWindow();
         unbinder.unbind();
     }
+
+    @Override
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
 }

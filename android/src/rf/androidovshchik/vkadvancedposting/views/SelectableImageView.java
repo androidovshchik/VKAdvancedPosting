@@ -67,4 +67,9 @@ public class SelectableImageView extends AppCompatImageView {
     private Context getApplicationContext() {
         return getContext().getApplicationContext();
     }
+
+    @Override
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
 }

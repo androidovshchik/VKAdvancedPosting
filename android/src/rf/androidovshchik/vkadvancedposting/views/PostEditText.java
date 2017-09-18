@@ -31,6 +31,11 @@ public class PostEditText extends AppCompatEditText {
         return true;
     }
 
+    @Override
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
+
     public interface KeyImeChangeListener {
 
         void onBackKeyboardPressed();

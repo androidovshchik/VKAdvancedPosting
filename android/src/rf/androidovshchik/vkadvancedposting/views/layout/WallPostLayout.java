@@ -15,14 +15,15 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import rf.androidovshchik.vkadvancedposting.R;
+import rf.androidovshchik.vkadvancedposting.views.ProgressBar;
 import rf.androidovshchik.vkadvancedposting.views.VKButton;
+import timber.log.Timber;
 
 public class WallPostLayout extends RelativeLayout implements Animator.AnimatorListener {
 
     @BindView(R.id.progressBar)
-    protected MaterialProgressBar progressBar;
+    protected ProgressBar progressBar;
     @BindView(R.id.loaderImage)
     protected ImageView loaderImage;
     @BindView(R.id.loaderText)
@@ -113,14 +114,20 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
         if (cancelAppearing != null && cancelAppearing.isRunning()) {
             cancelAppearing.end();
         }
+        progressBar.overDrawProgress = true;
         loaderText.setText(R.string.main_publication_succeed);
+        loaderImage.setVisibility(VISIBLE);
+        loaderImage.setImageResource(R.drawable.ic_loader_success);
     }
 
     public void onPublishFailed() {
         if (cancelAppearing != null && cancelAppearing.isRunning()) {
             cancelAppearing.end();
         }
+        progressBar.overDrawProgress = true;
         loaderText.setText(R.string.main_publication_failed);
+        loaderImage.setVisibility(VISIBLE);
+        loaderImage.setImageResource(R.drawable.ic_close);
     }
 
     public void onPublishRetry() {
@@ -130,6 +137,8 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        loaderText.setText(R.string.main_publication_progress);
+        loaderImage.setVisibility(INVISIBLE);
         unbinder.unbind();
     }
 

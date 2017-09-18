@@ -60,4 +60,9 @@ public abstract class BaseRecyclerView extends RecyclerView {
     protected Context getApplicationContext() {
         return getContext().getApplicationContext();
     }
+
+    @Override
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
 }
