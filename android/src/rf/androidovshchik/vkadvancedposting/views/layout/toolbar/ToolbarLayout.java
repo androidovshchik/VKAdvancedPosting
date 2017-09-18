@@ -15,7 +15,7 @@ import rf.androidovshchik.vkadvancedposting.R;
 public class ToolbarLayout extends RelativeLayout {
 
     @BindView(R.id.background)
-    protected View background;
+    public View background;
 
     protected Unbinder unbinder;
 
