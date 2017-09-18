@@ -13,12 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import java.util.ArrayList;
-
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.models.Background;
 import rf.androidovshchik.vkadvancedposting.models.Player;
-import rf.androidovshchik.vkadvancedposting.models.Record;
 import rf.androidovshchik.vkadvancedposting.models.Sticker;
 
 public class World extends WorldAdapter {
@@ -49,7 +46,7 @@ public class World extends WorldAdapter {
 
 	private int rendersCount = 0;
 
-	public World(boolean debug, int worldWidth, int worldHeight, ArrayList<Record> records) {
+	public World(boolean debug, int worldWidth, int worldHeight) {
 		GdxLog.DEBUG = debug;
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
