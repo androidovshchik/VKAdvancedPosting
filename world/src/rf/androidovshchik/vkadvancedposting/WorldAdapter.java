@@ -31,7 +31,7 @@ public abstract class WorldAdapter extends InputAdapter
     }
 
     @Override
-    public boolean tap (float x, float y, int count, int button) {
+    public boolean tap(float x, float y, int count, int button) {
         return false;
     }
 

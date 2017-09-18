@@ -26,7 +26,6 @@ public class World extends WorldAdapter {
 	private static final String TAG = World.class.getSimpleName();
 
 	private static final int FIRST_FINGER = 0;
-	private static final int SECOND_FINGER = 1;
 
 	private int worldWidth;
 	private int worldHeight;
@@ -128,7 +127,9 @@ public class World extends WorldAdapter {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		GdxLog.print(TAG, "touchUp pointer" + pointer);
+		if (pointer == FIRST_FINGER) {
+			currentSticker = Sticker.INDEX_NONE;
+		}
 		return false;
 	}
 
@@ -170,7 +171,6 @@ public class World extends WorldAdapter {
 
 		Vector2 startVector = new Vector2(initialPointer1).sub(initialPointer2);
 		Vector2 currentVector = new Vector2(pointer1).sub(pointer2);
-
 		sticker.setScale(sticker.startScale * currentVector.len() / startVector.len());
 
 		float startAngle = (float) Math.toDegrees(Math.atan2(startVector.x, startVector.y));
@@ -181,16 +181,16 @@ public class World extends WorldAdapter {
 		if (endAngle < 0) {
 			endAngle += 360;
 		}
-
-		GdxLog.print(TAG, "startAngle " + startAngle + " endAngle " + endAngle);
-
 		sticker.setRotation(sticker.startRotation + endAngle - startAngle);
 		return false;
 	}
 
 	@Override
 	public void pinchStop() {
-		currentSticker = Sticker.INDEX_NONE;
+		Sticker sticker = getCurrentSticker();
+		if (sticker != null) {
+			sticker.setPinchStarts();
+		}
 	}
 
 	@Override
@@ -263,6 +263,14 @@ public class World extends WorldAdapter {
 		Sticker sticker = new Sticker(texture, Player.TYPE_STICKER, String.valueOf(filename),
 				worldWidth, worldHeight, stickersStage.getActors().size);
 		stickersStage.addActor(sticker);
+	}
+
+	public void clearWorld() {
+		clearBackground();
+		drawGradient = false;
+		for (int i = stickersStage.getActors().size - 1; i >= 0; i--) {
+			stickersStage.getActors().get(i).remove();
+		}
 	}
 
 	private void removeSticker() {
