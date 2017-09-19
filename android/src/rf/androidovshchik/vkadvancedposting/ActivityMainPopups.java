@@ -93,7 +93,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onPhotoClickEvent(PhotoClickEvent event) {
 		String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
-		String path = ((PhotosRecyclerView) photosPopup.getContentView()).adapterPhotos
+		String path = ((PhotosLayout) photosPopup.getContentView()).photosRecyclerView.adapterPhotos
 				.photoPaths.get(event.position).getPath().substring(sdcardPath.length());
 		fragmentWorld.world.postRunnable("setPhotoBackground", path);
 	}

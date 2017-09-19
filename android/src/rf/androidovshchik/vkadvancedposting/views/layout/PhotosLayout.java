@@ -8,10 +8,13 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import rf.androidovshchik.vkadvancedposting.R;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView;
 
 public class PhotosLayout extends FrameLayout {
 
     public View photosShadow;
+
+    public PhotosRecyclerView photosRecyclerView;
 
     public PhotosLayout(Context context) {
         super(context);
@@ -35,6 +38,7 @@ public class PhotosLayout extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         photosShadow = findViewById(R.id.photosShadow);
+        photosRecyclerView = findViewById(R.id.photosRecyclerView);
     }
 
     @Override

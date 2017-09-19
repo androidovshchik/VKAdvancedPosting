@@ -86,18 +86,15 @@ public class MainLayout extends CoordinatorLayout {
         if (availableHeight != null) {
             this.availableHeight = availableHeight;
         }
+        int notAvailableHeight = windowHeight - this.availableHeight;
         float scale;
         if (windowWidth > getViewportHeight()) {
             scale = 1f * getViewportHeight() / windowWidth;
         } else {
             scale = 1f;
-            world.setY(0);
-            world.setScaleX(scale);
-            world.setScaleY(scale);
-            return;
         }
-        world.setY(- (windowHeight - this.availableHeight) / 2 -
-                (isPostMode ? (toolbarBottomHeight - toolbarTopHeight) / 2 : 0));
+        world.setY(- notAvailableHeight / 2 - (notAvailableHeight > 0 && isPostMode ?
+                (toolbarBottomHeight - toolbarTopHeight) / 2 : 0));
         world.setScaleX(scale);
         world.setScaleY(scale);
     }
