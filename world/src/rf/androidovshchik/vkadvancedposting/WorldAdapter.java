@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -85,15 +84,6 @@ public abstract class WorldAdapter extends InputAdapter
                 Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
         BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
         return pixmap;
-    }
-
-    public boolean saveScreenshot(Pixmap pixmap) {
-        try {
-            PixmapIO.writePNG(Gdx.files.external("screenshot.png"), pixmap);
-        } finally {
-            pixmap.dispose();
-        }
-        return true;
     }
 
     protected Color parseColor(String hex) {

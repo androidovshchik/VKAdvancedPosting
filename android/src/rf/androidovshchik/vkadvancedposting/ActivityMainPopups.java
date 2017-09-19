@@ -2,6 +2,7 @@ package rf.androidovshchik.vkadvancedposting;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -9,12 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import rf.androidovshchik.vkadvancedposting.events.clicks.PhotoClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.StickerClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
@@ -22,7 +31,6 @@ import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
-import rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
 
 public class ActivityMainPopups extends ActivityMainLayouts {
@@ -35,6 +43,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	private int windowHeight;
 	private int bottomToolbarActionHeight;
+
+	private int worldSize;
 
 	private boolean isKeyboardShowing = false;
 
@@ -52,6 +62,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
 		bottomToolbarActionHeight =
 				getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
+		worldSize = getResources().getDimensionPixelSize(R.dimen.world_width);
 	}
 
 	@Override
@@ -80,6 +91,40 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	public boolean onPopupShadowTouch() {
 		hideStickersPopup();
 		return false;
+	}
+
+	@OnClick(R.id.actionSend)
+	public void onSend() {
+		if (stickersPopup.isShowing()) {
+			hideStickersPopup();
+		} else if (photosPopup.isShowing()) {
+			ViewUtil.hidePopup(photosPopup);
+		}
+		if (isKeyboardShowing) {
+			ViewUtil.hideKeyboard(getApplicationContext());
+		}
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				final Pixmap pixmap = fragmentWorld.world.getScreenshot();
+				Observable.fromCallable(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						Bitmap bitmap = Bitmap.createBitmap(worldSize, worldSize,
+								Bitmap.Config.ARGB_8888);
+						bitmap.copyPixelsFromBuffer(pixmap.getPixels());
+						return true;
+					}
+				}).subscribeOn(Schedulers.io())
+						.subscribe(new Consumer<Boolean>() {
+							@Override
+							public void accept(Boolean success) {
+
+							}
+						});
+			}
+		});
+		dialogWallPost.show(getSupportFragmentManager(), DialogWallPost.class.getSimpleName());
 	}
 
 	@SuppressWarnings("unused")

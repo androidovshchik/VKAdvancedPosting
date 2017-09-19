@@ -15,7 +15,7 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	protected FragmentWorld fragmentWorld;
 	protected FragmentPostText fragmentPostText;
 
-    private DialogWallPost dialogWallPost;
+	protected DialogWallPost dialogWallPost;
 
 	protected Rect rectResizedWindow;
 
@@ -47,10 +47,5 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	@OnClick(R.id.actionHistory)
 	public void onHistory() {
 		mainLayout.onHistoryMode();
-	}
-
-	@OnClick(R.id.actionSend)
-	public void onSend() {
-		dialogWallPost.show(getSupportFragmentManager(), DialogWallPost.class.getSimpleName());
 	}
 }
