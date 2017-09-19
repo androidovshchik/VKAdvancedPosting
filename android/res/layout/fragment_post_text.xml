@@ -4,6 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:gravity="start"
     android:hint="@string/main.hint"
     android:textColorHint="#3d000000"
     android:background="@null"
