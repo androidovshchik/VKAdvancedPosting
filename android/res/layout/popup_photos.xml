@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/stickersRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxHeight="328dp"
-    android:background="@color/white"/>
+    android:background="@color/white">
+
+    <rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:id="@+id/photosShadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#7a000000"
+        android:visibility="gone"/>
+
+</rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout>

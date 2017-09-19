@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 import com.vk.sdk.VKSdk;
@@ -24,6 +23,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
 public abstract class ActivityMainBase extends AppCompatActivity
 		implements AndroidFragmentApplication.Callbacks, ViewTreeObserver.OnGlobalLayoutListener {
@@ -101,9 +101,7 @@ public abstract class ActivityMainBase extends AppCompatActivity
 				if (resultCode != AppCompatActivity.RESULT_OK) {
 					finish();
 				} else {
-					// show keyboard
-					((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
-							.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+					ViewUtil.showKeyboard(getApplicationContext());
 				}
 				break;
 			default:

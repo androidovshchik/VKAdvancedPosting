@@ -8,12 +8,11 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
+import android.util.AttributeSet;
 
 import java.io.File;
 
-import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.components.CursorPhotos;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.base.BaseRecyclerView;
@@ -29,13 +28,16 @@ public class PhotosRecyclerView extends BaseRecyclerView
 
     public AdapterPhotos adapterPhotos;
 
-    public PhotosRecyclerView(Context context) {
-        super(context, null, 0);
+    public PhotosRecyclerView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public PhotosRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
     @Override
     protected void init() {
-        setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(DIVIDER_HEIGHT);

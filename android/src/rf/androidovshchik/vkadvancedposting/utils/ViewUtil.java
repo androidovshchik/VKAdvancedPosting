@@ -5,11 +5,13 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.annotation.StyleRes;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
 
 import java.lang.reflect.InvocationTargetException;
@@ -80,5 +82,17 @@ public final class ViewUtil {
         if (popupWindow.isShowing()) {
             popupWindow.dismiss();
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static void showKeyboard(Context context) {
+        ((InputMethodManager) context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    @SuppressWarnings("unused")
+    public static void hideKeyboard(Context context) {
+        ((InputMethodManager) context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
     }
 }

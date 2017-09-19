@@ -5,10 +5,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.PopupWindow;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -23,6 +21,7 @@ import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.PhotosRecyclerView;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
 
@@ -31,16 +30,13 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@BindView(R.id.popupShadow)
 	View popupShadow;
 
-	protected PopupWindow photosPopup;
-	protected PopupWindow stickersPopup;
+	private PopupWindow photosPopup;
+	private PopupWindow stickersPopup;
 
-	protected int windowHeight;
-	private int bottomToolbarHeight;
-	private int keyboardHeight = 0;
+	private int windowHeight;
+	private int bottomToolbarActionHeight;
 
 	private boolean isKeyboardShowing = false;
-	// when keyboard is shown photosPopup doesn't disappear
-	private boolean needShowPhotos = false;
 
 	@Override
 	@SuppressLint("InflateParams")
@@ -50,37 +46,28 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				null, false), R.style.AnimationStickersAppear);
 		stickersPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
 		if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-			photosPopup = ViewUtil.createPopup(new PhotosRecyclerView(this),
-					R.style.AnimationPhotosAppear);
+			photosPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_photos,
+					null, false), R.style.AnimationPhotosAppear);
 		}
 		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
-		bottomToolbarHeight = getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
+		bottomToolbarActionHeight =
+				getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
 	}
 
 	@Override
 	public void onGlobalLayout() {
 		super.onGlobalLayout();
-		int difference = windowHeight - rectResizedWindow.bottom;
-		if (difference != 0) {
+		int keyboardHeight = windowHeight - rectResizedWindow.bottom;
+		if (keyboardHeight != 0) {
 			isKeyboardShowing = true;
-			keyboardHeight = difference;
 			photosPopup.setHeight(keyboardHeight);
-			boolean firstTime = mainLayout.bottomToolbar.getLayoutParams().height ==
-					bottomToolbarHeight;
-			if (mainLayout.bottomToolbar.getY() > rectResizedWindow.bottom) {
-				if (firstTime) {
-					mainLayout.bottomToolbar.getLayoutParams().height =
-							keyboardHeight + bottomToolbarHeight;
-				}
-				moveBottomToolbarUp(keyboardHeight);
-			}
+			mainLayout.bottomToolbar.getLayoutParams().height =
+					keyboardHeight + bottomToolbarActionHeight;
+			moveBottomToolbar();
 		} else {
 			isKeyboardShowing = false;
-			hidePhotosPopup();
-			if (keyboardHeight != 0 &&
-					mainLayout.bottomToolbar.getY() < windowHeight - keyboardHeight) {
-				moveBottomToolbarDown();
-			}
+			ViewUtil.hidePopup(photosPopup);
+			moveBottomToolbar();
 		}
 	}
 
@@ -148,8 +135,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	public void onTextTouchEvent(TextTouchEvent event) {
 		if (photosPopup.isShowing()) {
 			ViewUtil.hidePopup(photosPopup);
-		} else {
-			moveBottomToolbarUp(0);
 		}
 	}
 
@@ -161,57 +146,38 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	private void showPhotosPopup() {
 		if (!isKeyboardShowing) {
-			moveBottomToolbarUp(0);
+			ViewUtil.showKeyboard(getApplicationContext());
 		}
-		ViewUtil.showPopup(photosPopup, mainLayout);
+		mainLayout.bottomToolbar.post(new Runnable() {
+			@Override
+			public void run() {
+				ViewUtil.showPopup(photosPopup, mainLayout);
+			}
+		});
 	}
 
 	private void hidePhotosPopup() {
-		ViewUtil.hidePopup(photosPopup);
-		if (!isKeyboardShowing) {
-			moveBottomToolbarDown();
-		}
+		ViewUtil.hideKeyboard(getApplicationContext());
 	}
 
 	private void showStickersPopup() {
 		popupShadow.setVisibility(View.VISIBLE);
 		if (photosPopup.isShowing()) {
-			if (!isKeyboardShowing) {
-				needShowPhotos = true;
-				mainLayout.bottomToolbar.post(new Runnable() {
-					@Override
-					public void run() {
-						moveBottomToolbarUp(0);
-					}
-				});
-			} else {
-				moveBottomToolbarUp(0);
-			}
+			((PhotosLayout) photosPopup.getContentView()).photosShadow.setVisibility(View.VISIBLE);
 		}
 		ViewUtil.showPopup(stickersPopup, mainLayout);
 	}
 
 	private void hideStickersPopup() {
 		popupShadow.setVisibility(View.GONE);
-		ViewUtil.hidePopup(stickersPopup);
-		if (needShowPhotos) {
-			needShowPhotos = false;
-			mainLayout.bottomToolbar.post(new Runnable() {
-				@Override
-				public void run() {
-					showPhotosPopup();
-				}
-			});
+		if (photosPopup.isShowing()) {
+			((PhotosLayout) photosPopup.getContentView()).photosShadow.setVisibility(View.GONE);
 		}
+		ViewUtil.hidePopup(stickersPopup);
 	}
 
-	private void moveBottomToolbarUp(int plusOffset) {
-		mainLayout.bottomToolbar.setY(windowHeight -
-				mainLayout.bottomToolbar.getHeight() - plusOffset);
-	}
-
-	private void moveBottomToolbarDown() {
-		mainLayout.bottomToolbar.setY(windowHeight - bottomToolbarHeight);
+	private void moveBottomToolbar() {
+		mainLayout.bottomToolbar.setY(rectResizedWindow.bottom - bottomToolbarActionHeight);
 	}
 
 	@Override
@@ -221,22 +187,23 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		} else if (photosPopup.isShowing()) {
 			hidePhotosPopup();
 		} else if (isKeyboardShowing) {
-			((InputMethodManager) getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
-					.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+			ViewUtil.hideKeyboard(getApplicationContext());
 		} else {
 			super.onBackPressed();
 		}
 	}
 
 	@Override
+	@SuppressLint("InflateParams")
 	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
 										   @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		switch (requestCode) {
 			case REQUEST_READ_EXTERNAL_STORAGE:
 				if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-					photosPopup = ViewUtil.createPopup(new PhotosRecyclerView(this),
-							R.style.AnimationPhotosAppear);
+					photosPopup = ViewUtil.createPopup(getLayoutInflater()
+							.inflate(R.layout.popup_photos,
+									null, false), R.style.AnimationPhotosAppear);
 					showPhotosPopup();
 				}
 				break;
