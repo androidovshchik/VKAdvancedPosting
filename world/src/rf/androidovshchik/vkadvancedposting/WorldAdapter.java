@@ -4,10 +4,12 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,6 +20,9 @@ public abstract class WorldAdapter extends InputAdapter
         implements ApplicationListener, GestureDetector.GestureListener {
 
     private static final String TAG = WorldAdapter.class.getSimpleName();
+
+    protected OrthographicCamera camera;
+    protected FitViewport viewport;
 
     @Override
     public void pause() {
@@ -78,10 +83,13 @@ public abstract class WorldAdapter extends InputAdapter
     }
 
     public Pixmap getScreenshot() {
-        byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0,
-                Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-        Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(),
-                Gdx.graphics.getBackBufferHeight(), Pixmap.Format.RGBA8888);
+        int width = Gdx.graphics.getWidth() - viewport.getLeftGutterWidth() -
+                viewport.getRightGutterWidth();
+        int height = Gdx.graphics.getHeight() - viewport.getTopGutterHeight() -
+                viewport.getBottomGutterHeight();
+        byte[] pixels = ScreenUtils.getFrameBufferPixels(viewport.getLeftGutterWidth(),
+                viewport.getTopGutterHeight(), width, height, true);
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGBA8888);
         BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
         return pixmap;
     }

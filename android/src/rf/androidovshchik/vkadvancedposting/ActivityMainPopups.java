@@ -3,6 +3,8 @@ package rf.androidovshchik.vkadvancedposting;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -12,10 +14,15 @@ import android.widget.PopupWindow;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.graphics.PixmapIO.PNG;
+import com.badlogic.gdx.utils.StreamUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.concurrent.Callable;
 
 import butterknife.BindView;
@@ -32,6 +39,7 @@ import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
+import timber.log.Timber;
 
 public class ActivityMainPopups extends ActivityMainLayouts {
 
@@ -110,9 +118,19 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				Observable.fromCallable(new Callable<Boolean>() {
 					@Override
 					public Boolean call() throws Exception {
-						Bitmap bitmap = Bitmap.createBitmap(worldSize, worldSize,
-								Bitmap.Config.ARGB_8888);
-						bitmap.copyPixelsFromBuffer(pixmap.getPixels());
+						PNG writer = new PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f));
+						writer.setFlipY(false);
+						ByteArrayOutputStream output = new ByteArrayOutputStream();
+						try {
+							writer.write(output, pixmap);
+						} finally {
+							StreamUtils.closeQuietly(output);
+							writer.dispose();
+							pixmap.dispose();
+						}
+						byte[] bytes = output.toByteArray();
+						Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+						uploadImage(bitmap);
 						return true;
 					}
 				}).subscribeOn(Schedulers.io())

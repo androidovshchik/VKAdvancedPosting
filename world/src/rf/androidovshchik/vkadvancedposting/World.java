@@ -28,9 +28,6 @@ public class World extends WorldAdapter {
 	private int worldHeight;
 	private float worldDensity;
 
-	private OrthographicCamera camera;
-	private FitViewport viewport;
-
 	private ShapeRenderer shapeRenderer;
 	private SpriteBatch spriteBatch;
 
