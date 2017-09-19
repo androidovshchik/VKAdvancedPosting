@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">VKAdvancedPosting</string>
-    <string name="prompt_settings">Необходимо вручную дать разрешение для доступа к внутреннему хранилищу</string>
+    <string name="prompt_settings">Необходимо вручную дать разрешение на доступ к внутреннему хранилищу</string>
     <string name="login.button">Войти через ВКонтакте</string>
     <string name="main.post">Запись</string>
     <string name="main.history">История</string>
