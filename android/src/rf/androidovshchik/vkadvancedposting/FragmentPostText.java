@@ -31,7 +31,7 @@ public class FragmentPostText extends Fragment {
         getPostEditText().requestFocus();
     }
 
-    @OnTouch(R.id.popupShadow)
+    @OnTouch(R.id.postText)
     public boolean onPopupShadowTouch() {
         EventUtil.post(new TextTouchEvent());
         return false;
