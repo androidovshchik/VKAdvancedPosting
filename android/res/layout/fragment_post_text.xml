@@ -7,5 +7,5 @@
     android:hint="@string/main.hint"
     android:textColorHint="#3d000000"
     android:background="@null"
-    android:inputType="textNoSuggestions"
+    android:inputType="textMultiLine"
     style="@style/TextStyle3"/>
