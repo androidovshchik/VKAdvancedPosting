@@ -22,7 +22,7 @@ public class PhotosRecyclerView extends BaseRecyclerView
 
     private static final int CURSOR_PHOTOS = 1;
 
-    private static final int DIVIDER_HEIGHT = ViewUtil.dp2px(0.5f);
+    private static final int DIVIDER_SIZE = ViewUtil.dp2px(0.5f);
 
     private Paint paint;
 
@@ -40,7 +40,7 @@ public class PhotosRecyclerView extends BaseRecyclerView
     protected void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(DIVIDER_HEIGHT);
+        paint.setStrokeWidth(DIVIDER_SIZE);
         paint.setColor(Color.parseColor("#1e000000"));
         adapterPhotos = new AdapterPhotos();
         setAdapter(adapterPhotos);
@@ -58,7 +58,7 @@ public class PhotosRecyclerView extends BaseRecyclerView
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawLine(0, DIVIDER_HEIGHT / 2, getWidth(), DIVIDER_HEIGHT / 2, paint);
+        canvas.drawLine(0, DIVIDER_SIZE / 2, getWidth(), DIVIDER_SIZE / 2, paint);
     }
 
     @Override
@@ -93,10 +93,9 @@ public class PhotosRecyclerView extends BaseRecyclerView
                 maxBottomSpace - DecorationPhotos.BOTTOM_SPACE);
         addItemDecoration(new DecorationPhotos());
         setupCacheProperties();
-        adapterPhotos.hasUiPrepared = true;
-        if (adapterPhotos.getItemCount() > 0) {
-            adapterPhotos.notifyDataSetChanged();
-        }
+        // ui is prepared
+        adapterPhotos.photoPickersCount = 2;
+        adapterPhotos.notifyDataSetChanged();
     }
 
     @Override
@@ -111,7 +110,8 @@ public class PhotosRecyclerView extends BaseRecyclerView
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
                 adapterPhotos.photoPaths.add(new File(path));
             } while (cursor.moveToNext());
-            if (adapterPhotos.hasUiPrepared) {
+            if (adapterPhotos.photoPickersCount > 0) {
+                // onSizeChanged called before and ui was prepared
                 adapterPhotos.notifyDataSetChanged();
             }
         }
