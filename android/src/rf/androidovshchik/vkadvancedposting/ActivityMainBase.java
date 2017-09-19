@@ -74,14 +74,18 @@ public abstract class ActivityMainBase extends AppCompatActivity
 	}
 
 	protected void uploadImage(Bitmap bitmap) {
-		if (VKAccessToken.currentToken() == null) {
-			return;
+		try {
+			if (VKAccessToken.currentToken() == null) {
+				return;
+			}
+			long userId = Long.parseLong(VKAccessToken.currentToken().userId);
+			VKRequest request = VKApi.uploadWallPhotoRequest(new VKUploadImage(bitmap,
+					VKImageParameters.pngImage()), userId, 0);
+			request.attempts = 3;
+			request.executeWithListener(vkRequestCallback);
+		} finally {
+			bitmap.recycle();
 		}
-		long userId = Long.parseLong(VKAccessToken.currentToken().userId);
-		VKRequest request = VKApi.uploadWallPhotoRequest(new VKUploadImage(bitmap,
-				VKImageParameters.pngImage()), userId, 0);
-		request.attempts = 3;
-		request.executeWithListener(vkRequestCallback);
 	}
 
 	protected void makeWallPost(VKAttachments attachments) {

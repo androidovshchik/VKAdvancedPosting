@@ -2,7 +2,13 @@ package rf.androidovshchik.vkadvancedposting.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.StyleRes;
 import android.support.v7.app.AppCompatActivity;
@@ -94,5 +100,38 @@ public final class ViewUtil {
     public static void hideKeyboard(Context context) {
         ((InputMethodManager) context.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE))
                 .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+    }
+
+    @SuppressWarnings("unused")
+    public static Bitmap getBitmapFromView(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        bitmap.eraseColor(Color.TRANSPARENT);
+        Canvas canvas = new Canvas(bitmap);
+        Drawable background = view.getBackground();
+        if (background != null) {
+            background.draw(canvas);
+        } else {
+            canvas.drawColor(Color.WHITE);
+        }
+        view.draw(canvas);
+        return bitmap;
+    }
+
+    @SuppressWarnings("unused")
+    public static Bitmap overlayBitmapToCenter(Bitmap bitmap, Bitmap overlay) {
+        try {
+            float marginLeft = bitmap.getWidth() * 0.5f - overlay.getWidth() * 0.5f;
+            float marginTop = bitmap.getHeight() * 0.5f - overlay.getHeight() * 0.5f;
+            Bitmap overlayBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                    Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(overlayBitmap);
+            canvas.drawBitmap(bitmap, new Matrix(), null);
+            canvas.drawBitmap(overlay, marginLeft, marginTop, null);
+            return overlayBitmap;
+        } finally {
+            bitmap.recycle();
+            overlay.recycle();
+        }
     }
 }

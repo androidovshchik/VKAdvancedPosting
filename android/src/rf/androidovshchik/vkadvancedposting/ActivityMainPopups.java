@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -14,7 +13,6 @@ import android.widget.PopupWindow;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.PixmapIO.PNG;
 import com.badlogic.gdx.utils.StreamUtils;
 
@@ -22,7 +20,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.concurrent.Callable;
 
 import butterknife.BindView;
@@ -39,7 +36,6 @@ import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
-import timber.log.Timber;
 
 public class ActivityMainPopups extends ActivityMainLayouts {
 
@@ -51,8 +47,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	private int windowHeight;
 	private int bottomToolbarActionHeight;
-
-	private int worldSize;
 
 	private boolean isKeyboardShowing = false;
 
@@ -70,7 +64,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
 		bottomToolbarActionHeight =
 				getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
-		worldSize = getResources().getDimensionPixelSize(R.dimen.world_width);
 	}
 
 	@Override
@@ -111,6 +104,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		if (isKeyboardShowing) {
 			ViewUtil.hideKeyboard(getApplicationContext());
 		}
+		final Bitmap postText = ViewUtil.getBitmapFromView(fragmentPostText.getPostEditText());
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run() {
@@ -129,8 +123,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 							pixmap.dispose();
 						}
 						byte[] bytes = output.toByteArray();
-						Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-						uploadImage(bitmap);
+						uploadImage(ViewUtil.overlayBitmapToCenter(BitmapFactory
+								.decodeByteArray(bytes, 0, bytes.length), postText));
 						return true;
 					}
 				}).subscribeOn(Schedulers.io())

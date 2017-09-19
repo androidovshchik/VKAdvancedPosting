@@ -37,7 +37,7 @@ public class FragmentPostText extends Fragment {
         return false;
     }
 
-    private PostEditText getPostEditText() {
+    public PostEditText getPostEditText() {
         return (PostEditText) getView();
     }
 
