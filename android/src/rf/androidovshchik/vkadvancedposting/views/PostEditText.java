@@ -1,6 +1,11 @@
 package rf.androidovshchik.vkadvancedposting.views;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.CornerPathEffect;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
@@ -17,11 +22,17 @@ import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
 public class PostEditText extends AppCompatEditText implements TextWatcher {
 
+    private static final int RADIUS = ViewUtil.dp2px(8);
+    private static final int PADDING = ViewUtil.dp2px(4);
+
     private int windowWidth;
 
     private int maxLines;
 
     private String beforeText;
+
+    private Paint paint;
+    private Path path;
 
     public PostEditText(Context context, @NonNull AttributeSet attrs) {
         this(context, attrs, android.support.v7.appcompat.R.attr.editTextStyle);
@@ -30,11 +41,12 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
     public PostEditText(Context context, @NonNull AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         windowWidth = ViewUtil.getWindow(getApplicationContext()).x;
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.RED);
+        paint.setPathEffect(new CornerPathEffect(RADIUS));
+        path = new Path();
         addTextChangedListener(this);
-    }
-
-    public void setPostText(String text) {
-
     }
 
     @Override
@@ -74,6 +86,37 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
     }
 
     @Override
+    protected void onDraw(Canvas canvas) {
+        if (getText().toString().isEmpty()) {
+            super.onDraw(canvas);
+            return;
+        }
+        Layout layout = getLayout();
+        float x = getWidth() / 2;
+        float y = 0;
+        path.reset();
+        path.moveTo(x, y);
+        for (int i = 0; i < layout.getLineCount(); i++) {
+            x = 1f * getWidth() / 2 - layout.getLineWidth(i) / 2 - PADDING;
+            path.lineTo(x, y);
+            y += layout.getLineBottom(i) - layout.getLineTop(i) + PADDING / 2;
+            path.lineTo(x, y);
+        }
+        x = getWidth() / 2;
+        path.lineTo(x, y);
+        for (int i = layout.getLineCount() - 1; i >= 0; i--) {
+            x = 1f * getWidth() / 2 + layout.getLineWidth(i) / 2 + PADDING;
+            path.lineTo(x, y);
+            y -= layout.getLineBottom(i) - layout.getLineTop(i) + PADDING / 2;
+            path.lineTo(x, y);
+        }
+        x = getWidth() / 2;
+        path.lineTo(x, y);
+        canvas.drawPath(path, paint);
+        super.onDraw(canvas);
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         maxLines = windowWidth / getLineHeight() - 1;
@@ -85,8 +128,8 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
         int line = layout.getLineForVertical(Math.round(event.getY()));
         float lineStartX = 1f * layout.getWidth() / 2 - layout.getLineWidth(line) / 2;
         float lineEndX = 1f * layout.getWidth() / 2 + layout.getLineWidth(line) / 2;
-        return !(event.getX() < lineStartX || event.getX() > lineEndX)
-                && super.dispatchTouchEvent(event);
+        return (!(event.getX() < lineStartX || event.getX() > lineEndX) ||
+                getText().toString().isEmpty()) && super.dispatchTouchEvent(event);
     }
 
     private int countLines(String string) {
