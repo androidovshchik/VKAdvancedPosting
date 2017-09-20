@@ -216,7 +216,7 @@ public class World extends WorldAdapter {
 		Texture textureCenter = new Texture(Gdx.files.internal("illustrations/" + centerPath));
 		Background backgroundCenter = new Background(textureCenter,
 				Player.TYPE_CENTER_BACKGROUND, centerPath);
-		backgroundCenter.center(worldWidth, worldHeight);
+		backgroundCenter.center(worldWidth, worldHeight, 0);
 		drawGradient = false;
 		backgroundStage.addActor(backgroundCenter);
 		if (topPath != null) {
@@ -239,9 +239,8 @@ public class World extends WorldAdapter {
 	public void setPhotoBackground(String photoPath, Integer rotation) {
 		clearBackground();
 		Texture textureCenter = new Texture(Gdx.files.external(photoPath));
-		Background backgroundCenter = new Background(textureCenter, Player.TYPE_PHOTO, photoPath,
-				rotation);
-		backgroundCenter.center(worldWidth, worldHeight);
+		Background backgroundCenter = new Background(textureCenter, Player.TYPE_PHOTO, photoPath);
+		backgroundCenter.center(worldWidth, worldHeight, rotation);
 		drawGradient = false;
 		backgroundStage.addActor(backgroundCenter);
 	}

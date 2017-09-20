@@ -8,6 +8,7 @@ public class Background extends Player {
 
     public Background(Texture texture, int type, String path) {
         super(texture, type, path);
+        setOrigin(getWidth() / 2, getHeight() / 2);
     }
 
     public Background(Texture texture, Record record) {
@@ -18,25 +19,25 @@ public class Background extends Player {
         float scale = 1f * worldWidth / getWidth();
         float halfWidthDifference = getWidth() * (1f - scale) / 2;
         float halfHeightDifference = getHeight() * (1f - scale) / 2;
-        setOrigin(getWidth() / 2, getHeight() / 2);
         setX(- halfWidthDifference);
         setY(worldHeight - getHeight() + halfHeightDifference);
         setScale(scale);
     }
 
-    public void center(int worldWidth, int worldHeight) {
-        setOrigin(getWidth() / 2, getHeight() / 2);
+    public void center(int worldWidth, int worldHeight, int rotation) {
+        setRotation(- rotation);
         setX(worldWidth / 2 - getWidth() / 2);
         setY(worldHeight / 2 - getHeight() / 2);
-        float minSize = getHeight() > getWidth() ? getWidth() : getHeight();
-        setScale(1f * worldHeight / minSize);
+        float minSize, scale;
+        minSize = getHeight() > getWidth() ? getWidth() : getHeight();
+        scale = 1f * worldHeight / minSize;
+        setScale(scale);
     }
 
     public void bottom(int worldWidth, int worldHeight) {
         float scale = 1f * worldWidth / getWidth();
         float halfWidthDifference = getWidth() * (1f - scale) / 2;
         float halfHeightDifference = getHeight() * (1f - scale) / 2;
-        setOrigin(getWidth() / 2, getHeight() / 2);
         setX(- halfWidthDifference);
         setY(- halfHeightDifference);
         setScale(scale);

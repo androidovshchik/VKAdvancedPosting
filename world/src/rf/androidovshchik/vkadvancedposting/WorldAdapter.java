@@ -62,9 +62,9 @@ public abstract class WorldAdapter extends InputAdapter
                 try {
                     method = World.class.getMethod(name, classes);
                 } catch (SecurityException e) {
-                    GdxLog.print(TAG, e.getMessage());
+                    GdxLog.print(TAG, e.toString());
                 } catch (NoSuchMethodException e) {
-                    GdxLog.print(TAG, e.getMessage());
+                    GdxLog.print(TAG, e.toString());
                 }
                 if (method == null) {
                     return;
@@ -72,11 +72,11 @@ public abstract class WorldAdapter extends InputAdapter
                 try {
                     method.invoke(WorldAdapter.this, params);
                 } catch (IllegalArgumentException e) {
-                    GdxLog.print(TAG, e.getMessage());
+                    GdxLog.print(TAG, e.toString());
                 } catch (IllegalAccessException e) {
-                    GdxLog.print(TAG, e.getMessage());
+                    GdxLog.print(TAG, e.toString());
                 } catch (InvocationTargetException e) {
-                    GdxLog.print(TAG, e.getMessage());
+                    GdxLog.print(TAG, e.toString());
                 }
             }
         });
