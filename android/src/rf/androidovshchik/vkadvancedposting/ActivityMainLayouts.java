@@ -100,14 +100,8 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	@SuppressWarnings("unused")
 	@Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
 	public void onVKResponseEvent(VKResponseEvent event) {
-		if (event.isSuccessful) {
-			if (event.isPhotoUploadRequest) {
-				makeWallPost(new VKAttachments(((VKPhotoArray) event.parsedModel).get(0)));
-			} else {
-				dialogWallPost.wallPostLayout.onPublishSucceed();
-			}
-		} else {
-			dialogWallPost.wallPostLayout.onPublishFailed();
+		if (event.isSuccessful && event.isPhotoUploadRequest) {
+			makeWallPost(new VKAttachments(((VKPhotoArray) event.parsedModel).get(0)));
 		}
 	}
 

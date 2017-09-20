@@ -199,12 +199,12 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 			ViewUtil.showKeyboard(getApplicationContext());
 		}
 		((PhotosLayout) photosPopup.getContentView()).photosShadow.setVisibility(View.GONE);
-		mainLayout.bottomToolbar.post(new Runnable() {
+		mainLayout.bottomToolbar.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				ViewUtil.showPopup(photosPopup, mainLayout);
 			}
-		});
+		}, 80);
 	}
 
 	private void hidePhotosPopup() {

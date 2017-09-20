@@ -13,11 +13,16 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.events.remote.VKRepeatEvent;
+import rf.androidovshchik.vkadvancedposting.events.remote.sticky.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.events.world.RemoveAllEvent;
 import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
@@ -58,6 +63,7 @@ public class DialogWallPost extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(this);
         Window window = getDialog().getWindow();
         if (window != null) {
             ObjectAnimator appearing = ObjectAnimator.ofFloat(window.getDecorView(),
@@ -66,6 +72,18 @@ public class DialogWallPost extends DialogFragment {
             appearing.setInterpolator(new AccelerateInterpolator());
             appearing.setDuration(300);
             appearing.start();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
+    public void onVKResponseEvent(VKResponseEvent event) {
+        if (event.isSuccessful) {
+            if (!event.isPhotoUploadRequest) {
+                wallPostLayout.onPublishSucceed();
+            }
+        } else {
+            wallPostLayout.onPublishFailed();
         }
     }
 
@@ -84,6 +102,12 @@ public class DialogWallPost extends DialogFragment {
             EventUtil.post(new VKRepeatEvent());
             wallPostLayout.onPublishRetry();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
