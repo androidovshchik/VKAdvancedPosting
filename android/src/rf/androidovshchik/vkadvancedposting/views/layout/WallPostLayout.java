@@ -18,7 +18,6 @@ import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.views.ProgressBar;
 import rf.androidovshchik.vkadvancedposting.views.VKButton;
-import timber.log.Timber;
 
 public class WallPostLayout extends RelativeLayout implements Animator.AnimatorListener {
 

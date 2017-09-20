@@ -25,6 +25,8 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
     private static final int RADIUS = ViewUtil.dp2px(8);
     private static final int PADDING = ViewUtil.dp2px(4);
 
+    public int backgroundColor = Color.TRANSPARENT;
+
     private int windowWidth;
 
     private int maxLines;
@@ -43,7 +45,6 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
         windowWidth = ViewUtil.getWindow(getApplicationContext()).x;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.RED);
         paint.setPathEffect(new CornerPathEffect(RADIUS));
         path = new Path();
         addTextChangedListener(this);
@@ -91,6 +92,11 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
             super.onDraw(canvas);
             return;
         }
+        if (backgroundColor == Color.TRANSPARENT) {
+            super.onDraw(canvas);
+            return;
+        }
+        paint.setColor(backgroundColor);
         Layout layout = getLayout();
         float x = getWidth() / 2;
         float y = 0;
@@ -100,9 +106,6 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
             x = 1f * getWidth() / 2 - layout.getLineWidth(i) / 2 - PADDING;
             path.lineTo(x, y);
             y += layout.getLineBottom(i) - layout.getLineTop(i);
-            if (i == layout.getLineCount() - 1) {
-                y += PADDING / 2;
-            }
             path.lineTo(x, y);
         }
         x = getWidth() / 2;
@@ -110,9 +113,6 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
         for (int i = layout.getLineCount() - 1; i >= 0; i--) {
             x = 1f * getWidth() / 2 + layout.getLineWidth(i) / 2 + PADDING;
             path.lineTo(x, y);
-            if (i == layout.getLineCount() - 1) {
-                y -= PADDING / 2;
-            }
             y -= layout.getLineBottom(i) - layout.getLineTop(i);
             path.lineTo(x, y);
         }

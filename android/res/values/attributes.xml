@@ -2,7 +2,6 @@
 <resources>
     <declare-styleable name="TrashFab">
         <attr name="visibleMarginBottom" format="dimension" />
-        <attr name="radiusAppear" format="dimension" />
         <attr name="radiusOpen" format="dimension" />
     </declare-styleable>
 </resources>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rf.androidovshchik.vkadvancedposting.views.layout.MainLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,6 +13,20 @@
 
     <include
         layout="@layout/toolbar_main_top" />
+
+    <rf.androidovshchik.vkadvancedposting.views.fab.TrashFab
+        android:id="@+id/actionTrash"
+        android:layout_height="48dp"
+        android:layout_width="48dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:src="@drawable/ic_fab_trash"
+        android:clickable="true"
+        android:scaleType="centerInside"
+        android:background="@drawable/solid_trash"
+        app:backgroundTint="@null"
+        app:layout_behavior=".views.fab.TrashBehavior"
+        custom:visibleMarginBottom="16dp"
+        custom:radiusOpen="48dp"/>
 
     <include
         android:layout_width="match_parent"
