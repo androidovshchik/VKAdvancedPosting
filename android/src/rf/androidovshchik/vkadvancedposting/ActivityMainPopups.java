@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -113,7 +114,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		if (isKeyboardShowing) {
 			ViewUtil.hideKeyboard(getApplicationContext());
 		}
+		fragmentPostText.getPostEditText().setFocusable(false);
 		final Bitmap postText = ViewUtil.getBitmapFromView(fragmentPostText.getPostEditText());
+		fragmentPostText.getPostEditText().setFocusable(true);
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run() {
@@ -266,6 +269,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				.adapter.currentTheme == position) {
 			return;
 		}
+		fragmentPostText.getPostEditText().setTextColor(position > 0 &&
+				fragmentPostText.getPostEditText().backgroundColor != Color.WHITE ?
+				Color.WHITE : Color.BLACK);
 		mainLayout.bottomToolbar.themesRecyclerView
 				.adapter.currentTheme = position;
 		mainLayout.bottomToolbar.themesRecyclerView

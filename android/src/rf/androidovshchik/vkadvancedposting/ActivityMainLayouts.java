@@ -1,5 +1,6 @@
 package rf.androidovshchik.vkadvancedposting;
 
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -44,6 +45,26 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	public void onGlobalLayout() {
 		getWindow().getDecorView().getWindowVisibleDisplayFrame(rectResizedWindow);
 		mainLayout.onViewportChange(rectResizedWindow.bottom);
+	}
+
+	@OnClick(R.id.actionFont)
+	public void onFont() {
+		switch (fragmentPostText.getPostEditText().backgroundColor) {
+			case Color.TRANSPARENT:
+				if (fragmentPostText.getPostEditText().getCurrentTextColor() != Color.WHITE) {
+					fragmentPostText.getPostEditText().backgroundColor = Color.WHITE;
+					fragmentPostText.getPostEditText().invalidate();
+					break;
+				}
+			case Color.WHITE:
+				fragmentPostText.getPostEditText().backgroundColor = Color.parseColor("#1e000000");
+				fragmentPostText.getPostEditText().invalidate();
+				break;
+			default:
+				fragmentPostText.getPostEditText().backgroundColor = Color.TRANSPARENT;
+				fragmentPostText.getPostEditText().invalidate();
+				break;
+		}
 	}
 
 	@OnClick(R.id.actionPost)
