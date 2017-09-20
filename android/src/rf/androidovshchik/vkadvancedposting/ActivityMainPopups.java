@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +59,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	private int bottomToolbarActionHeight;
 
 	private boolean isKeyboardShowing = false;
-
-	private Uri uri;
 
 	@Override
 	@SuppressLint("InflateParams")
@@ -182,9 +183,10 @@ public class ActivityMainPopups extends ActivityMainLayouts {
         } else {
             String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
             String path = ((PhotosLayout) photosPopup.getContentView())
-                    .photosRecyclerView.adapterPhotos.photoPaths.get(event.position - 2)
-                    .getPath().substring(sdcardPath.length());
-            fragmentWorld.world.postRunnable("setPhotoBackground", path);
+                    .photosRecyclerView.adapterPhotos.photoPaths.get(event.position - 2).getPath();
+			int orientation = CameraUtil.getOrientation(path);
+            fragmentWorld.world.postRunnable("setPhotoBackground",
+					path.substring(sdcardPath.length()), orientation);
         }
 	}
 
@@ -284,6 +286,22 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	}
 
 	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (cursor != null && cursor.moveToFirst()) {
+			String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
+			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+			if (path == null) {
+				return;
+			}
+			Timber.d("path " + path);
+			int orientation = CameraUtil.getOrientation(path);
+			Timber.d("orientation " + orientation);
+			fragmentWorld.world.postRunnable("setPhotoBackground",
+					path.substring(sdcardPath.length()), orientation);
+		}
+	}
+
+	@Override
 	@SuppressLint("InflateParams")
 	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
 										   @NonNull int[] grantResults) {
@@ -341,9 +359,15 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		}
 		if (resultUri != null) {
 			// resultUri is URI of photo
-			Timber.d("resultUri.getPath() " + resultUri.path());
-			fragmentWorld.world.postRunnable("setPhotoBackground", resultUri.getPath());
 			uri = resultUri;
+			LoaderManager loaderManager = getSupportLoaderManager();
+			if (loaderManager != null) {
+				if (loaderManager.getLoader(CURSOR_PICKER) != null) {
+					loaderManager.restartLoader(CURSOR_PICKER, null, this);
+				} else {
+					loaderManager.initLoader(CURSOR_PICKER, null, this);
+				}
+			}
 		}
 	}
 }

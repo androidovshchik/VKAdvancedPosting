@@ -3,6 +3,7 @@ package rf.androidovshchik.vkadvancedposting.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -10,6 +11,8 @@ import android.text.TextUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+
+import timber.log.Timber;
 
 public final class CameraUtil {
 
@@ -27,7 +30,7 @@ public final class CameraUtil {
 			dirPath = DiskUtil.getInternalPhotoDir(context);
 			isExternalStorage = false;
 		}
-		String fileName = (TextUtils.isEmpty(prefix) ? title : prefix + title) + ".jpg" ;
+		String fileName = (TextUtils.isEmpty(prefix) ? title : prefix + title) + ".jpg";
         String path = dirPath + "/" + fileName;
         File file = new File(path);
         ContentValues values = new ContentValues(6);
@@ -57,5 +60,33 @@ public final class CameraUtil {
     	intent.addCategory(Intent.CATEGORY_DEFAULT);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoUri(context, prefix));
     	return intent;
+    }
+
+    public static int getOrientation(String path) {
+        ExifInterface exifInterface;
+        try {
+            exifInterface = new ExifInterface(path);
+        } catch (Exception e) {
+            Timber.e(e.getMessage());
+            return 0;
+        }
+        int exifR = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+        int orientation;
+        switch (exifR) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                orientation = 90;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                orientation = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                orientation = 270;
+                break;
+            default:
+                orientation = 0;
+                break;
+        }
+        return orientation;
     }
 }

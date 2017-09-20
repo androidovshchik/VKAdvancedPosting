@@ -236,10 +236,11 @@ public class World extends WorldAdapter {
 	}
 
 	@SuppressWarnings("unused")
-	public void setPhotoBackground(String photoPath) {
+	public void setPhotoBackground(String photoPath, Integer rotation) {
 		clearBackground();
 		Texture textureCenter = new Texture(Gdx.files.external(photoPath));
-		Background backgroundCenter = new Background(textureCenter, Player.TYPE_PHOTO, photoPath);
+		Background backgroundCenter = new Background(textureCenter, Player.TYPE_PHOTO, photoPath,
+				rotation);
 		backgroundCenter.center(worldWidth, worldHeight);
 		drawGradient = false;
 		backgroundStage.addActor(backgroundCenter);

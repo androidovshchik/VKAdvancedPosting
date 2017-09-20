@@ -106,13 +106,20 @@ public class PhotosRecyclerView extends BaseRecyclerView
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
-            do {
-                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-                adapterPhotos.photoPaths.add(new File(path));
-            } while (cursor.moveToNext());
-            if (adapterPhotos.photoPickersCount > 0) {
-                // onSizeChanged called before and ui was prepared
-                adapterPhotos.notifyDataSetChanged();
+            try {
+                if (cursor.moveToFirst()) {
+                    do {
+                        String path = cursor.getString(cursor
+                                .getColumnIndex(MediaStore.Images.Media.DATA));
+                        adapterPhotos.photoPaths.add(new File(path));
+                    } while (cursor.moveToNext());
+                    if (adapterPhotos.photoPickersCount > 0) {
+                        // onSizeChanged called before and ui was prepared
+                        adapterPhotos.notifyDataSetChanged();
+                    }
+                }
+            } finally {
+                cursor.close();
             }
         }
     }

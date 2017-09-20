@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewTreeObserver;
@@ -32,11 +35,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import rf.androidovshchik.vkadvancedposting.callbacks.VKRequestCallback;
+import rf.androidovshchik.vkadvancedposting.components.CursorPicker;
 import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import timber.log.Timber;
 
 public abstract class ActivityMainBase extends AppCompatActivity
-		implements AndroidFragmentApplication.Callbacks, ViewTreeObserver.OnGlobalLayoutListener {
+		implements AndroidFragmentApplication.Callbacks, ViewTreeObserver.OnGlobalLayoutListener,
+		LoaderManager.LoaderCallbacks<Cursor> {
 
 	protected static final int REQUEST_VK_LOGIN = 1;
 	protected static final int REQUEST_PROMPT_SETTINGS = 2;
@@ -45,6 +51,10 @@ public abstract class ActivityMainBase extends AppCompatActivity
 	protected static final int REQUEST_WRITE_CAMERA = 12;
 	protected static final int REQUEST_GALLERY_GET_IMAGE = 20;
 	protected static final int REQUEST_CAMERA_GET_IMAGE = 21;
+
+	protected static final int CURSOR_PICKER = 1;
+
+    protected Uri uri;
 
 	private VKRequest requestUploadImage;
 	private VKRequest requestWallPost;
@@ -152,6 +162,15 @@ public abstract class ActivityMainBase extends AppCompatActivity
 
 	@Override
 	public void exit() {}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+		Timber.d("onCreateLoader " + uri.toString());
+		return new CursorPicker(getApplicationContext(), uri);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {}
 
 	@Override
 	public void onStop() {
