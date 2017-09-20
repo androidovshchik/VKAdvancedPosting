@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -32,15 +31,10 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
     @BindView(R.id.actionBackwards)
     protected VKButton actionBackwards;
 
-    public boolean isFirstStart = true;
-    public boolean isPublishing = true;
-    public boolean hasPostPublished = false;
+    public boolean backwardsCreateNew = false;
+    public boolean backwardsRetry = false;
 
-    private AccelerateInterpolator accelerateInterpolator;
-    @Nullable
     private ObjectAnimator cancelAppearing;
-    private ObjectAnimator cancelDisappearing;
-    private ObjectAnimator backwardsAppearing;
 
     private Unbinder unbinder;
 
@@ -66,81 +60,87 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
     protected void onFinishInflate() {
         super.onFinishInflate();
         unbinder = ButterKnife.bind(this);
-        accelerateInterpolator = new AccelerateInterpolator();
+        AccelerateInterpolator accelerateInterpolator = new AccelerateInterpolator();
+        cancelAppearing = actionCancel.createAnimationAppear(accelerateInterpolator);
+        cancelAppearing.addListener(this);
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
-        if (isFirstStart) {
-            cancelAppearing = actionCancel.createAnimationAppear(accelerateInterpolator);
-            cancelAppearing.addListener(this);
-            cancelAppearing.start();
-        } else if (hasPostPublished) {
-            onPublishSucceed();
-        } else if (!isPublishing) {
-            onPublishFailed();
-        } else {
-            actionCancel.setVisibility(VISIBLE);
-        }
+        cancelAppearing.start();
     }
 
     @Override
     public void onAnimationStart(Animator animator) {
-        if (isPublishing) {
-            actionCancel.setVisibility(VISIBLE);
-        }
+        actionCancel.setVisibility(VISIBLE);
     }
 
     @Override
-    public void onAnimationEnd(Animator animator) {
-        animator.removeListener(this);
-    }
+    public void onAnimationEnd(Animator animator) {}
 
     @Override
-    public void onAnimationCancel(Animator animator) {
-        animator.removeListener(this);
-    }
+    public void onAnimationCancel(Animator animator) {}
 
     @Override
     public void onAnimationRepeat(Animator animator) {}
 
     public void onPublishCancel() {
-        if (cancelAppearing != null && cancelAppearing.isRunning()) {
+        if (cancelAppearing.isRunning()) {
             cancelAppearing.cancel();
         }
     }
 
     public void onPublishSucceed() {
-        if (cancelAppearing != null && cancelAppearing.isRunning()) {
+        if (cancelAppearing.isRunning()) {
             cancelAppearing.end();
         }
+        backwardsCreateNew = true;
+        backwardsRetry = false;
         progressBar.overDrawProgress = true;
         loaderText.setText(R.string.main_publication_succeed);
         loaderImage.setVisibility(VISIBLE);
         loaderImage.setImageResource(R.drawable.ic_loader_success);
+        actionBackwards.setVisibility(VISIBLE);
+        actionBackwards.setText(R.string.main_button_create);
+        actionCancel.setVisibility(GONE);
     }
 
     public void onPublishFailed() {
-        if (cancelAppearing != null && cancelAppearing.isRunning()) {
+        if (cancelAppearing.isRunning()) {
             cancelAppearing.end();
         }
+        backwardsCreateNew = false;
+        backwardsRetry = true;
         progressBar.overDrawProgress = true;
-        progressBar.setVisibility(INVISIBLE);
         loaderText.setText(R.string.main_publication_failed);
         loaderImage.setVisibility(VISIBLE);
         loaderImage.setImageResource(R.drawable.ic_sentiment_dissatisfied);
+        actionBackwards.setVisibility(VISIBLE);
+        actionBackwards.setText(R.string.main_button_retry);
+        actionCancel.setVisibility(GONE);
     }
 
     public void onPublishRetry() {
-
+        backwardsCreateNew = false;
+        backwardsRetry = false;
+        progressBar.overDrawProgress = false;
+        loaderText.setText(R.string.main_publication_progress);
+        loaderImage.setVisibility(INVISIBLE);
+        actionBackwards.setVisibility(GONE);
+        actionCancel.setVisibility(VISIBLE);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        backwardsCreateNew = false;
+        backwardsRetry = false;
+        progressBar.overDrawProgress = false;
         loaderText.setText(R.string.main_publication_progress);
         loaderImage.setVisibility(INVISIBLE);
+        actionBackwards.setVisibility(GONE);
+        actionCancel.setVisibility(INVISIBLE);
         unbinder.unbind();
     }
 

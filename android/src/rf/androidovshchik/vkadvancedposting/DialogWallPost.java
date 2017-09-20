@@ -17,6 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import rf.androidovshchik.vkadvancedposting.events.remote.VKRepeatEvent;
+import rf.androidovshchik.vkadvancedposting.events.world.RemoveAllEvent;
+import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.WallPostLayout;
 
 public class DialogWallPost extends DialogFragment {
@@ -56,7 +59,7 @@ public class DialogWallPost extends DialogFragment {
     public void onStart() {
         super.onStart();
         Window window = getDialog().getWindow();
-        if (wallPostLayout.isFirstStart && window != null) {
+        if (window != null) {
             ObjectAnimator appearing = ObjectAnimator.ofFloat(window.getDecorView(),
                     "alpha", 0f, 1f);
             appearing.setRepeatCount(Animation.ABSOLUTE);
@@ -74,7 +77,13 @@ public class DialogWallPost extends DialogFragment {
 
     @OnClick(R.id.actionBackwards)
     protected void onBackwards() {
-        dismissAllowingStateLoss();
+        if (wallPostLayout.backwardsCreateNew) {
+            EventUtil.post(new RemoveAllEvent());
+            dismissAllowingStateLoss();
+        } else if (wallPostLayout.backwardsRetry) {
+            EventUtil.post(new VKRepeatEvent());
+            wallPostLayout.onPublishRetry();
+        }
     }
 
     @Override

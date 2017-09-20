@@ -49,7 +49,6 @@
         android:layout_height="56dp"
         android:layout_margin="12dp"
         android:layout_alignParentBottom="true"
-        android:text="@string/main.button.backwards"
         android:theme="@style/VKButton.Repeat"
         android:visibility="gone"/>
 
