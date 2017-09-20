@@ -157,32 +157,21 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@SuppressWarnings("unused")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onPhotoClickEvent(PhotoClickEvent event) {
-        if (event.position <= 0) {
+        if (event.position <= 1) {
 			if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
 						REQUEST_WRITE_GALLERY);
 			} else {
-				Intent intent = new Intent();
-				intent.setType("image/*");
-				intent.setAction(Intent.ACTION_GET_CONTENT);
-				startActivityForResult(intent, REQUEST_GALLERY_GET_IMAGE);
-			}
-        } else if (event.position == 1) {
-			if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-						REQUEST_WRITE_CAMERA);
-			} else {
-				Intent intent = CameraUtil.getCameraIntent(getApplicationContext(), null);
-				uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
-				startActivityForResult(intent, REQUEST_CAMERA_GET_IMAGE);
+				if (event.position == 0) {
+					startGalleryIntent();
+				} else {
+					startCameraIntent();
+				}
 			}
         } else {
-            String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
-            String path = ((PhotosLayout) photosPopup.getContentView())
-                    .photosRecyclerView.adapterPhotos.photoPaths.get(event.position - 2).getPath();
-			int orientation = CameraUtil.getOrientation(path);
-            fragmentWorld.world.postRunnable("setPhotoBackground",
-					path.substring(sdcardPath.length()), orientation);
+			String path = ((PhotosLayout) photosPopup.getContentView())
+					.photosRecyclerView.adapterPhotos.photoPaths.get(event.position - 2).getPath();
+			setPhotoBackground(path);
         }
 	}
 
@@ -268,6 +257,29 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		mainLayout.bottomToolbar.setY(rectResizedWindow.bottom - bottomToolbarActionHeight);
 	}
 
+	private void startCameraIntent() {
+		Intent intent = CameraUtil.getCameraIntent(getApplicationContext(), null);
+		uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+		startActivityForResult(intent, REQUEST_CAMERA_GET_IMAGE);
+	}
+
+	private void startGalleryIntent() {
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(intent, REQUEST_GALLERY_GET_IMAGE);
+	}
+
+	private void setPhotoBackground(String path) {
+		if (path == null) {
+			return;
+		}
+		String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
+		int orientation = CameraUtil.getOrientation(path);
+		fragmentWorld.world.postRunnable("setPhotoBackground",
+				path.substring(sdcardPath.length()), orientation);
+	}
+
 	@Override
 	public void onBackPressed() {
 		if (stickersPopup.isShowing()) {
@@ -286,15 +298,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		if (cursor != null) {
 			try {
 				if (cursor.moveToFirst()) {
-					String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
 					String path = cursor.getString(cursor
 							.getColumnIndex(MediaStore.Images.Media.DATA));
-					if (path == null) {
-						return;
-					}
-					int orientation = CameraUtil.getOrientation(path);
-					fragmentWorld.world.postRunnable("setPhotoBackground",
-							path.substring(sdcardPath.length()), orientation);
+					setPhotoBackground(path);
 				}
 			} finally {
 				cursor.close();
@@ -312,6 +318,18 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 					showPhotosPopup();
 				}
+				break;
+			case REQUEST_WRITE_CAMERA:
+				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+					startCameraIntent();
+				}
+				break;
+			case REQUEST_WRITE_GALLERY:
+				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+					startGalleryIntent();
+				}
+				break;
+			default:
 				break;
 		}
 	}
