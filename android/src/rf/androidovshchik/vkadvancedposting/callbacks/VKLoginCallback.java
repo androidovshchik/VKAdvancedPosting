@@ -4,7 +4,7 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.api.VKError;
 
-import rf.androidovshchik.vkadvancedposting.events.sticky.VKLoginEvent;
+import rf.androidovshchik.vkadvancedposting.events.remote.sticky.VKLoginEvent;
 import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 import timber.log.Timber;
 

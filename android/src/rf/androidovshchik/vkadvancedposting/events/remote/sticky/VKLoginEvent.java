@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.events.sticky;
+package rf.androidovshchik.vkadvancedposting.events.remote.sticky;
 
 public class VKLoginEvent {
 

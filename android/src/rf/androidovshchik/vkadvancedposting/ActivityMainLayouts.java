@@ -1,19 +1,33 @@
 package rf.androidovshchik.vkadvancedposting;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
+import com.badlogic.gdx.utils.StreamUtils;
 import com.vk.sdk.api.model.VKAttachments;
 import com.vk.sdk.api.model.VKPhotoArray;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.ByteArrayOutputStream;
+import java.util.concurrent.Callable;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-import rf.androidovshchik.vkadvancedposting.events.stickers.StickerPressEvent;
-import rf.androidovshchik.vkadvancedposting.events.sticky.VKResponseEvent;
+import io.reactivex.Observable;
+import io.reactivex.schedulers.Schedulers;
+import rf.androidovshchik.vkadvancedposting.events.remote.VKRepeatEvent;
+import rf.androidovshchik.vkadvancedposting.events.world.RemoveAllEvent;
+import rf.androidovshchik.vkadvancedposting.events.world.StickerPressEvent;
+import rf.androidovshchik.vkadvancedposting.events.remote.sticky.VKResponseEvent;
+import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.MainLayout;
 
 public abstract class ActivityMainLayouts extends ActivityMainBase {
@@ -85,6 +99,12 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	}
 
 	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onRemoveAllEvent(RemoveAllEvent event) {
+		fragmentWorld.world.postRunnable("clearWorld");
+	}
+
+	@SuppressWarnings("unused")
 	@Subscribe(sticky = true, threadMode = ThreadMode.POSTING)
 	public void onVKResponseEvent(VKResponseEvent event) {
 		if (event.isSuccessful) {
@@ -96,5 +116,40 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 		} else {
 			dialogWallPost.wallPostLayout.onPublishFailed();
 		}
+	}
+
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onVKRepeatEvent(VKRepeatEvent event) {
+		fragmentPostText.getPostEditText().setFocusable(false);
+		final Bitmap postText = ViewUtil.getBitmapFromView(fragmentPostText.getPostEditText());
+		fragmentPostText.getPostEditText().setFocusable(true);
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run() {
+				final Pixmap pixmap = fragmentWorld.world.getScreenshot();
+				Observable.fromCallable(new Callable<Boolean>() {
+					@Override
+					public Boolean call() throws Exception {
+						PixmapIO.PNG writer = new PixmapIO.PNG((int)(pixmap.getWidth() *
+								pixmap.getHeight() * 1.5f));
+						writer.setFlipY(false);
+						ByteArrayOutputStream output = new ByteArrayOutputStream();
+						try {
+							writer.write(output, pixmap);
+						} finally {
+							StreamUtils.closeQuietly(output);
+							writer.dispose();
+							pixmap.dispose();
+						}
+						byte[] bytes = output.toByteArray();
+						uploadImage(ViewUtil.overlayBitmapToCenter(BitmapFactory
+								.decodeByteArray(bytes, 0, bytes.length), postText));
+						return true;
+					}
+				}).subscribeOn(Schedulers.io())
+						.subscribe();
+			}
+		});
 	}
 }

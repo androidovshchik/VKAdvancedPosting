@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.events.stickers;
+package rf.androidovshchik.vkadvancedposting.events.world;
 
 public class StickerPressEvent {
 

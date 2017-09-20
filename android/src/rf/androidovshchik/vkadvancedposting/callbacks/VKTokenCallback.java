@@ -3,7 +3,7 @@ package rf.androidovshchik.vkadvancedposting.callbacks;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 
-import rf.androidovshchik.vkadvancedposting.events.sticky.VKInvalidTokenEvent;
+import rf.androidovshchik.vkadvancedposting.events.remote.sticky.VKInvalidTokenEvent;
 import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 
 public class VKTokenCallback extends VKAccessTokenTracker {

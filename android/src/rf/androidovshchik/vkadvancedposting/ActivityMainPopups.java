@@ -5,8 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,23 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO.PNG;
-import com.badlogic.gdx.utils.StreamUtils;
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.ByteArrayOutputStream;
-import java.util.concurrent.Callable;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import rf.androidovshchik.vkadvancedposting.events.clicks.PhotoClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.StickerClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
@@ -118,40 +105,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		if (isKeyboardShowing) {
 			ViewUtil.hideKeyboard(getApplicationContext());
 		}
-		fragmentPostText.getPostEditText().setFocusable(false);
-		final Bitmap postText = ViewUtil.getBitmapFromView(fragmentPostText.getPostEditText());
-		fragmentPostText.getPostEditText().setFocusable(true);
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run() {
-				final Pixmap pixmap = fragmentWorld.world.getScreenshot();
-				Observable.fromCallable(new Callable<Boolean>() {
-					@Override
-					public Boolean call() throws Exception {
-						PNG writer = new PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f));
-						writer.setFlipY(false);
-						ByteArrayOutputStream output = new ByteArrayOutputStream();
-						try {
-							writer.write(output, pixmap);
-						} finally {
-							StreamUtils.closeQuietly(output);
-							writer.dispose();
-							pixmap.dispose();
-						}
-						byte[] bytes = output.toByteArray();
-						uploadImage(ViewUtil.overlayBitmapToCenter(BitmapFactory
-								.decodeByteArray(bytes, 0, bytes.length), postText));
-						return true;
-					}
-				}).subscribeOn(Schedulers.io())
-						.subscribe(new Consumer<Boolean>() {
-							@Override
-							public void accept(Boolean success) {
-
-							}
-						});
-			}
-		});
+		onVKRepeatEvent(null);
 		dialogWallPost.show(getSupportFragmentManager(), DialogWallPost.class.getSimpleName());
 	}
 

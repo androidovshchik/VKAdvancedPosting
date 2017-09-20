@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 
 import rf.androidovshchik.vkadvancedposting.callbacks.StickersPressListener;
-import rf.androidovshchik.vkadvancedposting.events.stickers.StickerPressEvent;
+import rf.androidovshchik.vkadvancedposting.events.world.StickerPressEvent;
 import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
-import timber.log.Timber;
 
 public class FragmentWorld extends AndroidFragmentApplication {
 

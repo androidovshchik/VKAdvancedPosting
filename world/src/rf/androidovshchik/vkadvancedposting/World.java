@@ -271,6 +271,7 @@ public class World extends WorldAdapter {
 		stickersStage.addActor(sticker);
 	}
 
+	@SuppressWarnings("unused")
 	public void clearWorld() {
 		clearBackground();
 		drawGradient = false;

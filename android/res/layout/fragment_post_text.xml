@@ -12,5 +12,5 @@
     android:hint="@string/main.hint"
     android:textColorHint="#3d000000"
     android:background="@null"
-    android:inputType="textMultiLine"
+    android:inputType="textMultiLine|textNoSuggestions"
     style="@style/TextStyle3"/>
