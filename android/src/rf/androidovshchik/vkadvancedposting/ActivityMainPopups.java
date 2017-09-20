@@ -60,6 +60,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	private int windowHeight;
 	private int bottomToolbarActionHeight;
 
+	private int keyboardHeight = 0;
 	private boolean isKeyboardShowing = false;
 
 	@Override
@@ -81,10 +82,13 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		super.onGlobalLayout();
 		int keyboardHeight = windowHeight - rectResizedWindow.bottom;
 		if (keyboardHeight != 0) {
+			if (this.keyboardHeight == 0) {
+				this.keyboardHeight = keyboardHeight;
+			}
 			isKeyboardShowing = true;
-			photosPopup.setHeight(keyboardHeight);
+			photosPopup.setHeight(this.keyboardHeight);
 			mainLayout.bottomToolbar.getLayoutParams().height =
-					keyboardHeight + bottomToolbarActionHeight;
+					this.keyboardHeight + bottomToolbarActionHeight;
 			moveBottomToolbar();
 		} else {
 			isKeyboardShowing = false;
@@ -270,6 +274,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 			return;
 		}
 		fragmentPostText.getPostEditText().setTextColor(position > 0 &&
+				((PhotosLayout) photosPopup.getContentView()).photosRecyclerView
+						.adapterPhotos.currentPhoto == AdapterPhotos.PHOTO_NONE &&
 				fragmentPostText.getPostEditText().backgroundColor != Color.WHITE ?
 				Color.WHITE : Color.BLACK);
 		mainLayout.bottomToolbar.themesRecyclerView

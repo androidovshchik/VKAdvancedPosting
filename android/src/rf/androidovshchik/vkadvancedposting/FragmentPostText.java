@@ -32,7 +32,7 @@ public class FragmentPostText extends Fragment {
     }
 
     @OnTouch(R.id.postText)
-    public boolean onPopupShadowTouch() {
+    public boolean onPostTextTouch() {
         EventUtil.post(new TextTouchEvent());
         return false;
     }
