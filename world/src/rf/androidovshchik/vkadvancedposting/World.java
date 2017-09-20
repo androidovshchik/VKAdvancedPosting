@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import rf.androidovshchik.vkadvancedposting.callbacks.StickersPressListener;
 import rf.androidovshchik.vkadvancedposting.components.GdxLog;
 import rf.androidovshchik.vkadvancedposting.models.Background;
 import rf.androidovshchik.vkadvancedposting.models.Player;
@@ -36,6 +37,8 @@ public class World extends WorldAdapter {
 
 	private int currentSticker = Sticker.INDEX_NONE;
 
+	private StickersPressListener pressListener;
+
 	private boolean drawGradient = false;
 	private Color gradientTopLeftColor = Color.CLEAR;
 	private Color gradientBottomRightColor = Color.CLEAR;
@@ -43,10 +46,12 @@ public class World extends WorldAdapter {
 
 	private int rendersCount = 0;
 
-	public World(boolean debug, int worldWidth, int worldHeight) {
+	public World(boolean debug, int worldWidth, int worldHeight,
+				 StickersPressListener pressListener) {
 		GdxLog.DEBUG = debug;
 		this.worldWidth = worldWidth;
 		this.worldHeight = worldHeight;
+		this.pressListener = pressListener;
 	}
 
 	@Override
@@ -147,8 +152,9 @@ public class World extends WorldAdapter {
 	@Override
 	public boolean longPress(float x, float y) {
 		Sticker sticker = getCurrentSticker();
-		if (sticker != null) {
-			removeSticker();
+		if (sticker != null && pressListener != null) {
+			pressListener.onStickerLongPress();
+			//removeSticker();
 		}
 		return false;
 	}

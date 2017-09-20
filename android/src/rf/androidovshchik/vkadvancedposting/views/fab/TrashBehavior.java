@@ -81,7 +81,7 @@ public class TrashBehavior extends CoordinatorLayout.Behavior<TrashFab>
         if (hasLongPressed) {
             if (event.getAction() != MotionEvent.ACTION_MOVE) {
                 hasLongPressed = false;
-                return false;
+                child.stickerPressed = false;
             }
             child.animateTrash(event.getX(), event.getY());
         }

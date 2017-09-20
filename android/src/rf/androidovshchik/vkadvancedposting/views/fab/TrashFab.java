@@ -23,6 +23,8 @@ public class TrashFab extends AppCompatImageView {
     public int visibleMarginBottom;
     private int radiusOpen;
 
+    public boolean stickerPressed = false;
+
     public TrashFab(Context context, @NonNull AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -43,6 +45,7 @@ public class TrashFab extends AppCompatImageView {
                 DEFAULT_RADIUS_OPEN);
         Timber.d("radiusOpen: %dpx", radiusOpen);
         array.recycle();
+        setTag(0);
     }
 
     @Override
@@ -55,14 +58,32 @@ public class TrashFab extends AppCompatImageView {
     protected void onSizeChanged(int w, int h, int oldW, int oldH) {
         super.onSizeChanged(w, h, oldW, oldH);
         trashCenter.x = getX() + w / 2;
-        trashCenter.y = getY() + h / 2;
         Timber.d("X: %d - %f - %d", getLeft(), trashCenter.x, getRight());
         Timber.d("Y: %d - %f - %d", getTop(), trashCenter.y, getBottom());
     }
 
     public void animateTrash(float touchX, float touchY) {
-        Timber.d("Touch X: %f Y: %f", touchX, touchY);
+        if (!stickerPressed) {
+            if (getVisibility() == VISIBLE) {
+                setVisibility(INVISIBLE);
+            }
+            return;
+        }
+        if (getVisibility() != VISIBLE) {
+            setVisibility(VISIBLE);
+            trashCenter.y = getY() + getHeight() / 2;
+        }
         double touchDistance = Math.hypot(touchX - trashCenter.x, touchY - trashCenter.y);
-        Timber.d("Requires trash animation");
+        if (touchDistance < radiusOpen && (int) getTag() != R.drawable.ic_fab_trash_released) {
+            setTag(R.drawable.ic_fab_trash_released);
+            setImageResource(R.drawable.ic_fab_trash_released);
+            setScaleY(1.5f);
+            setScaleX(1.5f);
+        } else if (touchDistance > radiusOpen && (int) getTag() != R.drawable.ic_fab_trash) {
+            setTag(R.drawable.ic_fab_trash);
+            setImageResource(R.drawable.ic_fab_trash);
+            setScaleY(1f);
+            setScaleX(1f);
+        }
     }
 }

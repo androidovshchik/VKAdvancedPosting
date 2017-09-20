@@ -12,7 +12,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import rf.androidovshchik.vkadvancedposting.events.VKResponseEvent;
+import rf.androidovshchik.vkadvancedposting.events.stickers.StickerPressEvent;
+import rf.androidovshchik.vkadvancedposting.events.sticky.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.views.layout.MainLayout;
 
 public abstract class ActivityMainLayouts extends ActivityMainBase {
@@ -74,7 +75,13 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 
 	@OnClick(R.id.actionHistory)
 	public void onHistory() {
-		mainLayout.onHistoryMode();
+        mainLayout.onHistoryMode();
+	}
+
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onStickerPressEvent(StickerPressEvent event) {
+		mainLayout.trashFab.stickerPressed = true;
 	}
 
 	@SuppressWarnings("unused")

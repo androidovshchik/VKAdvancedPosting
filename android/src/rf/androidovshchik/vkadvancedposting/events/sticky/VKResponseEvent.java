@@ -1,4 +1,4 @@
-package rf.androidovshchik.vkadvancedposting.events;
+package rf.androidovshchik.vkadvancedposting.events.sticky;
 
 public class VKResponseEvent {
 

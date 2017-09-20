@@ -36,7 +36,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.ButterKnife;
 import rf.androidovshchik.vkadvancedposting.callbacks.VKRequestCallback;
 import rf.androidovshchik.vkadvancedposting.components.CursorPicker;
-import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
+import rf.androidovshchik.vkadvancedposting.events.sticky.VKInvalidTokenEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 
 public abstract class ActivityMainBase extends AppCompatActivity

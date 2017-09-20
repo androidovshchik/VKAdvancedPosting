@@ -4,7 +4,7 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
-import rf.androidovshchik.vkadvancedposting.events.VKResponseEvent;
+import rf.androidovshchik.vkadvancedposting.events.sticky.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 import timber.log.Timber;
 

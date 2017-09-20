@@ -23,6 +23,7 @@
         android:clickable="true"
         android:scaleType="centerInside"
         android:background="@drawable/solid_trash"
+        android:visibility="invisible"
         app:backgroundTint="@null"
         app:layout_behavior=".views.fab.TrashBehavior"
         custom:visibleMarginBottom="16dp"

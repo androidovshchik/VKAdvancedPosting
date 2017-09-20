@@ -7,6 +7,11 @@ import android.view.ViewGroup;
 
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 
+import rf.androidovshchik.vkadvancedposting.callbacks.StickersPressListener;
+import rf.androidovshchik.vkadvancedposting.events.stickers.StickerPressEvent;
+import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
+import timber.log.Timber;
+
 public class FragmentWorld extends AndroidFragmentApplication {
 
     public World world;
@@ -15,7 +20,12 @@ public class FragmentWorld extends AndroidFragmentApplication {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         int worldWidth = getResources().getDimensionPixelSize(R.dimen.world_width);
-        world = new World(BuildConfig.DEBUG, worldWidth, worldWidth);
+        world = new World(BuildConfig.DEBUG, worldWidth, worldWidth, new StickersPressListener() {
+            @Override
+            public void onStickerLongPress() {
+                EventUtil.post(new StickerPressEvent());
+            }
+        });
         return initializeForView(world);
     }
 }

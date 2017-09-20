@@ -11,6 +11,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rf.androidovshchik.vkadvancedposting.R;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
+import rf.androidovshchik.vkadvancedposting.views.fab.TrashFab;
 import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.BottomToolbarLayout;
 import rf.androidovshchik.vkadvancedposting.views.layout.toolbar.TopToolbarLayout;
 
@@ -18,6 +19,8 @@ public class MainLayout extends CoordinatorLayout {
 
     @BindView(R.id.topToolbarLayout)
     public TopToolbarLayout topToolbar;
+    @BindView(R.id.actionTrash)
+    public TrashFab trashFab;
     @BindView(R.id.world)
     public FrameLayout world;
     @BindView(R.id.bottomToolbarLayout)

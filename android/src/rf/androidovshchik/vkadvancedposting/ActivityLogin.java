@@ -16,7 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rf.androidovshchik.vkadvancedposting.callbacks.VKLoginCallback;
-import rf.androidovshchik.vkadvancedposting.events.VKLoginEvent;
+import rf.androidovshchik.vkadvancedposting.events.sticky.VKLoginEvent;
 
 public class ActivityLogin extends AppCompatActivity {
 
