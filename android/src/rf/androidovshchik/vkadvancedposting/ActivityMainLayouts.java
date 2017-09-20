@@ -114,9 +114,9 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	@SuppressWarnings("unused")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onVKRepeatEvent(VKRepeatEvent event) {
-		fragmentPostText.getPostEditText().setFocusable(false);
+		fragmentPostText.getPostEditText().setCursorVisible(false);
 		final Bitmap postText = ViewUtil.getBitmapFromView(fragmentPostText.getPostEditText());
-		fragmentPostText.getPostEditText().setFocusable(true);
+		fragmentPostText.getPostEditText().setCursorVisible(true);
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run() {
