@@ -13,6 +13,9 @@ android {
         }
         instrumentTest.setRoot('tests')
     }
+    lintOptions{
+        disable "ResourceType"
+    }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
