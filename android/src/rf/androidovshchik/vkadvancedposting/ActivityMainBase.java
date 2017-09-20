@@ -38,7 +38,6 @@ import rf.androidovshchik.vkadvancedposting.callbacks.VKRequestCallback;
 import rf.androidovshchik.vkadvancedposting.components.CursorPicker;
 import rf.androidovshchik.vkadvancedposting.events.VKInvalidTokenEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
-import timber.log.Timber;
 
 public abstract class ActivityMainBase extends AppCompatActivity
 		implements AndroidFragmentApplication.Callbacks, ViewTreeObserver.OnGlobalLayoutListener,
@@ -165,7 +164,6 @@ public abstract class ActivityMainBase extends AppCompatActivity
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-		Timber.d("onCreateLoader " + uri.toString());
 		return new CursorPicker(getApplicationContext(), uri);
 	}
 
