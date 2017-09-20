@@ -2,10 +2,13 @@ package rf.androidovshchik.vkadvancedposting;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,7 @@ import rf.androidovshchik.vkadvancedposting.events.clicks.StickerClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
+import rf.androidovshchik.vkadvancedposting.utils.CameraIntentHelper;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
@@ -50,6 +54,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	private boolean isKeyboardShowing = false;
 
+	private Uri uri;
+
 	@Override
 	@SuppressLint("InflateParams")
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +63,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		stickersPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_stickers,
 				null, false), R.style.AnimationStickersAppear);
 		stickersPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-		if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+		if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 			photosPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_photos,
 					null, false), R.style.AnimationPhotosAppear);
 		}
@@ -72,7 +78,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		int keyboardHeight = windowHeight - rectResizedWindow.bottom;
 		if (keyboardHeight != 0) {
 			isKeyboardShowing = true;
-			photosPopup.setHeight(keyboardHeight);
+			if (photosPopup != null) {
+				photosPopup.setHeight(keyboardHeight);
+			}
 			mainLayout.bottomToolbar.getLayoutParams().height =
 					keyboardHeight + bottomToolbarActionHeight;
 			moveBottomToolbar();
@@ -149,10 +157,32 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@SuppressWarnings("unused")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onPhotoClickEvent(PhotoClickEvent event) {
-		String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
-		String path = ((PhotosLayout) photosPopup.getContentView()).photosRecyclerView.adapterPhotos
-				.photoPaths.get(event.position).getPath().substring(sdcardPath.length());
-		fragmentWorld.world.postRunnable("setPhotoBackground", path);
+        if (event.position <= 0) {
+			if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+						REQUEST_WRITE_GALLERY);
+			} else {
+				Intent intent = new Intent();
+				intent.setType("image/*");
+				intent.setAction(Intent.ACTION_GET_CONTENT);
+				startActivityForResult(intent, REQUEST_GALLERY_GET_IMAGE);
+			}
+        } else if (event.position == 1) {
+			if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+						REQUEST_WRITE_CAMERA);
+			} else {
+				Intent intent = CameraIntentHelper.getCameraIntent(getApplicationContext(), null);
+				uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+				startActivityForResult(intent, REQUEST_CAMERA_GET_IMAGE);
+			}
+        } else {
+            String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
+            String path = ((PhotosLayout) photosPopup.getContentView())
+                    .photosRecyclerView.adapterPhotos.photoPaths.get(event.position - 2)
+                    .getPath().substring(sdcardPath.length());
+            fragmentWorld.world.postRunnable("setPhotoBackground", path);
+        }
 	}
 
 	@SuppressWarnings("all")
@@ -173,9 +203,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		} else if (position >= 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length) {
 			if (position >= 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
 					ThemesRecyclerView.THUMB_PATHS.length) {
-				if (!hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-					requirePermission(Manifest.permission.READ_EXTERNAL_STORAGE,
-							REQUEST_READ_EXTERNAL_STORAGE);
+				if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+					requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+							REQUEST_WRITE_POPUP);
 				} else {
 					showPhotosPopup();
 				}
@@ -256,8 +286,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 										   @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		switch (requestCode) {
-			case REQUEST_READ_EXTERNAL_STORAGE:
-				if (hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+			case REQUEST_WRITE_POPUP:
+				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 					photosPopup = ViewUtil.createPopup(getLayoutInflater()
 							.inflate(R.layout.popup_photos,
 									null, false), R.style.AnimationPhotosAppear);

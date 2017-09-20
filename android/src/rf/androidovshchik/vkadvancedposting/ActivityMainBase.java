@@ -40,7 +40,11 @@ public abstract class ActivityMainBase extends AppCompatActivity
 
 	protected static final int REQUEST_VK_LOGIN = 1;
 	protected static final int REQUEST_PROMPT_SETTINGS = 2;
-	protected static final int REQUEST_READ_EXTERNAL_STORAGE = 10;
+	protected static final int REQUEST_WRITE_POPUP = 10;
+	protected static final int REQUEST_WRITE_GALLERY = 11;
+	protected static final int REQUEST_WRITE_CAMERA = 12;
+	protected static final int REQUEST_GALLERY_GET_IMAGE = 20;
+	protected static final int REQUEST_CAMERA_GET_IMAGE = 21;
 
 	private VKRequest requestUploadImage;
 	private VKRequest requestWallPost;

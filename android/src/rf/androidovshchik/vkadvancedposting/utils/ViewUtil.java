@@ -75,6 +75,9 @@ public final class ViewUtil {
 
     @SuppressWarnings("unused")
     public static void showPopup(PopupWindow popupWindow, View parent) {
+        if (popupWindow == null) {
+            return;
+        }
         if (!popupWindow.isShowing()) {
             popupWindow.showAtLocation(parent, Gravity.BOTTOM, 0, 0);
         }
@@ -82,6 +85,9 @@ public final class ViewUtil {
 
     @SuppressWarnings("unused")
     public static void hidePopup(PopupWindow popupWindow) {
+        if (popupWindow == null) {
+            return;
+        }
         if (popupWindow.isShowing()) {
             popupWindow.dismiss();
         }
