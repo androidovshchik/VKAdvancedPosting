@@ -37,6 +37,7 @@ public class World extends WorldAdapter {
 
 	private int currentSticker = Sticker.INDEX_NONE;
 
+    private boolean stickerPressed = false;
 	private StickersPressListener pressListener;
 
 	private boolean drawGradient = false;
@@ -127,6 +128,20 @@ public class World extends WorldAdapter {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		if (pointer == FIRST_FINGER) {
+			if (stickerPressed) {
+				stickerPressed = false;
+				Vector2 coordinates =
+						stickersStage.screenToStageCoordinates(new Vector2(screenX, screenY));
+				Sticker sticker = getCurrentSticker();
+				if (sticker != null) {
+					if (coordinates.x > worldWidth / 2 - sticker.getWidth() / 2 &&
+							coordinates.x < worldWidth / 2 + sticker.getWidth() / 2 &&
+							coordinates.y > - sticker.getWidth() / 2 &&
+							coordinates.y < sticker.getWidth() / 2) {
+						removeSticker();
+					}
+				}
+			}
 			currentSticker = Sticker.INDEX_NONE;
 		}
 		return false;
@@ -144,17 +159,11 @@ public class World extends WorldAdapter {
 	}
 
 	@Override
-	public boolean panStop(float x, float y, int pointer, int button) {
-		currentSticker = Sticker.INDEX_NONE;
-		return false;
-	}
-
-	@Override
 	public boolean longPress(float x, float y) {
 		Sticker sticker = getCurrentSticker();
 		if (sticker != null && pressListener != null) {
+            stickerPressed = true;
 			pressListener.onStickerLongPress();
-			//removeSticker();
 		}
 		return false;
 	}
@@ -275,6 +284,7 @@ public class World extends WorldAdapter {
 		for (int i = 0; i < stickersStage.getActors().size; i++) {
 			((Sticker) stickersStage.getActors().get(i)).index = i;
 		}
+		currentSticker = Sticker.INDEX_NONE;
 	}
 
 	private void clearBackground() {

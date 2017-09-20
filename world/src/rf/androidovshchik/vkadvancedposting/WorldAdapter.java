@@ -49,6 +49,11 @@ public abstract class WorldAdapter extends InputAdapter
         return false;
     }
 
+    @Override
+    public boolean panStop(float x, float y, int pointer, int button) {
+        return false;
+    }
+
     // null may be only String params
     public void postRunnable(final String name, final Object... params) {
         Gdx.app.postRunnable(new Runnable() {
