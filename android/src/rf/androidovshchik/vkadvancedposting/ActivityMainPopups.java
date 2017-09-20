@@ -97,6 +97,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	@OnClick(R.id.actionSend)
 	public void onSend() {
+		if (fragmentPostText.getPostEditText().getText().length() <= 0) {
+			return;
+		}
 		if (stickersPopup.isShowing()) {
 			hideStickersPopup();
 		} else if (photosPopup.isShowing()) {
