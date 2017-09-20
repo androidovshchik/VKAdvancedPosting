@@ -10,27 +10,27 @@ import android.text.TextUtils;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
-public final class CameraIntentHelper {
+public final class CameraUtil {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+    @SuppressWarnings("all")
+    private static final SimpleDateFormat dateFormat =
+            new SimpleDateFormat("yyyyMMdd_HHmmss");
 
-
-    public static Uri getPhotoUri(Context context, String prefix) {
-    	final GregorianCalendar today = new GregorianCalendar(); 
-        final String title = dateFormat.format(today.getTime());
+    private static Uri getPhotoUri(Context context, String prefix) {
+        GregorianCalendar today = new GregorianCalendar();
+        String title = dateFormat.format(today.getTime());
         String dirPath;
         boolean isExternalStorage = true;
-		dirPath = DiskUtils.getExternalPhotoDir(context);
+		dirPath = DiskUtil.getExternalPhotoDir(context);
 		if (TextUtils.isEmpty(dirPath)) {
-			dirPath = DiskUtils.getInternalPhotoDir(context);
+			dirPath = DiskUtil.getInternalPhotoDir(context);
 			isExternalStorage = false;
 		}
-        final String fileName = (TextUtils.isEmpty(prefix) ? title : prefix + title) + ".jpg" ;
-        final String path = dirPath + "/" + fileName;
-        final File file = new File(path);
-        final ContentValues values = new ContentValues(6);
+		String fileName = (TextUtils.isEmpty(prefix) ? title : prefix + title) + ".jpg" ;
+        String path = dirPath + "/" + fileName;
+        File file = new File(path);
+        ContentValues values = new ContentValues(6);
         values.put(MediaStore.Images.Media.TITLE, title);
         values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
@@ -41,17 +41,18 @@ public final class CameraIntentHelper {
             values.put(MediaStore.Images.Media.SIZE, file.length());
         }
         Uri uri;
-        if (isExternalStorage)
-        	uri = context.getContentResolver()
-        		.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        else
-        	uri = context.getContentResolver()
-        	.insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+        if (isExternalStorage) {
+            uri = context.getContentResolver()
+                    .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        } else {
+            uri = context.getContentResolver()
+                    .insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+        }
         return uri;
     }
 
     public static Intent getCameraIntent(Context context, String prefix) {
-    	final Intent intent = new Intent();
+        Intent intent = new Intent();
     	intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
     	intent.addCategory(Intent.CATEGORY_DEFAULT);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, getPhotoUri(context, prefix));

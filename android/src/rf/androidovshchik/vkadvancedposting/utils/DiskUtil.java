@@ -5,7 +5,7 @@ import android.os.Environment;
 
 import java.io.File;
 
-public final class DiskUtils {
+public final class DiskUtil {
 
     @SuppressWarnings("all")
     public static String getExternalPhotoDir(final Context context) {

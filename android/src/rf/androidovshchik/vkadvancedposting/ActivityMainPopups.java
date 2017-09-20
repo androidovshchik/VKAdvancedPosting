@@ -2,6 +2,7 @@ package rf.androidovshchik.vkadvancedposting;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupWindow;
@@ -36,10 +38,11 @@ import rf.androidovshchik.vkadvancedposting.events.clicks.StickerClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
-import rf.androidovshchik.vkadvancedposting.utils.CameraIntentHelper;
+import rf.androidovshchik.vkadvancedposting.utils.CameraUtil;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
+import timber.log.Timber;
 
 public class ActivityMainPopups extends ActivityMainLayouts {
 
@@ -172,7 +175,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
 						REQUEST_WRITE_CAMERA);
 			} else {
-				Intent intent = CameraIntentHelper.getCameraIntent(getApplicationContext(), null);
+				Intent intent = CameraUtil.getCameraIntent(getApplicationContext(), null);
 				uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
 				startActivityForResult(intent, REQUEST_CAMERA_GET_IMAGE);
 			}
@@ -294,6 +297,53 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 					showPhotosPopup();
 				}
 				break;
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode != REQUEST_CAMERA_GET_IMAGE && requestCode != REQUEST_GALLERY_GET_IMAGE) {
+			return;
+		}
+		ContentResolver contentResolver = getContentResolver();
+		if (resultCode != AppCompatActivity.RESULT_OK) {
+			// if failed/canceled to take/select photo
+			if (uri != null) {
+				try {
+					contentResolver.delete(uri, null, null);
+				} catch (Exception e) {
+					Timber.e(e.getMessage());
+					// there is no photo
+				}
+				uri = null;
+			}
+			return;
+		}
+		Uri resultUri = null;
+		switch (requestCode) {
+			case REQUEST_CAMERA_GET_IMAGE:
+				// success taking photo
+				if (data != null && data.getData() != null) {
+					resultUri = data.getData();
+				} else {
+					resultUri = uri;
+				}
+				break;
+			case REQUEST_GALLERY_GET_IMAGE:
+				// success selecting photo
+				if (data != null && data.getData() != null) {
+					resultUri = data.getData();
+				}
+				break;
+			default:
+				return;
+		}
+		if (resultUri != null) {
+			// resultUri is URI of photo
+			Timber.d("resultUri.getPath() " + resultUri.path());
+			fragmentWorld.world.postRunnable("setPhotoBackground", resultUri.getPath());
+			uri = resultUri;
 		}
 	}
 }
