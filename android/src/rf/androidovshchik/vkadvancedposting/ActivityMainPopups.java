@@ -100,14 +100,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		if (fragmentPostText.getPostEditText().getText().length() <= 0) {
 			return;
 		}
-		if (stickersPopup.isShowing()) {
-			hideStickersPopup();
-		} else if (photosPopup.isShowing()) {
-			ViewUtil.hidePopup(photosPopup);
-		}
-		if (isKeyboardShowing) {
-			ViewUtil.hideKeyboard(getApplicationContext());
-		}
+		onExitMainLayout();
 		onVKRepeatEvent(null);
 		dialogWallPost.show(getSupportFragmentManager(), DialogWallPost.class.getSimpleName());
 	}
@@ -122,9 +115,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@SuppressWarnings("unused")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onPhotoClickEvent(PhotoClickEvent event) {
+		onPhotoPositionChanged(event.position);
 		onThemePositionChanged(1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
 				ThemesRecyclerView.THUMB_PATHS.length);
-		onPhotoPositionChanged(event.position);
         if (event.position <= 1) {
 			if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -193,6 +186,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		if (!isKeyboardShowing) {
 			ViewUtil.showKeyboard(getApplicationContext());
 		}
+		((PhotosLayout) photosPopup.getContentView()).photosShadow.setVisibility(View.GONE);
 		mainLayout.bottomToolbar.post(new Runnable() {
 			@Override
 			public void run() {
@@ -253,12 +247,14 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	}
 
 	private void startCameraIntent() {
+		onExitMainLayout();
 		Intent intent = CameraUtil.getCameraIntent(getApplicationContext(), null);
 		uri = intent.getParcelableExtra(MediaStore.EXTRA_OUTPUT);
 		startActivityForResult(intent, REQUEST_CAMERA_GET_IMAGE);
 	}
 
 	private void startGalleryIntent() {
+		onExitMainLayout();
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -275,8 +271,20 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				path.substring(sdcardPath.length()), orientation);
 	}
 
+	private void onExitMainLayout() {
+		if (stickersPopup.isShowing()) {
+			hideStickersPopup();
+		} else if (photosPopup.isShowing()) {
+			ViewUtil.hidePopup(photosPopup);
+		}
+		if (isKeyboardShowing) {
+			ViewUtil.hideKeyboard(getApplicationContext());
+		}
+	}
+
 	@Override
 	public void onBackPressed() {
+		Timber.d("onBackPressed " + fragmentPostText.getPostEditText().isFocused());
 		if (stickersPopup.isShowing()) {
 			hideStickersPopup();
 		} else if (photosPopup.isShowing()) {

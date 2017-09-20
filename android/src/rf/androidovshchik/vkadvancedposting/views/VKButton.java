@@ -18,7 +18,6 @@ public class VKButton extends AppCompatButton {
 
     private static final int ANIMATION_TIME_APPEAR = 300;
     private static final int ANIMATION_DELAY_APPEAR = 500;
-    private static final int ANIMATION_TIME_FADE = 200;
 
     public VKButton(Context context, @NonNull AttributeSet attrs) {
         this(context, attrs, android.support.v7.appcompat.R.attr.buttonStyle);
@@ -39,19 +38,6 @@ public class VKButton extends AppCompatButton {
                 PropertyValuesHolder.ofFloat(View.ALPHA, 0, 1));
         return setupAnimation(objectAnimator, interpolator, ANIMATION_DELAY_APPEAR,
                 ANIMATION_TIME_APPEAR);
-    }
-
-    public ObjectAnimator createAnimationFadeIn(Interpolator interpolator) {
-        return createAnimationFade(interpolator, 0, 1);
-    }
-
-    public ObjectAnimator createAnimationFadeOut(Interpolator interpolator) {
-        return createAnimationFade(interpolator, 1, 0);
-    }
-
-    private ObjectAnimator createAnimationFade(Interpolator interpolator, float from, float to) {
-        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "alpha", from, to);
-        return setupAnimation(objectAnimator, interpolator, 0, ANIMATION_TIME_FADE);
     }
 
     private ObjectAnimator setupAnimation(ObjectAnimator objectAnimator, Interpolator interpolator,
