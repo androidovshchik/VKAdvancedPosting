@@ -44,6 +44,7 @@ import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
 import rf.androidovshchik.vkadvancedposting.utils.CameraUtil;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
+import rf.androidovshchik.vkadvancedposting.views.recyclerview.photos.AdapterPhotos;
 import rf.androidovshchik.vkadvancedposting.views.recyclerview.themes.ThemesRecyclerView;
 import timber.log.Timber;
 
@@ -157,6 +158,9 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@SuppressWarnings("unused")
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onPhotoClickEvent(PhotoClickEvent event) {
+		onThemePositionChanged(1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length +
+				ThemesRecyclerView.THUMB_PATHS.length);
+		onPhotoPositionChanged(event.position);
         if (event.position <= 1) {
 			if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 				requirePermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -179,14 +183,13 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onThemeClickEvent(ThemeClickEvent event) {
 		int position = event.position;
-		mainLayout.bottomToolbar.themesRecyclerView
-				.adapter.currentTheme = position;
-		mainLayout.bottomToolbar.themesRecyclerView
-				.adapter.notifyDataSetChanged();
+		onThemePositionChanged(position);
 		if (position <= 0) {
+			onPhotoPositionChanged(AdapterPhotos.PHOTO_NONE);
 			String white = "ffffff";
 			fragmentWorld.world.setGradientBackground(white, white);
 		} else if (position < 1 + ThemesRecyclerView.GRADIENT_DRAWABLES.length) {
+			onPhotoPositionChanged(AdapterPhotos.PHOTO_NONE);
 			String topLeftColor = ThemesRecyclerView.GRADIENT_HEXES[position - 1][0];
 			String bottomRightColor = ThemesRecyclerView.GRADIENT_HEXES[position - 1][1];
 			fragmentWorld.world.setGradientBackground(topLeftColor, bottomRightColor);
@@ -201,6 +204,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				}
 				return;
 			}
+			onPhotoPositionChanged(AdapterPhotos.PHOTO_NONE);
 			String[] paths = ThemesRecyclerView.THUMB_PATHS[position -
 					ThemesRecyclerView.GRADIENT_DRAWABLES.length - 1];
 			fragmentWorld.world.postRunnable("setImagesBackground", paths[0], paths[1], paths[2]);
@@ -255,6 +259,28 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	private void moveBottomToolbar() {
 		mainLayout.bottomToolbar.setY(rectResizedWindow.bottom - bottomToolbarActionHeight);
+	}
+
+	private void onThemePositionChanged(int position) {
+		if (mainLayout.bottomToolbar.themesRecyclerView
+				.adapter.currentTheme == position) {
+			return;
+		}
+		mainLayout.bottomToolbar.themesRecyclerView
+				.adapter.currentTheme = position;
+		mainLayout.bottomToolbar.themesRecyclerView
+				.adapter.notifyDataSetChanged();
+	}
+
+	private void onPhotoPositionChanged(int position) {
+		if (((PhotosLayout) photosPopup.getContentView())
+				.photosRecyclerView.adapterPhotos.currentPhoto == position) {
+			return;
+		}
+		((PhotosLayout) photosPopup.getContentView())
+				.photosRecyclerView.adapterPhotos.currentPhoto = position;
+		((PhotosLayout) photosPopup.getContentView())
+				.photosRecyclerView.adapterPhotos.notifyDataSetChanged();
 	}
 
 	private void startCameraIntent() {
