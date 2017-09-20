@@ -98,6 +98,7 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
         backwardsCreateNew = true;
         backwardsRetry = false;
         progressBar.overDrawProgress = true;
+        progressBar.setVisibility(VISIBLE);
         loaderText.setText(R.string.main_publication_succeed);
         loaderImage.setVisibility(VISIBLE);
         loaderImage.setImageResource(R.drawable.ic_loader_success);
@@ -113,6 +114,7 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
         backwardsCreateNew = false;
         backwardsRetry = true;
         progressBar.overDrawProgress = true;
+        progressBar.setVisibility(INVISIBLE);
         loaderText.setText(R.string.main_publication_failed);
         loaderImage.setVisibility(VISIBLE);
         loaderImage.setImageResource(R.drawable.ic_sentiment_dissatisfied);
@@ -125,6 +127,7 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
         backwardsCreateNew = false;
         backwardsRetry = false;
         progressBar.overDrawProgress = false;
+        progressBar.setVisibility(VISIBLE);
         loaderText.setText(R.string.main_publication_progress);
         loaderImage.setVisibility(INVISIBLE);
         actionBackwards.setVisibility(GONE);
@@ -137,6 +140,7 @@ public class WallPostLayout extends RelativeLayout implements Animator.AnimatorL
         backwardsCreateNew = false;
         backwardsRetry = false;
         progressBar.overDrawProgress = false;
+        progressBar.setVisibility(VISIBLE);
         loaderText.setText(R.string.main_publication_progress);
         loaderImage.setVisibility(INVISIBLE);
         actionBackwards.setVisibility(GONE);

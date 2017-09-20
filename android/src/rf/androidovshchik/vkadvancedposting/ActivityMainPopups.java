@@ -190,6 +190,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		onPhotoPositionChanged(AdapterPhotos.PHOTO_NONE);
 		onThemePositionChanged(0);
 		fragmentPostText.getPostEditText().setText("");
+		fragmentPostText.getPostEditText().requestFocus();
+		ViewUtil.showKeyboard(getApplicationContext());
 	}
 
 	private void showPhotosPopup() {
