@@ -99,7 +99,10 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
         for (int i = 0; i < layout.getLineCount(); i++) {
             x = 1f * getWidth() / 2 - layout.getLineWidth(i) / 2 - PADDING;
             path.lineTo(x, y);
-            y += layout.getLineBottom(i) - layout.getLineTop(i) + PADDING / 2;
+            y += layout.getLineBottom(i) - layout.getLineTop(i);
+            if (i == layout.getLineCount() - 1) {
+                y += PADDING / 2;
+            }
             path.lineTo(x, y);
         }
         x = getWidth() / 2;
@@ -107,7 +110,10 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
         for (int i = layout.getLineCount() - 1; i >= 0; i--) {
             x = 1f * getWidth() / 2 + layout.getLineWidth(i) / 2 + PADDING;
             path.lineTo(x, y);
-            y -= layout.getLineBottom(i) - layout.getLineTop(i) + PADDING / 2;
+            if (i == layout.getLineCount() - 1) {
+                y -= PADDING / 2;
+            }
+            y -= layout.getLineBottom(i) - layout.getLineTop(i);
             path.lineTo(x, y);
         }
         x = getWidth() / 2;
