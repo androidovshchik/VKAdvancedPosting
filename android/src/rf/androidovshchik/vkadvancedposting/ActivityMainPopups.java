@@ -236,11 +236,18 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 				.adapter.currentTheme == position) {
 			return;
 		}
-		fragmentPostText.getPostEditText().setTextColor(position > 0 &&
-				((PhotosLayout) photosPopup.getContentView()).photosRecyclerView
-						.adapterPhotos.currentPhoto == AdapterPhotos.PHOTO_NONE &&
-				fragmentPostText.getPostEditText().backgroundColor != Color.WHITE ?
-				Color.WHITE : Color.BLACK);
+		switch (fragmentPostText.getPostEditText().backgroundColor) {
+			case Color.WHITE:
+				fragmentPostText.getPostEditText().setTextColor(Color.BLACK);
+				break;
+			default:
+				if (position > 0) {
+					fragmentPostText.getPostEditText().setTextColor(Color.WHITE);
+				} else {
+					fragmentPostText.getPostEditText().setTextColor(Color.BLACK);
+				}
+				break;
+		}
 		mainLayout.bottomToolbar.themesRecyclerView
 				.adapter.currentTheme = position;
 		mainLayout.bottomToolbar.themesRecyclerView
@@ -296,7 +303,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	@Override
 	public void onBackPressed() {
-		Timber.d("onBackPressed " + fragmentPostText.getPostEditText().isFocused());
 		if (stickersPopup.isShowing()) {
 			hideStickersPopup();
 		} else if (photosPopup.isShowing()) {
