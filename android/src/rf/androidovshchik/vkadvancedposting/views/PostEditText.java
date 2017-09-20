@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -13,7 +14,6 @@ import android.view.MotionEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
 import rf.androidovshchik.vkadvancedposting.utils.EventUtil;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
-import timber.log.Timber;
 
 public class PostEditText extends AppCompatEditText implements TextWatcher {
 
@@ -80,17 +80,20 @@ public class PostEditText extends AppCompatEditText implements TextWatcher {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Timber.d("dispatchTouchEvent");
-        return super.dispatchTouchEvent(ev);
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        Layout layout = getLayout();
+        int line = layout.getLineForVertical(Math.round(event.getY()));
+        float lineStartX = 1f * layout.getWidth() / 2 - layout.getLineWidth(line) / 2;
+        float lineEndX = 1f * layout.getWidth() / 2 + layout.getLineWidth(line) / 2;
+        return !(event.getX() < lineStartX || event.getX() > lineEndX)
+                && super.dispatchTouchEvent(event);
     }
 
     private int countLines(String string) {
         if (string == null || string.isEmpty()) {
             return 0;
         }
-        int lines = 1;
-        int position = 0;
+        int lines = 1, position = 0;
         while ((position = string.indexOf("\n", position) + 1) != 0) {
             lines++;
         }
