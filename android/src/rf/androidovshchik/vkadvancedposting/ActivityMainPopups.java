@@ -67,10 +67,8 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		stickersPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_stickers,
 				null, false), R.style.AnimationStickersAppear);
 		stickersPopup.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-		if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-			photosPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_photos,
-					null, false), R.style.AnimationPhotosAppear);
-		}
+		photosPopup = ViewUtil.createPopup(getLayoutInflater().inflate(R.layout.popup_photos,
+				null, false), R.style.AnimationPhotosAppear);
 		windowHeight = ViewUtil.getWindow(getApplicationContext()).y;
 		bottomToolbarActionHeight =
 				getResources().getDimensionPixelSize(R.dimen.toolbar_bottom_height);
@@ -82,9 +80,7 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		int keyboardHeight = windowHeight - rectResizedWindow.bottom;
 		if (keyboardHeight != 0) {
 			isKeyboardShowing = true;
-			if (photosPopup != null) {
-				photosPopup.setHeight(keyboardHeight);
-			}
+			photosPopup.setHeight(keyboardHeight);
 			mainLayout.bottomToolbar.getLayoutParams().height =
 					keyboardHeight + bottomToolbarActionHeight;
 			moveBottomToolbar();
@@ -287,17 +283,22 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		if (cursor != null && cursor.moveToFirst()) {
-			String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
-			String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-			if (path == null) {
-				return;
+		if (cursor != null) {
+			try {
+				if (cursor.moveToFirst()) {
+					String sdcardPath = Environment.getExternalStorageDirectory().getPath() + "/";
+					String path = cursor.getString(cursor
+							.getColumnIndex(MediaStore.Images.Media.DATA));
+					if (path == null) {
+						return;
+					}
+					int orientation = CameraUtil.getOrientation(path);
+					fragmentWorld.world.postRunnable("setPhotoBackground",
+							path.substring(sdcardPath.length()), orientation);
+				}
+			} finally {
+				cursor.close();
 			}
-			Timber.d("path " + path);
-			int orientation = CameraUtil.getOrientation(path);
-			Timber.d("orientation " + orientation);
-			fragmentWorld.world.postRunnable("setPhotoBackground",
-					path.substring(sdcardPath.length()), orientation);
 		}
 	}
 
@@ -309,9 +310,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		switch (requestCode) {
 			case REQUEST_WRITE_POPUP:
 				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-					photosPopup = ViewUtil.createPopup(getLayoutInflater()
-							.inflate(R.layout.popup_photos,
-									null, false), R.style.AnimationPhotosAppear);
 					showPhotosPopup();
 				}
 				break;

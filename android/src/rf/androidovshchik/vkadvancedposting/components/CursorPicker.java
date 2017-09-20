@@ -23,15 +23,6 @@ public class CursorPicker extends CursorLoader {
         return getCorrectCursor(getContext(), uri);
     }
 
-    /**
-     * Get a file path from a Uri. This will get the the path for Storage Access
-     * Framework Documents, as well as the _data field for the MediaStore and
-     * other file-based ContentProviders.
-     *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @author paulburke
-     */
     public static Cursor getCorrectCursor(final Context context, final Uri uri) {
         // DocumentProvider
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
