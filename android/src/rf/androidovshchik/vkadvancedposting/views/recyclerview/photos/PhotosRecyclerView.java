@@ -45,6 +45,11 @@ public class PhotosRecyclerView extends BaseRecyclerView
         adapterPhotos = new AdapterPhotos();
         setAdapter(adapterPhotos);
         setupGridLayoutManager(2, false);
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
         LoaderManager loaderManager = getSupportLoaderManager();
         if (loaderManager != null) {
             if (loaderManager.getLoader(CURSOR_PHOTOS) != null) {
@@ -108,6 +113,7 @@ public class PhotosRecyclerView extends BaseRecyclerView
         if (cursor != null && cursor.moveToFirst()) {
             try {
                 if (cursor.moveToFirst()) {
+                    adapterPhotos.photoPaths.clear();
                     do {
                         String path = cursor.getString(cursor
                                 .getColumnIndex(MediaStore.Images.Media.DATA));
