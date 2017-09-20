@@ -55,8 +55,6 @@ public abstract class ActivityMainBase extends AppCompatActivity
 
     protected Uri uri;
 
-	private VKRequest requestUploadImage;
-	private VKRequest requestWallPost;
 	private VKRequestCallback vkRequestCallback;
 
 	@Override

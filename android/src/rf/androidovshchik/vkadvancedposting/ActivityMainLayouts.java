@@ -24,7 +24,6 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.schedulers.Schedulers;
 import rf.androidovshchik.vkadvancedposting.events.remote.VKRepeatEvent;
-import rf.androidovshchik.vkadvancedposting.events.world.RemoveAllEvent;
 import rf.androidovshchik.vkadvancedposting.events.world.StickerPressEvent;
 import rf.androidovshchik.vkadvancedposting.events.remote.sticky.VKResponseEvent;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
@@ -96,12 +95,6 @@ public abstract class ActivityMainLayouts extends ActivityMainBase {
 	@Subscribe(threadMode = ThreadMode.POSTING)
 	public void onStickerPressEvent(StickerPressEvent event) {
 		mainLayout.trashFab.stickerPressed = true;
-	}
-
-	@SuppressWarnings("unused")
-	@Subscribe(threadMode = ThreadMode.POSTING)
-	public void onRemoveAllEvent(RemoveAllEvent event) {
-		fragmentWorld.world.postRunnable("clearWorld");
 	}
 
 	@SuppressWarnings("unused")

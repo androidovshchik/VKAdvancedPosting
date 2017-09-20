@@ -29,6 +29,7 @@ import rf.androidovshchik.vkadvancedposting.events.clicks.StickerClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.clicks.ThemeClickEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.KeyBackEvent;
 import rf.androidovshchik.vkadvancedposting.events.text.TextTouchEvent;
+import rf.androidovshchik.vkadvancedposting.events.world.RemoveAllEvent;
 import rf.androidovshchik.vkadvancedposting.utils.CameraUtil;
 import rf.androidovshchik.vkadvancedposting.utils.ViewUtil;
 import rf.androidovshchik.vkadvancedposting.views.layout.PhotosLayout;
@@ -182,6 +183,15 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 		onBackPressed();
 	}
 
+	@SuppressWarnings("unused")
+	@Subscribe(threadMode = ThreadMode.POSTING)
+	public void onRemoveAllEvent(RemoveAllEvent event) {
+		fragmentWorld.world.postRunnable("clearWorld");
+		onPhotoPositionChanged(AdapterPhotos.PHOTO_NONE);
+		onThemePositionChanged(0);
+		fragmentPostText.getPostEditText().setText("");
+	}
+
 	private void showPhotosPopup() {
 		if (!isKeyboardShowing) {
 			ViewUtil.showKeyboard(getApplicationContext());
@@ -317,11 +327,6 @@ public class ActivityMainPopups extends ActivityMainLayouts {
 										   @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		switch (requestCode) {
-			case REQUEST_WRITE_POPUP:
-				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-					showPhotosPopup();
-				}
-				break;
 			case REQUEST_WRITE_CAMERA:
 				if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 					startCameraIntent();
