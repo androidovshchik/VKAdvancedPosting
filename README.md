@@ -1,3 +1,3 @@
 # VKAdvancedPosting
 
-![](https://github.com/androidovshchik/VKAdvancedPosting/blob/master/post.jpg?raw=true | width=200)
+<img src="https://github.com/androidovshchik/VKAdvancedPosting/blob/master/post.jpg?raw=true" width="300">
