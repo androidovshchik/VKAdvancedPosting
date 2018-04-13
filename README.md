@@ -10,6 +10,8 @@
 
 Competitive work https://vk.com/wall-104669514_37
 
+Article https://habrahabr.ru/post/338398/
+
 ## Binaries
 
 [Download apk here](https://github.com/androidovshchik/VKAdvancedPosting/releases)
